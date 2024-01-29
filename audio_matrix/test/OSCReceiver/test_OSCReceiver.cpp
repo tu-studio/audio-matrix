@@ -3,11 +3,16 @@
 #include <benchmark/benchmark.h>
 #include <OSCReceiver.h>
 
-double randomDouble(int LO, int HI){
+#ifndef RANDOMDOUBLE
+#define RANDOMDOUBLE
+
+static double randomDouble(int LO, int HI){
   return (double) LO + (double) (std::rand()) / ((double) (RAND_MAX/(HI-LO)));
 }
 
-static void BM_construct_destruct(benchmark::State& state) {
+#endif // RANDOMDOUBLE
+
+static void BM_OSCReceiver_construct_destruct(benchmark::State& state) {
     // Perform setup here
     std::srand(std::time(0));
 
@@ -20,7 +25,7 @@ static void BM_construct_destruct(benchmark::State& state) {
     }
 }
 // Register the function as a benchmark
-BENCHMARK(BM_construct_destruct);
+BENCHMARK(BM_OSCReceiver_construct_destruct);
 
 TEST(OSCReceiver, construct_destruct){
 
@@ -36,7 +41,7 @@ TEST(OSCReceiver, construct_destruct){
 }
 
 TEST(OSCReceiver, benchmark){
-    // LockMemory();
+    benchmark::SetBenchmarkFilter("BM_OSCReceiver_construct_destruct");
     benchmark::RunSpecifiedBenchmarks();
-    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << "----------------------------------------------------------------------------" << std::endl;
 }

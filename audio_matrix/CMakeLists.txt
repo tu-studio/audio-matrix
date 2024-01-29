@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add include directories for all folders in the source
 file(GLOB_RECURSE SUB_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/source/*)
+list(APPEND SUB_DIRS ${CMAKE_CURRENT_LIST_DIR}/source)
 set(SUB_DIRS_RELATIVE "")
 
 foreach (DIR ${SUB_DIRS})
@@ -28,12 +29,11 @@ foreach (DIR ${SUB_DIRS})
         target_include_directories(${PROJECT_NAME} PRIVATE ${DIR})
         message(STATUS "Including directory ${DIR}")
         cmake_path(RELATIVE_PATH DIR BASE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/source OUTPUT_VARIABLE SUB_DIR_RELATIVE)
-        list(APPEND SUB_DIRS_RELATIVE ${SUB_DIR_RELATIVE})
+        if (NOT SUB_DIR_RELATIVE STREQUAL ".")
+            list(APPEND SUB_DIRS_RELATIVE ${SUB_DIR_RELATIVE})
+        endif()
     endif ()
 endforeach ()
-
-message(STATUS "Found subdirectories: ${SUB_DIRS_RELATIVE}")
-message(STATUS "Found source files: ${SUB_DIRS}")
 
 # Link all of our libs together
 target_link_libraries(${PROJECT_NAME} PUBLIC jack lo)
@@ -81,25 +81,20 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
 
     # get all test cpp and header files
     file(GLOB_RECURSE TEST_SOURCES_${DIR} CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/test/${DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/test/${DIR}/*.h)
-    file(GLOB_RECURSE SOURCES_${DIR} CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*.h)
+    list(REMOVE_ITEM SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/main.cpp)
 
     if (NOT TEST_SOURCES_${DIR})
         message(STATUS "No test files found for ${DIR}")
         continue()
     else ()
+        message(STATUS "Found test files for ${DIR}")
         # Setup the test executable
-        add_executable(Test_${DIR} ${TEST_SOURCES_${DIR}} ${SOURCES_${DIR}})
+        add_executable(Test_${DIR} ${TEST_SOURCES_${DIR}} ${SOURCES})
     endif ()
 
     # Add include directories for all folders in test
     file(GLOB_RECURSE TEST_DIRS_${DIR} LIST_DIRECTORIES true ${CMAKE_CURRENT_SOURCE_DIR}/test/${DIR}/*)
     list(APPEND TEST_DIRS_${DIR} ${CMAKE_CURRENT_LIST_DIR}/test/${DIR})
-    file(GLOB_RECURSE SOURCE_DIRS_${DIR} LIST_DIRECTORIES true ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}/*)
-    list(APPEND SOURCE_DIRS_${DIR} ${CMAKE_CURRENT_LIST_DIR}/source/${DIR})
-
-    message(STATUS "Found test files: ${TEST_DIRS_${DIR}}")
-    message(STATUS "Found test source files: ${SOURCE_DIRS_${DIR}}")
-    message(STATUS "Debug: ${CMAKE_CURRENT_SOURCE_DIR}/source/${DIR}")
 
     foreach (TEST_DIR IN LISTS TEST_DIRS_${DIR})
         if (IS_DIRECTORY ${TEST_DIR})
@@ -108,7 +103,7 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
         endif ()
     endforeach ()
 
-    foreach (SOURCE_DIR IN LISTS SOURCE_DIRS_${DIR})
+    foreach (SOURCE_DIR IN LISTS SUB_DIRS)
         if (IS_DIRECTORY ${SOURCE_DIR})
             target_include_directories(Test_${DIR} PRIVATE ${SOURCE_DIR})
             message(STATUS "Including directory test ${SOURCE_DIR}")
