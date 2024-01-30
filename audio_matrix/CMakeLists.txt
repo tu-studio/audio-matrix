@@ -35,15 +35,33 @@ foreach (DIR ${SUB_DIRS})
     endif ()
 endforeach ()
 
+# load the module FetchContent, which enables us to download external resource
+# in our case GoogleTest and yaml-cpp
+include(FetchContent)
+
+# TODO ich hab nicht verstanden, warum das nicht funktioniert, ich hab stattdessen die systeminstallation der lib bei mir verwendet...
+# TODO falls das hier zum funktionieren gebracht wird muss in den link commands die lib zu yaml-cpp::yaml-cpp geändert werden
+# # Fetch yaml-cpp library
+# FetchContent_Declare(
+#   yaml-cpp
+#   GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+#   GIT_TAG yaml-cpp-0.8.0 # Can be a tag (yaml-cpp-x.x.x), a commit hash, or a branch name (master)
+# )
+# FetchContent_GetProperties(yaml-cpp)
+
+# if(NOT yaml-cpp_POPULATED)
+#   message(STATUS "Fetching yaml-cpp...")
+#   FetchContent_Populate(yaml-cpp)
+#   add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
+# endif()
+
 # Link all of our libs together
-target_link_libraries(${PROJECT_NAME} PUBLIC jack lo)
+target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp)
 
 # We include(CTest) so that cmake can find the unit tests for which we use the GoogleTest framework.
 include(CTest)
 
-# load the module FetchContent, which enables us to download external resource
-# in our case GoogleTest
-include(FetchContent)
+
 
 # Externally provided libraries
 FetchContent_Declare(
@@ -60,6 +78,7 @@ FetchContent_Declare(benchmark
     GIT_TAG v1.8.3)
 
 FetchContent_MakeAvailable(googletest)
+
 
 # For benchmark we want to set the BENCMARK_ENABLE_TESTING to OFF therefore we cannot use FetchContent_MakeAvailable()
 # Check if population has already been performed
@@ -111,7 +130,7 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
     endforeach ()
 
     # Link the test executable against gtest_main and google benchmark
-    target_link_libraries(Test_${DIR} gtest_main benchmark::benchmark jack lo)
+    target_link_libraries(Test_${DIR} gtest_main benchmark::benchmark jack lo yaml-cpp)
 
     # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
     include(GoogleTest)
