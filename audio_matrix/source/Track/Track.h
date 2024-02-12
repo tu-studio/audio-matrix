@@ -17,10 +17,10 @@ public:
     void prepare(HostAudioConfig host_audio_config);
     void process(jack_nframes_t nframes);
 
-    AudioBuffer& get_buffer();
+    AudioBufferF& get_buffer();
     
 private:
-    AudioBuffer m_buffer;
+    AudioBufferF m_buffer;
     std::vector<std::shared_ptr<Module>> m_modules;
     size_t m_max_number_of_channels;
     const TrackConfig& m_config; 

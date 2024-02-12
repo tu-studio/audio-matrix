@@ -8,6 +8,7 @@
 #include <memory>
 #include <ConfigParser.h>
 #include <HostAudioConfig.h>
+#include <OSCServer.h>
 
 class AudioMatrix
 {
@@ -22,6 +23,8 @@ private:
     std::shared_ptr<AudioMatrixConfig> config;
     ConfigParser config_parser;
     HostAudioConfig m_host_audio_config;
+    OSCServer osc_server;
+
 };
 
 
