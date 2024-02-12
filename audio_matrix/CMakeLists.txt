@@ -35,37 +35,18 @@ foreach (DIR ${SUB_DIRS})
     endif ()
 endforeach ()
 
-# load the module FetchContent, which enables us to download external resource
-# in our case GoogleTest and yaml-cpp
-include(FetchContent)
-
-# TODO ich hab nicht verstanden, warum das nicht funktioniert, ich hab stattdessen die systeminstallation der lib bei mir verwendet...
-# TODO falls das hier zum funktionieren gebracht wird muss in den link commands die lib zu yaml-cpp::yaml-cpp geändert werden
-# # Fetch yaml-cpp library
-# FetchContent_Declare(
-#   yaml-cpp
-#   GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-#   GIT_TAG yaml-cpp-0.8.0 # Can be a tag (yaml-cpp-x.x.x), a commit hash, or a branch name (master)
-# )
-# FetchContent_GetProperties(yaml-cpp)
-
-# if(NOT yaml-cpp_POPULATED)
-#   message(STATUS "Fetching yaml-cpp...")
-#   FetchContent_Populate(yaml-cpp)
-#   add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
-# endif()
-
 # Link all of our libs together
 target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp)
 
-# We include(CTest) so that cmake can find the unit tests for which we use the GoogleTest framework.
+include(FetchContent)
+
+# This disables the default behavior of adding all targets to the CTest dashboard.
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
+# enable ctest
 include(CTest)
 
-
-
 # Externally provided libraries
-FetchContent_Declare(
-    googletest
+FetchContent_Declare(googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_PROGRESS TRUE
     GIT_SHALLOW TRUE
@@ -77,22 +58,31 @@ FetchContent_Declare(benchmark
     GIT_SHALLOW TRUE
     GIT_TAG v1.8.3)
 
+# This command ensures that each of the named dependencies are made available to the project by the time it returns. If the dependency has already been populated the command does nothing. Otherwise, the command populates the dependency and then calls add_subdirectory() on the result.
 FetchContent_MakeAvailable(googletest)
-
 
 # For benchmark we want to set the BENCMARK_ENABLE_TESTING to OFF therefore we cannot use FetchContent_MakeAvailable()
 # Check if population has already been performed
 FetchContent_GetProperties(benchmark)
 if(NOT benchmark_POPULATED)
-  # Fetch the content using previously declared details
-  FetchContent_Populate(benchmark)
+    # Fetch the content using previously declared details
+    FetchContent_Populate(benchmark)
 
-  # Set custom variables, policies, etc.
-  set(BENCHMARK_ENABLE_TESTING OFF)
-  set(BENCHMARK_ENABLE_GTEST_TESTS OFF CACHE BOOL "Enable testing of the benchmark library." FORCE)
+    # Set custom variables, policies, etc.
+    set(BENCHMARK_ENABLE_TESTING OFF)
+    set(BENCHMARK_ENABLE_GTEST_TESTS OFF)
 
-  # Bring the populated content into the build
-  add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
+    if (APPLE AND (BUILD_ARCHITECTURE STREQUAL "arm64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64"))
+    set(HAVE_STD_REGEX ON)
+    set(RUN_HAVE_STD_REGEX 1)
+    endif()
+
+    # Bring the populated content into the build
+    add_subdirectory(${benchmark_SOURCE_DIR} ${benchmark_BINARY_DIR})
+
+    # Supress warnings by making include directories system directories
+    get_property(BENCHMARK_INCLUDE_DIRS TARGET benchmark PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
+    target_include_directories(benchmark SYSTEM INTERFACE ${BENCHMARK_INCLUDE_DIRS})
 endif()
 
 # Make a test executable for every plugin
