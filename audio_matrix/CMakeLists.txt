@@ -35,6 +35,13 @@ foreach (DIR ${SUB_DIRS})
     endif ()
 endforeach ()
 
+# Add example yaml config
+add_subdirectory(examples)
+message(STATUS "Config path: ${SIMPLE_WFS_MIXER_CONFIG_PATH}")
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    SIMPLE_WFS_MIXER_CONFIG_PATH="${SIMPLE_WFS_MIXER_CONFIG_PATH}"
+)
+
 include(FetchContent)
 
 FetchContent_Declare(
