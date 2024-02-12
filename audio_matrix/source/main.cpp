@@ -17,7 +17,6 @@
 #include <jack/jack.h>
 #include <lo/lo.h>
 #include <lo/lo_cpp.h>
-#include <Config.h>
 #include <Track.h>
 #include <algorithm>
 #include <OSCServer.h>
@@ -172,30 +171,30 @@ main ( int argc, char *argv[] )
 
     /* create two ports pairs*/
     // call
-    input_ports = ( jack_port_t** ) calloc ( INPUT_PORTS, sizeof ( jack_port_t* ) );
-    output_ports = ( jack_port_t** ) calloc ( OUTPUT_PORTS, sizeof ( jack_port_t* ) );
+    // input_ports = ( jack_port_t** ) calloc ( INPUT_PORTS, sizeof ( jack_port_t* ) );
+    // output_ports = ( jack_port_t** ) calloc ( OUTPUT_PORTS, sizeof ( jack_port_t* ) );
 
-    char port_name[16];
-    for ( i = 0; i < INPUT_PORTS; i++ )
-    {
-        sprintf ( port_name, "input_%d", i + 1 );
-        input_ports[i] = jack_port_register ( client, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0 );
-        if( input_ports[i] == NULL )
-        {
-            fprintf ( stderr, "no more JACK ports available\n" );
-            exit ( 1 );
-        }
-    }
+    // char port_name[16];
+    // for ( i = 0; i < INPUT_PORTS; i++ )
+    // {
+    //     sprintf ( port_name, "input_%d", i + 1 );
+    //     input_ports[i] = jack_port_register ( client, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0 );
+    //     if( input_ports[i] == NULL )
+    //     {
+    //         fprintf ( stderr, "no more JACK ports available\n" );
+    //         exit ( 1 );
+    //     }
+    // }
 
-    for ( i = 0; i < OUTPUT_PORTS; i++ )
-    {
-        sprintf ( port_name, "output_%d", i + 1 );
-        output_ports[i] = jack_port_register ( client, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
-        if( output_ports[i] == NULL ) {
-            fprintf ( stderr, "no more JACK ports available\n" );
-            exit ( 1 );
-        }
-    }
+    // for ( i = 0; i < OUTPUT_PORTS; i++ )
+    // {
+    //     sprintf ( port_name, "output_%d", i + 1 );
+    //     output_ports[i] = jack_port_register ( client, port_name, JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
+    //     if( output_ports[i] == NULL ) {
+    //         fprintf ( stderr, "no more JACK ports available\n" );
+    //         exit ( 1 );
+    //     }
+    // }
 
     /* Tell the JACK server that we are ready to roll.  Our
      * process() callback will start running now. */
