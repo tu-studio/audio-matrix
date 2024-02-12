@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <OSCServer.h>
 #include <Gain.h>
+#include <AudioMatrix.h>
 
 jack_port_t **input_ports;
 jack_port_t **output_ports;
@@ -44,36 +45,36 @@ static void signal_handler ( int sig )
  * running, copy the input port to the output.  When it stops, exit.
  */
 
-int
-process ( jack_nframes_t nframes, void *arg )
-{
-    int i;
-    jack_default_audio_sample_t *in, *out;
+// int
+// process ( jack_nframes_t nframes, void *arg )
+// {
+//     int i;
+//     jack_default_audio_sample_t *in, *out;
 
-    for ( i = 0; i < INPUT_PORTS; i++ )
-    {
-        in = (jack_default_audio_sample_t *) jack_port_get_buffer ( input_ports[i], nframes );
-        memcpy ( wfs->get_buffer().get_channel_pointer(i), in, nframes * sizeof ( jack_default_audio_sample_t ) );
-    }
+//     for ( i = 0; i < INPUT_PORTS; i++ )
+//     {
+//         in = (jack_default_audio_sample_t *) jack_port_get_buffer ( input_ports[i], nframes );
+//         memcpy ( wfs->get_buffer().get_channel_pointer(i), in, nframes * sizeof ( jack_default_audio_sample_t ) );
+//     }
 
-    wfs->process(nframes);
+//     wfs->process(nframes);
 
-    for ( i = 0; i < OUTPUT_PORTS; i++ )
-    {
-        out = (jack_default_audio_sample_t *) jack_port_get_buffer ( output_ports[i], nframes );
-        memcpy ( out, wfs->get_buffer().get_channel_pointer(i), nframes * sizeof ( jack_default_audio_sample_t ) );
-    }
+//     for ( i = 0; i < OUTPUT_PORTS; i++ )
+//     {
+//         out = (jack_default_audio_sample_t *) jack_port_get_buffer ( output_ports[i], nframes );
+//         memcpy ( out, wfs->get_buffer().get_channel_pointer(i), nframes * sizeof ( jack_default_audio_sample_t ) );
+//     }
 
 
-    return 0;
-}
+//     return 0;
+// }
 
-int buffer_size_callback(jack_nframes_t nframes, void *arg) {
-    std::cout << "buffer size changed" << std::endl;
-    wfs->get_buffer().clear();
-    wfs->initialize(INPUT_PORTS, nframes);
-    return 0;
-}
+// int buffer_size_callback(jack_nframes_t nframes, void *arg) {
+//     std::cout << "buffer size changed" << std::endl;
+//     wfs->get_buffer().clear();
+//     wfs->initialize(INPUT_PORTS, nframes);
+//     return 0;
+// }
 
 /**
  * JACK calls this shutdown_callback if the server ever shuts down or
@@ -139,7 +140,7 @@ main ( int argc, char *argv[] )
     */
 
     
-    jack_set_process_callback ( client, process, 0 );
+    // jack_set_process_callback ( client, process, 0 );
 
     /* tell the JACK server to call `jack_shutdown()' if
        it ever shuts down, either entirely, or if it
@@ -150,26 +151,24 @@ main ( int argc, char *argv[] )
 
     jack_nframes_t max_buffersize = jack_get_buffer_size(client); 
 
-    wfs = std::make_shared<Track>();
-    wfs->initialize(INPUT_PORTS, max_buffersize);
+    AudioMatrix AudioMatrix("/home/leto/ak-cloud/STUDIO/seamless-v2/seamless_mixer_conf.yml");
 
-    osc_server = std::make_shared<OSCServer>();
     
-    // TODO: that's not how you do it
-    Gain* gain;
-    gain = new Gain();
-    // TODO: max_buffersize and sample_rate should be set in a different function
-    gain->initialize(INPUT_PORTS, max_buffersize, 44100, osc_server->get_server_thread());
+    // // TODO: that's not how you do it
+    // Gain* gain;
+    // gain = new Gain();
+    // // TODO: max_buffersize and sample_rate should be set in a different function
+    // gain->initialize(INPUT_PORTS, max_buffersize, 44100, osc_server->get_server_thread());
 
-    wfs->add_module((Module *) gain);
-    osc_server->get_server_thread()->add_method("/test", "f", [](const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data) {
-        std::cout << "test" << std::endl;
-        return 0;
-    }, NULL);
-    osc_server->get_server_thread()->start();
+    // wfs->add_module((Module *) gain);
+    // osc_server->get_server_thread()->add_method("/test", "f", [](const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data) {
+    //     std::cout << "test" << std::endl;
+    //     return 0;
+    // }, NULL);
+    // osc_server->get_server_thread()->start();
 
     // registers a function to be called when the maximum buffer size changes
-    jack_set_buffer_size_callback(client, buffer_size_callback, 0);
+    // jack_set_buffer_size_callback(client, buffer_size_callback, 0);
 
     /* create two ports pairs*/
     // call

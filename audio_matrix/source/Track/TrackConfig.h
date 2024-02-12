@@ -3,6 +3,8 @@
 
 #include <ModuleConfig.h>
 #include <string>
+#include <vector>
+#include <memory>
 
 struct TrackConfig{
     std::string name;

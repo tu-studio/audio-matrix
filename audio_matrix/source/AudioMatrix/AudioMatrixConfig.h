@@ -2,10 +2,10 @@
 #define AUDIOMATRIXCONFIG_H
 
 #include <TrackConfig.h>
-
+#include <Config.h>
+#include <vector>
 
 struct AudioMatrixConfig{
-    // analog zu Anira InferenceConfig
     int port = DEFAULT_INPUT_PORTS;
     int n_input_channels = DEFAULT_INPUT_PORTS;
     std::string osc_base_path = DEFAULT_OSC_BASE_PATH;

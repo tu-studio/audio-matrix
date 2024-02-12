@@ -4,24 +4,24 @@
 #include <AudioBuffer.h>
 #include <Module.h>
 #include <vector>
+#include <TrackConfig.h>
+#include <Gain.h>
 
 class Track {
 
 public:
-    Track(/* args */);
+    Track(const TrackConfig& config);
     ~Track();
 
     void initialize(int channels, int frames);
     void process(jack_nframes_t nframes);
 
-    void add_module(Module* module);
-
     AudioBuffer& get_buffer();
-    std::vector<Module*>& get_modules();
     
 private:
-    AudioBuffer buffer;
-    std::vector<Module*> modules;
+    AudioBuffer m_buffer;
+    std::vector<std::shared_ptr<Module>> m_modules;
+    const TrackConfig& m_config; 
 
 };
 

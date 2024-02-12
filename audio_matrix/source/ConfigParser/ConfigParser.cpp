@@ -25,9 +25,7 @@ ConfigParser::ConfigParser(std::string config_file){
     // check if the tracks section exists in the config, and is a sequence
     YAML::Node tracksNode = config["tracks"];
     if (tracksNode.IsDefined() && tracksNode.IsSequence()){
-        
-        std::cout << "Number of tracks: " << tracksNode.size() << std::endl;
-        
+                
         // iterate over all tracks
         for (YAML::const_iterator t_it=tracksNode.begin(); t_it!=tracksNode.end(); ++t_it){
             YAML::Node track = t_it->as<YAML::Node>();

@@ -1,12 +1,10 @@
 #include <Gain.h>
 
-Gain::Gain() {
-    std::cout << "Gain constructor" << std::endl;
+Gain::Gain(std::shared_ptr<GainConfig> config) : m_config(config){
+
 }
 
-Gain::~Gain() {
-    std::cout << "Gain destructor" << std::endl;
-}
+
 
 int Gain::initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate, std::shared_ptr<lo::ServerThread> lo_server) {
     this->input_channels = input_channels;
@@ -25,17 +23,17 @@ void Gain::process(AudioBuffer &buffer, jack_nframes_t nframes) {
     for (int i = 0; i < input_channels; i++) {
         float* channel = buffer.get_channel_pointer(i);
         for (int j = 0; j < nframes; j++) {
-            channel[j] *= gain;
+            channel[j] *= m_gain;
         }
     }
 }
 
 void Gain::set_gain(float gain) {
-    this->gain = gain;
+    m_gain = gain;
 }
 
 float Gain::get_gain() {
-    return gain;
+    return m_gain;
 }
 
 int Gain::osc_gain_callback(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data) {
