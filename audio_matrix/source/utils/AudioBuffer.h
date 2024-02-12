@@ -1,5 +1,5 @@
-#ifndef ANIRA_AUDIO_BUFFER_H
-#define ANIRA_AUDIO_BUFFER_H
+#ifndef AUDIOBUFFER_H
+#define AUDIOBUFFER_H
 
 #include <iostream>
 #include <cstring>
@@ -242,3 +242,5 @@ private:
 
 
 using AudioBufferF = AudioBuffer<float>;
+
+#endif //AUDIOBUFFER_H
