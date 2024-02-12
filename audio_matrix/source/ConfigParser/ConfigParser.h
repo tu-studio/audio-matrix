@@ -5,7 +5,6 @@
 #include <string>
 #include <iostream>
 #include <Track.h>
-#include <Config.h>
 #include <AudioMatrixConfig.h>
 #include <TrackConfig.h>
 

@@ -2,16 +2,17 @@
 #define AUDIOMATRIXCONFIG_H
 
 #include <TrackConfig.h>
-#include <Config.h>
 #include <vector>
+
+#define DEFAULT_INPUT_PORTS 64
+#define DEFAULT_PORT 12345
 
 struct AudioMatrixConfig{
     int port = DEFAULT_INPUT_PORTS;
     int n_input_channels = DEFAULT_INPUT_PORTS;
-    std::string osc_base_path = DEFAULT_OSC_BASE_PATH;
-    std::string osc_position_path = DEFAULT_OSC_POS_PATH;
     std::vector<TrackConfig> tracks;
 };
 
+typedef std::shared_ptr<AudioMatrixConfig> AudioMatrixConfig_ptr
 
 #endif //AUDIOMATRIXCONFIG_H

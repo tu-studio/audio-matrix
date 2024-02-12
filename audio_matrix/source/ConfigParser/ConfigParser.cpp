@@ -12,15 +12,6 @@ ConfigParser::ConfigParser(std::string config_file){
     if (config["n_input_channels"].IsDefined() && config["n_input_channels"].IsScalar()){
         audio_matrix_config.n_input_channels = config["n_input_channels"].as<int>();
     } 
-
-    if (config["osc_base_path"].IsDefined() && config["osc_base_path"].IsScalar()){
-        audio_matrix_config.osc_base_path = config["osc_base_path"].as<std::string>();
-    }
-
-    if (config["osc_position_path"].IsDefined() && config["osc_position_path"].IsScalar()){
-        audio_matrix_config.osc_position_path = config["osc_position_path"].as<std::string>();
-    }
-
     
     // check if the tracks section exists in the config, and is a sequence
     YAML::Node tracksNode = config["tracks"];
