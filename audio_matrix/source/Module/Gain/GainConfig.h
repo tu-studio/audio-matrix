@@ -2,9 +2,13 @@
 #define GAINCONFIG_H
 #include <ModuleConfig.h>
 
-struct GainConfig: private ModuleConfig
+struct GainConfig: ModuleConfig
 {
-    int gain;
+    float gain = 1;
+
+    const Modules module_type() const override {
+        return Modules::GAIN;
+    }
 };
 
 

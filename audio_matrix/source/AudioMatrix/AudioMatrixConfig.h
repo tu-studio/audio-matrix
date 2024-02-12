@@ -6,13 +6,11 @@
 
 struct AudioMatrixConfig{
     // analog zu Anira InferenceConfig
-    const int port;
-    const int n_input_channels;
-    const std::string osc_base_path;
-    const std::string osc_position_path;
-    const std::vector<TrackConfig> tracks;
-    AudioMatrixConfig(int port, int n_input_channels, const std::string osc_base_path, std::string osc_position_path, std::vector<TrackConfig> tracks)
-        : port(port), n_input_channels(n_input_channels), osc_base_path(osc_base_path), osc_position_path(osc_position_path), tracks(tracks) {}
+    int port = DEFAULT_INPUT_PORTS;
+    int n_input_channels = DEFAULT_INPUT_PORTS;
+    std::string osc_base_path = DEFAULT_OSC_BASE_PATH;
+    std::string osc_position_path = DEFAULT_OSC_POS_PATH;
+    std::vector<TrackConfig> tracks;
 };
 
 

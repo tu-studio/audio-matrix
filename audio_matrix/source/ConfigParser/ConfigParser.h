@@ -8,8 +8,11 @@
 #include <Config.h>
 #include <AudioMatrixConfig.h>
 #include <TrackConfig.h>
+
 #include <ModuleConfig.h>
 #include <GainConfig.h>
+#include <FilterConfig.h>
+
 class ConfigParser
 {
 
@@ -19,7 +22,12 @@ public:
 
     std::shared_ptr<AudioMatrixConfig> get_config();
 private:
-    /* data */
+
+    void parse_module_osc_params(YAML::Node module, std::shared_ptr<ModuleConfig> config);
+    std::shared_ptr<ModuleConfig> parse_module(YAML::Node module);
+    std::shared_ptr<GainConfig> parse_module_gain(YAML::Node module);
+    std::shared_ptr<FilterConfig> parse_module_filter(YAML::Node module);
+
     YAML::Node config;
     std::shared_ptr<AudioMatrixConfig> parsed_config;
     int port;

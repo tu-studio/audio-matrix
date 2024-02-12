@@ -5,12 +5,8 @@
 #include <string>
 
 struct TrackConfig{
-    const std::string name;
-    const std::vector<ModuleConfig> modules;
-    
-    TrackConfig(std::string name, std::vector<ModuleConfig> modules)
-        : name(name), modules(modules) {}
-
+    std::string name;
+    std::vector<std::shared_ptr<ModuleConfig>> modules;
 };
 
 
