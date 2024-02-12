@@ -32,6 +32,6 @@ void Track::process(jack_nframes_t nframes) {
     }
 }
 
-AudioBuffer& Track::get_buffer() {
+AudioBufferF& Track::get_buffer() {
     return m_buffer;
 }

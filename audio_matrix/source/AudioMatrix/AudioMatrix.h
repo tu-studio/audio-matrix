@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include <ConfigParser.h>
+#include <OSCServer.h>
 
 class AudioMatrix
 {
@@ -18,6 +19,7 @@ private:
     std::vector<Track> tracks;
     std::shared_ptr<AudioMatrixConfig> config;
     ConfigParser config_parser;
+    OSCServer osc_server;
 
 };
 

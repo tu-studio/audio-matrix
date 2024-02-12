@@ -16,10 +16,10 @@ public:
     void initialize(int channels, int frames);
     void process(jack_nframes_t nframes);
 
-    AudioBuffer& get_buffer();
+    AudioBufferF& get_buffer();
     
 private:
-    AudioBuffer m_buffer;
+    AudioBufferF m_buffer;
     std::vector<std::shared_ptr<Module>> m_modules;
     const TrackConfig& m_config; 
 

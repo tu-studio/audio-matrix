@@ -15,7 +15,7 @@ public:
     ~Module();
 
     virtual int initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate, std::shared_ptr<lo::ServerThread> lo_server) = 0;
-    virtual void process(AudioBuffer &buffer, jack_nframes_t nframes) = 0;
+    virtual void process(AudioBufferF &buffer, jack_nframes_t nframes) = 0;
 
     std::string get_name();
 

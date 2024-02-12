@@ -19,12 +19,12 @@ int Gain::initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t 
     return 0;
 }
 
-void Gain::process(AudioBuffer &buffer, jack_nframes_t nframes) {
+void Gain::process(AudioBufferF &buffer, jack_nframes_t nframes) {
     for (int i = 0; i < input_channels; i++) {
-        float* channel = buffer.get_channel_pointer(i);
-        for (int j = 0; j < nframes; j++) {
-            channel[j] *= m_gain;
-        }
+        // float* channel = buffer.get_channel_pointer(i);
+        // for (int j = 0; j < nframes; j++) {
+        //     channel[j] *= m_gain;
+        // }
     }
 }
 

@@ -11,7 +11,7 @@ public:
     ~Gain() = default;
 
     int initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate, std::shared_ptr<lo::ServerThread> = nullptr) override;
-    void process(AudioBuffer &buffer, jack_nframes_t nframes) override;
+    void process(AudioBufferF &buffer, jack_nframes_t nframes) override;
 
     void set_gain(float gain);
     float get_gain();
