@@ -101,10 +101,10 @@ GainConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
         YAML::Node moduleConfigNode = module.begin()->second;
         if (moduleConfigNode.IsMap()){
             if (moduleConfigNode["factor"].IsDefined()){
-                config->gain = moduleConfigNode["factor"].as<float>();
+                config->factor = moduleConfigNode["factor"].as<float>();
             }
         } else {
-            config->gain = moduleConfigNode.as<float>();
+            config->factor = moduleConfigNode.as<float>();
         }
     }
     return config;

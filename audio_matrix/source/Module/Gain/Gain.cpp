@@ -9,32 +9,29 @@ Gain::Gain(std::shared_ptr<GainConfig> config, std::shared_ptr<lo::ServerThread>
     }
 }
 
-
-
-int Gain::initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate) {
-    this->input_channels = input_channels;
-    this->output_channels = input_channels;
-    name = "Gain";
-    std::ignore = sample_rate;
-
-    return 0;
+size_t Gain::initialize(size_t input_channels) {
+    m_input_channels = input_channels;
+    m_output_channels = input_channels;
+    for (size_t i = 0; i < input_channels; i++) {
+        m_gain.push_back(m_config->factor);
+    }
+    return m_output_channels;
 }
 
-void Gain::process(AudioBufferF &buffer, jack_nframes_t nframes) {
-    for (int i = 0; i < input_channels; i++) {
-        // float* channel = buffer.get_channel_pointer(i);
-        // for (int j = 0; j < nframes; j++) {
-        //     channel[j] *= m_gain;
-        // }
+void Gain::process(AudioBufferF &buffer, size_t nframes) {
+    for (size_t i = 0; i < m_input_channels; i++) {
+        for (size_t j = 0; j < nframes; j++) {
+            buffer.setSample(i, j, buffer.getSample(i, j) * m_gain[i]);
+        }
     }
 }
 
-void Gain::set_gain(float gain) {
-    m_gain = gain;
+void Gain::set_gain(size_t channel, float gain) {
+    m_gain[channel] = gain;
 }
 
-float Gain::get_gain() {
-    return m_gain;
+float Gain::get_gain(size_t channel) {
+    return m_gain[channel];
 }
 
 int Gain::osc_gain_callback(const char *path, const char *types, lo_arg **argv, int argc, void *data, void *user_data) {
@@ -43,7 +40,7 @@ int Gain::osc_gain_callback(const char *path, const char *types, lo_arg **argv, 
     std::ignore = argc;
     std::ignore = data;
     Gain* gain = (Gain*) user_data;
-    gain->set_gain(argv[1]->f);
-    std::cout << "Changed gain of " << argv[0]->i <<  " to: " << gain->get_gain() << std::endl;
+    gain->set_gain(argv[0]->i, argv[1]->f);
+    std::cout << "Changed gain of " << argv[0]->i <<  " to: " << gain->get_gain(argv[0]->i) << std::endl;
     return 0;
 }

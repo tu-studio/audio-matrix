@@ -4,7 +4,7 @@
 
 struct GainConfig: ModuleConfig
 {
-    float gain = 1;
+    float factor = 1;
 
     const Modules module_type() const override {
         return Modules::GAIN;

@@ -15,15 +15,13 @@ public:
     Module();
     ~Module();
 
+    virtual size_t initialize(size_t input_channels) = 0;
     virtual void prepare(HostAudioConfig host_audio_config);
-    virtual int initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate) = 0;
-    virtual void process(AudioBufferF &buffer, jack_nframes_t nframes) = 0;
-    std::string get_name();
+    virtual void process(AudioBufferF& buffer, size_t nframes) = 0;
 
 protected:
-    int input_channels;
-    int output_channels;
-    std::string name = "Default Module";
+    size_t m_input_channels;
+    size_t m_output_channels;
 };
 
 #endif // MODULE_H

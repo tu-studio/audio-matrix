@@ -25,7 +25,7 @@ TEST(ConfigParser, basic_parse){
                 {
                     std::cout << "\tgain" << std::endl;
                     auto module_gain = std::dynamic_pointer_cast<GainConfig>(mc);
-                    std::cout << "\t\tfactor: " << module_gain->gain << std::endl;
+                    std::cout << "\t\tfactor: " << module_gain->factor << std::endl;
                 }
                 break;
             case Modules::FILTER:
