@@ -1,5 +1,5 @@
 # Set minimum cmake version that is required
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.5)
 
 # Project name
 set(PROJECT_NAME "seamless_audio_matrix")
@@ -35,10 +35,30 @@ foreach (DIR ${SUB_DIRS})
     endif ()
 endforeach ()
 
-# Link all of our libs together
-target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp)
+# Add example yaml config
+add_subdirectory(examples)
+message(STATUS "Config path: ${SIMPLE_WFS_MIXER_CONFIG_PATH}")
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    SIMPLE_WFS_MIXER_CONFIG_PATH="${SIMPLE_WFS_MIXER_CONFIG_PATH}"
+)
 
 include(FetchContent)
+
+FetchContent_Declare(
+  yaml-cpp
+  GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+  GIT_TAG 0.8.0
+)
+FetchContent_GetProperties(yaml-cpp)
+
+if(NOT yaml-cpp_POPULATED)
+  message(STATUS "Fetching yaml-cpp...")
+  FetchContent_Populate(yaml-cpp)
+  add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
+endif()
+
+# Link all of our libs together
+target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp::yaml-cpp)
 
 # This disables the default behavior of adding all targets to the CTest dashboard.
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
@@ -122,6 +142,8 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
     # Link the test executable against gtest_main and google benchmark
     target_link_libraries(Test_${DIR} gtest_main benchmark::benchmark jack lo yaml-cpp)
 
+    get_target_property(COMPILE_DEF ${PROJECT_NAME} COMPILE_DEFINITIONS)
+    target_compile_definitions(Test_${DIR} PRIVATE ${COMPILE_DEF})
     # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
     include(GoogleTest)
     # gtest_discover_tests will register a CTest test for each gtest and run them all in parallel with the rest of the Test.

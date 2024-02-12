@@ -22,8 +22,10 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
 Track::~Track() {
 }
 
-void Track::initialize(int channels, int frames) {
-    m_buffer.initialize(channels, frames);
+void Track::prepare(HostAudioConfig host_audio_config) {
+    for (auto module : m_modules) {
+        module->prepare(host_audio_config);
+    }
 }
 
 void Track::process(jack_nframes_t nframes) {

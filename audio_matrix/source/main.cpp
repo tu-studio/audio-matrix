@@ -95,6 +95,7 @@ void cleanup () {
 int
 main ( int argc, char *argv[] )
 {
+    std::cout << "This is the simple WFS config path " << SIMPLE_WFS_MIXER_CONFIG_PATH << std::endl;
     int i;
     const char **ports;
     const char *client_name;
@@ -150,7 +151,7 @@ main ( int argc, char *argv[] )
 
     jack_nframes_t max_buffersize = jack_get_buffer_size(client); 
 
-    AudioMatrix AudioMatrix("/home/leto/ak-cloud/STUDIO/seamless-v2/seamless_mixer_conf.yml");
+    AudioMatrix AudioMatrix(SIMPLE_WFS_MIXER_CONFIG_PATH);
 
     
     // // TODO: that's not how you do it

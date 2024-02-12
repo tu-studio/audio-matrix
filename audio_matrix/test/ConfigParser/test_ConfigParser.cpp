@@ -7,7 +7,7 @@
 #include <yaml-cpp/yaml.h>
 
 TEST(ConfigParser, basic_parse){
-    std::string file_name = "/home/leto/ak-cloud/STUDIO/seamless-v2/seamless_mixer_conf.yml";
+    std::string file_name = SIMPLE_WFS_MIXER_CONFIG_PATH;
     ConfigParser parser = ConfigParser(file_name);
     std::shared_ptr<AudioMatrixConfig> conf = parser.get_config();
     auto track_wfs = conf->tracks[0];

@@ -1,0 +1,2 @@
+# Wierdly without cache the variable is not set in the global scope
+set(SIMPLE_WFS_MIXER_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/seamless_mixer_conf.yml" CACHE STRING "Path to the seamless mixer configuration file")
