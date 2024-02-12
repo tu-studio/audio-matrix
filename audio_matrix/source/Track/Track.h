@@ -6,11 +6,12 @@
 #include <vector>
 #include <TrackConfig.h>
 #include <Gain.h>
+#include <OSCServer.h>
 
 class Track {
 
 public:
-    Track(const TrackConfig& config);
+    Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_server);
     ~Track();
 
     void initialize(int channels, int frames);

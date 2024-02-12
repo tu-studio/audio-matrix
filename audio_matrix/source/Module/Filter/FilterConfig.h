@@ -18,4 +18,6 @@ struct FilterConfig : ModuleConfig{
     }
 };
 
+typedef std::shared_ptr<FilterConfig> FilterConfigPtr;
+
 #endif //FILTERCONFIG_H

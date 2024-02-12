@@ -15,6 +15,11 @@ OSCServer::~OSCServer() {
     st.reset();
 }
 
+void OSCServer::start() {
+    std::cout << "OSCServer Listening on port " << port << std::endl;
+    st->start();
+}
+
 std::shared_ptr<lo::ServerThread> OSCServer::get_server_thread() {
     return st;
 }

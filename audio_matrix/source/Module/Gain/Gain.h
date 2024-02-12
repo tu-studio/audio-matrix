@@ -7,10 +7,10 @@ class Gain : public Module {
 
 public:
     Gain() = delete;
-    Gain(std::shared_ptr<GainConfig> config);
+    Gain(std::shared_ptr<GainConfig> config, std::shared_ptr<lo::ServerThread> osc_server);
     ~Gain() = default;
 
-    int initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate, std::shared_ptr<lo::ServerThread> = nullptr) override;
+    int initialize(int input_channels, jack_nframes_t nframes, jack_nframes_t sample_rate) override;
     void process(AudioBufferF &buffer, jack_nframes_t nframes) override;
 
     void set_gain(float gain);

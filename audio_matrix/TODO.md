@@ -7,3 +7,4 @@
 - Header zusammenfassen
 - neuen AudioBuffer reinbringen
 - initialize channel num juggling
+- Pfad von yaml datei aus Cmake dynamisch reinklatschen

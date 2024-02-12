@@ -92,25 +92,27 @@ void ConfigParser::parse_module_osc_params(YAML::Node module, std::shared_ptr<Mo
     }
 }
 
-std::shared_ptr<GainConfig> ConfigParser::parse_module_gain(YAML::Node module){
-    GainConfig config;
-    parse_module_osc_params(module, std::make_shared<GainConfig>(config));
+GainConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
+    GainConfigPtr config = std::make_shared<GainConfig>();
+    parse_module_osc_params(module, config);
+    std::cout << config->osc_path << " " << config->osc_controllable << std::endl;
+    
     if (module.IsMap()){
         YAML::Node moduleConfigNode = module.begin()->second;
         if (moduleConfigNode.IsMap()){
             if (moduleConfigNode["factor"].IsDefined()){
-                config.gain = moduleConfigNode["factor"].as<float>();
+                config->gain = moduleConfigNode["factor"].as<float>();
             }
         } else {
-            config.gain = moduleConfigNode.as<float>();
+            config->gain = moduleConfigNode.as<float>();
         }
     }
-    return std::make_shared<GainConfig>(config);
+    return config;
 }
 
 std::shared_ptr<FilterConfig> ConfigParser::parse_module_filter(YAML::Node module){
-    FilterConfig config;
-    parse_module_osc_params(module, std::make_shared<FilterConfig>(config));
+    FilterConfigPtr config = std::make_shared<FilterConfig>();
+    parse_module_osc_params(module, config);
     if(!module.IsMap()){
         std::cout << "Filter missing parameters" << std::endl;
         return nullptr;
@@ -126,11 +128,11 @@ std::shared_ptr<FilterConfig> ConfigParser::parse_module_filter(YAML::Node modul
     if (moduleConfigNode["type"].IsDefined()){
         std::string filter_type = moduleConfigNode["type"].as<std::string>();
         if (filter_type == "HP"){
-            config.type = FilterType::HP;
+            config->type = FilterType::HP;
         } else if (filter_type == "LP"){
-            config.type = FilterType::LP;
+            config->type = FilterType::LP;
         } else if (filter_type == "BP"){
-            config.type = FilterType::BP;
+            config->type = FilterType::BP;
         } else {
             std::cout << "Unknown Filter Type: " << filter_type << std::endl;
         }
@@ -139,12 +141,12 @@ std::shared_ptr<FilterConfig> ConfigParser::parse_module_filter(YAML::Node modul
     }
 
     if (moduleConfigNode["freq"].IsDefined()){
-        config.freq = moduleConfigNode["freq"].as<float>();
+        config->freq = moduleConfigNode["freq"].as<float>();
     } else {
         std::cout << "Filter Frequency undefined" << std::endl;
     }
 
-    return std::make_shared<FilterConfig>(config);
+    return config;
 }
 
 ConfigParser::~ConfigParser(){

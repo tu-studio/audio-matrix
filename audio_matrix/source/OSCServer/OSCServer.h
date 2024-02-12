@@ -10,7 +10,7 @@ class OSCServer
 public:
     OSCServer(int port = 58010);
     ~OSCServer();
-
+    void start();
     std::shared_ptr<lo::ServerThread> get_server_thread();
 
 private:

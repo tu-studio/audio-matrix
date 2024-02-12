@@ -1,6 +1,6 @@
 #include <Track.h>
 
-Track::Track(const TrackConfig& config): m_config(config) {
+Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_server): m_config(config) {
 
         for (const std::shared_ptr<ModuleConfig> module_config : m_config.modules){
             switch (module_config->module_type())
@@ -8,7 +8,7 @@ Track::Track(const TrackConfig& config): m_config(config) {
             case Modules::GAIN:
                 {
                     auto gain_config = std::dynamic_pointer_cast<GainConfig>(module_config);
-                    Gain gain(gain_config);
+                    Gain gain(gain_config , osc_server);
                     std::shared_ptr<Gain> gain_ptr = std::make_shared<Gain>(gain);
                     m_modules.push_back(std::static_pointer_cast<Module>(gain_ptr));
                 }

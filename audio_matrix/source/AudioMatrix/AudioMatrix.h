@@ -19,7 +19,7 @@ private:
     std::vector<Track> tracks;
     std::shared_ptr<AudioMatrixConfig> config;
     ConfigParser config_parser;
-    OSCServer osc_server;
+    OSCServer m_osc_server;
 
 };
 
