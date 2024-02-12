@@ -142,6 +142,8 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
     # Link the test executable against gtest_main and google benchmark
     target_link_libraries(Test_${DIR} gtest_main benchmark::benchmark jack lo yaml-cpp)
 
+    get_target_property(COMPILE_DEF ${PROJECT_NAME} COMPILE_DEFINITIONS)
+    target_compile_definitions(Test_${DIR} PRIVATE ${COMPILE_DEF})
     # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
     include(GoogleTest)
     # gtest_discover_tests will register a CTest test for each gtest and run them all in parallel with the rest of the Test.
