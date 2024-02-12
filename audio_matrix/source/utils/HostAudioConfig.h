@@ -4,11 +4,11 @@
 #include <cstddef>
 
 struct HostAudioConfig {
-    size_t hostBufferSize;
-    double hostSampleRate;
+    size_t m_host_buffer_size;
+    double m_host_sample_rate;
 
     bool operator==(const HostAudioConfig& other) const {
-        return hostBufferSize == other.hostBufferSize && hostSampleRate == other.hostSampleRate;
+        return m_host_buffer_size == other.m_host_buffer_size && m_host_sample_rate == other.m_host_sample_rate;
     }
 
     bool operator!=(const HostAudioConfig& other) const {
