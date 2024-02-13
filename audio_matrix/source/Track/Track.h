@@ -34,6 +34,6 @@ private:
     const TrackConfig& m_config; 
 };
 
-typedef std::shared_ptr<Track> TrackPtr;
+typedef std::unique_ptr<Track> TrackPtr;
 
 #endif // TRACK_H

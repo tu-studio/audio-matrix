@@ -11,6 +11,7 @@ OSCServer::OSCServer(int port) {
 }
 
 OSCServer::~OSCServer() {
+    // TODO: hier scheint es manchmal probleme beim destructen zu geben
     st->stop();
     st.reset();
 }

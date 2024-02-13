@@ -1,7 +1,6 @@
 #include <Track.h>
 
 Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_server): m_config(config) {
-    std::cout << "Track constructor" << std::endl;
     for (const std::shared_ptr<ModuleConfig> module_config : m_config.modules){
         switch (module_config->module_type())
         {
@@ -19,7 +18,6 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
 }
 
 Track::~Track() {
-    std::cout << "Track destructor" << std::endl;
 }
 
 size_t Track::initialize(size_t number_input_channels, size_t output_channel_offset) {
