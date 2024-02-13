@@ -1,10 +1,5 @@
 # TODO
 
-- OSCServer in AudioMatrix als member
-- Im Constructor an Tracks und Modules weitergeben per Referenz
-- Modules registrieren sich bei OSCServer im Constructor
-- path zu config weitergeben cmake
 - Header zusammenfassen
-- neuen AudioBuffer reinbringen
-- initialize channel num juggling
-- Pfad von yaml datei aus Cmake dynamisch reinklatschen
+- Segfault bei OSC Server stop auf den Grund gehen
+- unötige shared_ptr durch unique_ptr oder einfacher ersetzen 
