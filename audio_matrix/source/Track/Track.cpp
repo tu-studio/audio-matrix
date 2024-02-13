@@ -20,29 +20,31 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
 Track::~Track() {
 }
 
-size_t Track::initialize(size_t number_input_channels, size_t output_channel_offset) {
+size_t Track::initialize(size_t n_input_channels, size_t output_channel_offset) {
+    m_max_n_channels = n_input_channels;
     m_output_channel_offset = output_channel_offset;
-    m_number_input_channels = number_input_channels;
-    size_t number_output_channels = number_input_channels;
+    m_n_input_channels = n_input_channels;
+    size_t n_output_channels = n_input_channels;
     for (auto module : m_modules) {
-        number_output_channels = module->initialize(number_output_channels);
-        if (number_output_channels > m_max_number_of_channels) {
-            m_max_number_of_channels = number_output_channels;
+        // every module returns the number of output channels it has with a given number of input channels
+        n_output_channels = module->initialize(n_output_channels);
+        if (n_output_channels > m_max_n_channels) {
+            m_max_n_channels = n_output_channels;
         }
     }
-    m_number_output_channels = number_output_channels;
-    return number_output_channels;
+    m_n_output_channels = n_output_channels;
+    return n_output_channels;
 }
 
 void Track::prepare(HostAudioConfig host_audio_config) {
     for (auto module : m_modules) {
         module->prepare(host_audio_config);
     }
-    m_buffer.initialize(m_max_number_of_channels, host_audio_config.m_host_buffer_size);
+    m_buffer.initialize(m_max_n_channels, host_audio_config.m_host_buffer_size);
 }
 
 void Track::process(float** in, float** out, size_t nframes) {
-    for (size_t i = 0; i < m_number_input_channels; i++) {
+    for (size_t i = 0; i < m_n_input_channels; i++) {
         for (size_t j = 0; j < nframes; j++) {
             m_buffer.setSample(i, j, in[i][j]);
         }
@@ -50,7 +52,7 @@ void Track::process(float** in, float** out, size_t nframes) {
     for (auto& module : m_modules) {
         module->process(m_buffer, nframes);
     }
-    for (size_t i = 0; i < m_number_output_channels; i++) {
+    for (size_t i = 0; i < m_n_output_channels; i++) {
         for (size_t j = 0; j < nframes; j++) {
             out[i + m_output_channel_offset][j] = m_buffer.getSample(i, j);
         }

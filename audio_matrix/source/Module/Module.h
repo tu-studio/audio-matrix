@@ -20,8 +20,8 @@ public:
     virtual void process(AudioBufferF& buffer, size_t nframes) = 0;
 
 protected:
-    size_t m_input_channels;
-    size_t m_output_channels;
+    size_t m_n_input_channels;
+    size_t m_n_output_channels;
 };
 
 #endif // MODULE_H

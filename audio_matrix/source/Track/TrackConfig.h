@@ -11,5 +11,4 @@ struct TrackConfig{
     std::vector<std::shared_ptr<ModuleConfig>> modules;
 };
 
-
 #endif //TRACKCONFIG_H

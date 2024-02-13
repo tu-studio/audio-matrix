@@ -26,13 +26,12 @@ public:
     std::string get_ouput_port_name(size_t channel);
 
 private:
-    std::vector<TrackPtr> tracks;
+    std::vector<TrackPtr> m_tracks;
     AudioMatrixConfig m_audio_matrix_config;
     size_t m_n_output_channels;
     ConfigParser config_parser;
     HostAudioConfig m_host_audio_config;
     OSCServer m_osc_server;
-
 };
 
 

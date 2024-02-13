@@ -10,16 +10,16 @@ Gain::Gain(std::shared_ptr<GainConfig> config, std::shared_ptr<lo::ServerThread>
 }
 
 size_t Gain::initialize(size_t input_channels) {
-    m_input_channels = input_channels;
-    m_output_channels = input_channels;
+    m_n_input_channels = input_channels;
+    m_n_output_channels = input_channels;
     for (size_t i = 0; i < input_channels; i++) {
         m_gain.push_back(m_config->factor);
     }
-    return m_output_channels;
+    return m_n_output_channels;
 }
 
 void Gain::process(AudioBufferF &buffer, size_t nframes) {
-    for (size_t i = 0; i < m_input_channels; i++) {
+    for (size_t i = 0; i < m_n_input_channels; i++) {
         for (size_t j = 0; j < nframes; j++) {
             buffer.setSample(i, j, buffer.getSample(i, j) * m_gain[i]);
         }

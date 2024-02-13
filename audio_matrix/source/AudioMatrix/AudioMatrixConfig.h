@@ -13,6 +13,4 @@ struct AudioMatrixConfig{
     std::vector<TrackConfig> tracks;
 };
 
-typedef std::shared_ptr<AudioMatrixConfig> AudioMatrixConfig_ptr;
-
 #endif //AUDIOMATRIXCONFIG_H
