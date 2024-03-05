@@ -23,9 +23,9 @@ public:
 private:
 
     void parse_module_osc_params(YAML::Node module, std::shared_ptr<ModuleConfig> config);
-    std::shared_ptr<ModuleConfig> parse_module(YAML::Node module);
-    std::shared_ptr<GainConfig> parse_module_gain(YAML::Node module);
-    std::shared_ptr<FilterConfig> parse_module_filter(YAML::Node module);
+    ModuleConfigPtr parse_module(YAML::Node module);
+    ModuleConfigPtr parse_module_gain(YAML::Node module);
+    ModuleConfigPtr parse_module_filter(YAML::Node module);
 
     YAML::Node config;
     std::shared_ptr<AudioMatrixConfig> parsed_config;
