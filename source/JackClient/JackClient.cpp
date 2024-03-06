@@ -65,6 +65,7 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
     }
 
     // tell the JACK server to call `process()' whenever there is work to be done.
+    // before setting the process callback, we need to allocate the input and output ports. Why? this is not exactly clear to me. Is the method `process' called immediately after setting the process callback?
     jack_set_process_callback (m_client, process, this);
 
     // tell the JACK server to call `jack_shutdown()' if it ever shuts down, either entirely, or if it just decides to stop calling us.
@@ -80,6 +81,7 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 
 JackClient::~JackClient() {
     jack_client_close(m_client);
+    // ports need to be freed after the client is closed, otherwise we can run into setfaults
     free (input_ports);
     free (output_ports);
     delete audio_matrix;
