@@ -38,18 +38,6 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 
     audio_matrix = new AudioMatrix(SIMPLE_WFS_MIXER_CONFIG_PATH);
 
-    // tell the JACK server to call `process()' whenever there is work to be done.
-    jack_set_process_callback (m_client, process, this);
-
-    // tell the JACK server to call `jack_shutdown()' if it ever shuts down, either entirely, or if it just decides to stop calling us.
-    jack_on_shutdown (m_client, shutdown, this);
-
-    // registers a function to be called when the maximum buffer size changes
-    jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
-
-    // registers a function to be called when the sample rate changes
-    jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
-
     // create input and output ports
     size_t n_input_channels = audio_matrix->get_n_input_channels();
     size_t n_output_channels = audio_matrix->get_n_output_channels(); 
@@ -75,6 +63,19 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
             exit ( 1 );
         }
     }
+
+    // tell the JACK server to call `process()' whenever there is work to be done.
+    jack_set_process_callback (m_client, process, this);
+
+    // tell the JACK server to call `jack_shutdown()' if it ever shuts down, either entirely, or if it just decides to stop calling us.
+    jack_on_shutdown (m_client, shutdown, this);
+
+    // registers a function to be called when the maximum buffer size changes
+    jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
+
+    // registers a function to be called when the sample rate changes
+    jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
+
 }
 
 JackClient::~JackClient() {
