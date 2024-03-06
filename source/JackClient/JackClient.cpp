@@ -79,12 +79,12 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 }
 
 JackClient::~JackClient() {
+    jack_client_close(m_client);
     free (input_ports);
     free (output_ports);
     delete audio_matrix;
     delete[] in;
     delete[] out;
-    jack_client_close(m_client);
     std::cout << "JackClient destructed!" << std::endl;
 }
 
