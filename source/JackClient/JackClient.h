@@ -2,6 +2,7 @@
 #define JACK_CLIENT_H
 
 #include <jack/jack.h>
+#include <getopt.h>
 #include <AudioMatrix.h>
 
 class JackClient {
@@ -20,6 +21,7 @@ public:
     static int sample_rate_callback(jack_nframes_t nframes, void *arg);
     
 private:
+    void parse_args(int argc, char* argv[]);
 
     jack_client_t* m_client;
     jack_status_t m_status;
@@ -28,6 +30,9 @@ private:
     jack_default_audio_sample_t **in;
     jack_default_audio_sample_t **out;
 
+    std::string m_config_path;
+    const char* m_client_name = nullptr;
+    bool verbose = false;
     AudioMatrix* audio_matrix;
 };
 

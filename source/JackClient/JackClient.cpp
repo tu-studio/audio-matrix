@@ -2,41 +2,47 @@
 
 JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 
-    const char *client_name;
     const char *server_name = NULL;
     int options = JackNullOption;
 
-    // strrchr: locate last occurrence of character in string
-    client_name = strrchr ( argv[0], '/' );
-    if ( client_name == 0 ) {
-        client_name = argv[0];
+    parse_args(argc, argv);
+
+    if (m_config_path.empty()) {
+        std::cerr << "[error] Please provide a config file with --configfile <path/to/configfile>!" << std::endl;
+        exit (EXIT_FAILURE);
     }
-    else {
-        client_name++;
+
+    if (m_client_name == nullptr) {
+        m_client_name = strrchr ( argv[0], '/' );
+        if ( m_client_name == nullptr ) {
+            m_client_name = "jack_client";
+        }
+        else {
+            m_client_name++;
+        }
     }
 
     /* open a client connection to the JACK server */
-    m_client = jack_client_open ( client_name, (jack_options_t) options, &m_status, server_name );
+    m_client = jack_client_open ( m_client_name, (jack_options_t) options, &m_status, server_name );
     if ( m_client == NULL ) {
-        fprintf ( stderr, "jack_client_open() failed, "
-                  "status = 0x%2.0x\n", m_status );
+        fprintf ( stderr, "[error] jack_client_open() failed, status = 0x%2.0x\n", m_status );
         if ( m_status & JackServerFailed )
         {
-            fprintf ( stderr, "Unable to connect to JACK server\n" );
+            fprintf ( stderr, "[error] Unable to connect to JACK server\n" );
         }
         exit ( 1 );
     }
     if ( m_status & JackServerStarted )
     {
-        fprintf ( stderr, "JACK server started\n" );
+        fprintf ( stderr, "[info] JACK server started\n" );
     }
     if ( m_status & JackNameNotUnique )
     {
-        client_name = jack_get_client_name ( m_client );
-        fprintf ( stderr, "unique name `%s' assigned\n", client_name );
+        m_client_name = jack_get_client_name ( m_client );
+        fprintf ( stderr, "[error] unique name `%s' assigned\n", m_client_name );
     }
 
-    audio_matrix = new AudioMatrix(SIMPLE_WFS_MIXER_CONFIG_PATH);
+    audio_matrix = new AudioMatrix(m_config_path);
 
     // create input and output ports
     size_t n_input_channels = audio_matrix->get_n_input_channels();
@@ -50,7 +56,7 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
         input_ports[i] = jack_port_register (m_client, port_name.c_str(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsInput, 0);
         if( input_ports[i] == NULL )
         {
-            fprintf ( stderr, "no more JACK ports available\n" );
+            fprintf ( stderr, "[error] no more JACK ports available\n" );
             exit ( 1 );
         }
     }
@@ -59,7 +65,7 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
         std::string port_name = audio_matrix->get_ouput_port_name(i);
         output_ports[i] = jack_port_register (m_client, port_name.c_str(), JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0 );
         if( output_ports[i] == NULL ) {
-            fprintf ( stderr, "no more JACK ports available\n" );
+            fprintf ( stderr, "[error] no more JACK ports available\n" );
             exit ( 1 );
         }
     }
@@ -87,7 +93,66 @@ JackClient::~JackClient() {
     delete audio_matrix;
     delete[] in;
     delete[] out;
-    std::cout << "JackClient destructed!" << std::endl;
+    std::cout << "[info] JackClient destructed!" << std::endl;
+}
+
+void JackClient::parse_args(int argc, char* argv[]) {
+
+    int c;
+
+    while (true) {
+        int option_index                    = 0;
+        static struct option long_options[] = {
+            {"configfile", required_argument, nullptr, 'c'},
+            {"jackclientname", required_argument, nullptr, 'n'},
+            {"verbose", no_argument, nullptr, 'v'},
+            {"help", no_argument, nullptr, 'h'},
+            {nullptr, 0, nullptr, 0}};
+
+        c = getopt_long(argc, argv, "c:j:vh", long_options, &option_index);
+
+        if (c == -1) { break; }
+
+        switch (c) {
+            case 'c':
+                m_config_path = optarg;
+                break;
+
+            case 'n':
+                m_client_name = optarg;
+                break;
+
+            case 'h':
+                printf(
+                    "commandline arguments for audio-matix:\n"
+                    "--configfile,          -c (path to the audio-matrix configuration file)\n"
+                    "--jackclientname,      -j (name of the jack client)\n"
+                    "--verbose,             -v (be more verbose)\n"
+                    "--help,                -h \n");
+                exit(EXIT_SUCCESS);
+
+            case 'v':
+                verbose = true;
+                break;
+
+            case '?':
+                /* getopt_long already printed an error message. */
+                break;
+
+            default:
+                abort();
+        }
+    }
+
+    if (optind < argc) {
+        printf("non-option ARGV-elements: ");
+
+        while (optind < argc) { printf("%s ", argv[optind++]); }
+
+        printf("\n");
+
+        exit(EXIT_FAILURE);
+    }
 }
 
 void JackClient::prepare() {
@@ -118,7 +183,7 @@ void JackClient::prepare(HostAudioConfig config) {
 
     // Tell the JACK server that we are ready to roll. Our process() callback will start running now.
     if (jack_activate(m_client)) {
-        fprintf ( stderr, "cannot activate client" );
+        fprintf ( stderr, "[error] cannot activate client" );
         exit ( 1 );
     }
 }
@@ -139,20 +204,22 @@ int JackClient::process(jack_nframes_t nframes, void *arg) {
 }
 
 void JackClient::shutdown(void *arg) {
-    std::cout << "Jack server has shut down, exiting ..." << std::endl;
+    std::cout << "[info] Jack server has shut down, exiting ..." << std::endl;
     delete static_cast<JackClient*>(arg);
 }
 
 int JackClient::buffer_size_callback(jack_nframes_t nframes, void *arg) {
     JackClient* jack_client = static_cast<JackClient*>(arg);
     jack_client->prepare(HostAudioConfig(nframes, jack_get_sample_rate(jack_client->m_client)));
-    std::cout << "buffer size changed to " << nframes << std::endl;
+    if (jack_client->verbose)
+        std::cout << "[info] Buffer size changed to " << nframes << std::endl;
     return 0;
 }
 
 int JackClient::sample_rate_callback(jack_nframes_t nframes, void *arg) {
     JackClient* jack_client = static_cast<JackClient*>(arg);
     jack_client->prepare(HostAudioConfig(jack_get_buffer_size(jack_client->m_client), nframes));
-    std::cout << "sample rate changed to " << nframes << std::endl;
+    if (jack_client->verbose)
+        std::cout << "[info] Sample rate changed to " << nframes << std::endl;
     return 0;
 }
