@@ -23,6 +23,8 @@ public:
     size_t get_n_output_channels() { return m_n_output_channels; }
 
     std::string get_name() { return m_config.name; }
+    AudioBufferF& get_buffer() { return m_buffer; }
+    std::vector<std::shared_ptr<Module>>& get_modules() { return m_modules; }
     
 private:
     AudioBufferF m_buffer;
