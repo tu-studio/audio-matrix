@@ -11,9 +11,9 @@ tracks:
           osc_paths: /source/send/wfs
       - gain:
           factor: 1
-      - limiter:
-          type: brickwall
-          threshold: 0
+      # - limiter:
+      #     type: brickwall
+      #     threshold: 0
 #   - name: wfs # listens to OSC path /source/send/wfs if
 #     modules:
 #       - gain: 
