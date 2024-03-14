@@ -17,7 +17,7 @@ OSCServer::~OSCServer() {
 }
 
 void OSCServer::start() {
-    std::cout << "OSCServer Listening on port " << port << std::endl;
+    std::cout << "[info] OSCServer Listening on port " << port << std::endl;
     st->start();
 }
 

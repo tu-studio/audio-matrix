@@ -122,8 +122,10 @@ public:
     // Resizes the buffer to the given number of channels and samples, all data in the buffer is lost    
     void initialize(size_t number_of_channels, size_t size)
     {
-        delete[] m_p_data;
-        delete[] m_p_channels;
+        if (m_p_data != nullptr)
+            delete[] m_p_data;
+        if (m_p_channels != nullptr)
+            delete[] m_p_channels;
         m_number_of_channels = number_of_channels;
         m_size = size;
         allocateMemory();

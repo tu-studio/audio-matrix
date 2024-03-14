@@ -25,9 +25,9 @@ ConfigParser::ConfigParser(std::string config_file){
 
             if (track["name"].IsDefined()){
                 track_config.name = track["name"].as<std::string>();
-                std::cout << "[INFO] parsing track " << track_config.name << std::endl;
+                std::cout << "[info] Parsing track " << track_config.name << std::endl;
             } else {
-                std::cout << "[WARNING] Track has no name" << std::endl;
+                std::cout << "[warning] Track has no name" << std::endl;
             }
 
             
@@ -46,12 +46,12 @@ ConfigParser::ConfigParser(std::string config_file){
                     }
                 }
             } else {
-                std::cout << "[WARNING] Track has no Modules" << std::endl;
+                std::cout << "[warning] Track has no Modules" << std::endl;
             }
             audio_matrix_config.tracks.push_back(track_config);
         }
     } else {
-        std::cout << "[WARNING] No tracks defined" << std::endl;
+        std::cout << "[warning] No tracks defined" << std::endl;
     }
     parsed_config = std::make_shared<AudioMatrixConfig>(audio_matrix_config);
 }
@@ -70,7 +70,7 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
     } else if (name == "filter") {
         return parse_module_filter(module);
     } else {
-        std::cout << "[ERROR] unknown module: " << name << std::endl;
+        std::cout << "[error] Unknown module: " << name << std::endl;
         return nullptr;
     }
     
@@ -98,7 +98,7 @@ void ConfigParser::parse_module_osc_params(YAML::Node module, std::shared_ptr<Mo
         // TODO handle paths being a list
         config->osc_path = oscPathNode.as<std::string>();
     } else if (!config->osc_controllable && oscPathNode.IsDefined()){
-        std::cout << "[ERROR] OSC path missing on module with activated osc receiver" << std::endl;
+        std::cout << "[error] OSC path missing on module with activated osc receiver" << std::endl;
     }
 }
 
@@ -109,7 +109,7 @@ ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
     // parse basic osc params
     parse_module_osc_params(module, config);
     if(config->osc_controllable){
-        std::cout << "[INFO] Module Gain listens to OSC on path: " << config->osc_path << std::endl;
+        std::cout << "[info] Module Gain listens to OSC on path: " << config->osc_path << std::endl;
     }
 
     // get config values from config

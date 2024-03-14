@@ -2,10 +2,10 @@
 
 Gain::Gain(std::shared_ptr<GainConfig> config, std::shared_ptr<lo::ServerThread> osc_server) : m_config(config){
     if (m_config->osc_controllable && osc_server != nullptr){
-        std::cout << "registering function on path " << m_config->osc_path << std::endl;
+        std::cout << "[info] Registering function on path " << m_config->osc_path << std::endl;
         osc_server->add_method(m_config->osc_path, "if", osc_gain_callback, this);
     } else if(m_config->osc_controllable && osc_server == nullptr){
-        std::cout << "osc_server is null" << std::endl;
+        std::cout << "[error] osc_server is null, cannot add gain callback method" << std::endl;
     }
 }
 
