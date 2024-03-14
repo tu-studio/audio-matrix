@@ -1,5 +1,3 @@
 # TODO
 
-- Header zusammenfassen
-- Segfault bei OSC Server stop auf den Grund gehen
-- unötige shared_ptr durch unique_ptr oder einfacher ersetzen 
+- [ ] replace unnessesary shared_ptr with unique_ptr or simpler
