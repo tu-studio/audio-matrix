@@ -7,7 +7,7 @@
 #include <yaml-cpp/yaml.h>
 
 TEST(ConfigParser, basic_parse){
-    std::string file_name = SIMPLE_WFS_MIXER_CONFIG_PATH;
+    std::string file_name = TEST_CONFIG_0;
     ConfigParser parser = ConfigParser(file_name);
     std::shared_ptr<AudioMatrixConfig> conf = parser.get_config();
     auto track_wfs = conf->tracks[0];
@@ -40,10 +40,6 @@ TEST(ConfigParser, basic_parse){
             }
         }
     }
-    // YAML::Node config = parser.get_config();
-
-    // assert(config.IsMap());
-    
 }
 
 

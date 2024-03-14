@@ -1,0 +1,14 @@
+port: 8080
+n_input_channels: 64
+# osc_position_path: /source/pos/ # expect positions in aed format at position_path/aed or at position_path/azim, position_path/elev, position_path/dist
+
+tracks:
+  - name: wfs
+    modules:
+      - gain:
+          factor: 1
+          osc_controllable: true
+          osc_paths: /source/send/wfs
+      - gain:
+          factor: 1
+          
