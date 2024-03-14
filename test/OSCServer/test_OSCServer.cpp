@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <time.h>
 #include <benchmark/benchmark.h>
-#include <OSCReceiver.h>
+#include <OSCServer.h>
 
 #ifndef RANDOMDOUBLE
 #define RANDOMDOUBLE
@@ -12,36 +12,36 @@ static double randomDouble(int LO, int HI){
 
 #endif // RANDOMDOUBLE
 
-static void BM_OSCReceiver_construct_destruct(benchmark::State& state) {
+static void BM_OSCServer_construct_destruct(benchmark::State& state) {
     // Perform setup here
     std::srand(std::time(0));
 
-    std::unique_ptr<OSCReceiver> oscReceiver = nullptr;
+    std::unique_ptr<OSCServer> osc_server = nullptr;
 
     for (auto _ : state) {
     // This code gets timed
-        oscReceiver = std::make_unique<OSCReceiver>();
-        oscReceiver.reset();
+        osc_server = std::make_unique<OSCServer>();
+        osc_server.reset();
     }
 }
 // Register the function as a benchmark
-BENCHMARK(BM_OSCReceiver_construct_destruct);
+BENCHMARK(BM_OSCServer_construct_destruct);
 
-TEST(OSCReceiver, construct_destruct){
+TEST(OSCServer, construct_destruct){
 
-    std::unique_ptr<OSCReceiver> oscReceiver = nullptr;
+    std::unique_ptr<OSCServer> osc_server = nullptr;
 
-    oscReceiver = std::make_unique<OSCReceiver>();
-    oscReceiver.reset();
+    osc_server = std::make_unique<OSCServer>();
+    osc_server.reset();
 
     EXPECT_EQ(
-        oscReceiver,
+        osc_server,
         nullptr
     );
 }
 
-TEST(OSCReceiver, benchmark){
-    benchmark::SetBenchmarkFilter("BM_OSCReceiver_construct_destruct");
+TEST(OSCServer, benchmark){
+    benchmark::SetBenchmarkFilter("BM_OSCServer_construct_destruct");
     benchmark::RunSpecifiedBenchmarks();
     std::cout << "----------------------------------------------------------------------------" << std::endl;
 }
