@@ -126,7 +126,7 @@ jobs:
 
             # We need to import the apple developer certificate so that we can codesign our binaries
             -   name: import certificates (macOS)
-                uses: apple-actions/import-codesign-certs@v1
+                uses: apple-actions/import-codesign-certs@v2
                 if: ${{ matrix.name == 'macOS' }}
                 with:
                     # GitHub encrypted secrets
@@ -139,7 +139,7 @@ jobs:
                 run: |
                     codesign --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${{ env.PROJECT_NAME }}" --deep --strict --options=runtime --timestamp;
                     # The standalone needs to have specific entitlements, which we need to add when we codesign the files. Since we have set the entitlements in the CMakeLists.txt we can use the generated file in the location below
-                    codesign --entitlements "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/JuceLibraryCode/${PLUGINS[$index]}_Standalone.entitlements" --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app" --deep --strict --options=runtime --timestamp;
+                    # codesign --entitlements "${{ env.BUILD_DIR }}/${PLUGINS[$index]}/${PLUGINS[$index]}_artefacts/JuceLibraryCode/${PLUGINS[$index]}_Standalone.entitlements" --force -s "${{ secrets.DEV_ID_APP}}" -v "${{ env.PACKAGE_DIR }}/${PLUGIN_RELEASE_NAMES[$index]}.app" --deep --strict --options=runtime --timestamp;
                     # Here we check the code signitures
                     codesign -dv --verbose=4 "${{ env.PACKAGE_DIR }}/${{ env.PROJECT_NAME }}";
 
