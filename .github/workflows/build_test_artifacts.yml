@@ -108,7 +108,7 @@ jobs:
             # Test the project
             -   name: ctest
                 working-directory: ${{github.workspace}}/build/test
-                run: ctest --VV
+                run: ctest -VV
 
             # Declaring the product name and the packaging directory
             -   name: declare artefact variables
