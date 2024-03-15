@@ -65,5 +65,5 @@ include(cmake/install.cmake)
 # Exclude from all also makes sure that the test libs are not installed
 # https://stackoverflow.com/questions/64900981/how-do-you-prevent-cmake-from-install-ing-targets-from-within-projects-include
 if (BUILD_TESTS)
-    add_subdirectory(test EXCLUDE_FROM_ALL)
+    add_subdirectory(test)
 endif()

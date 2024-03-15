@@ -86,5 +86,5 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
     # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
     include(GoogleTest)
     # gtest_discover_tests will register a CTest test for each gtest and run them all in parallel with the rest of the Test.
-    gtest_discover_tests(Test_${DIR} DISCOVERY_TIMEOUT 120)    
+    gtest_discover_tests(Test_${DIR} DISCOVERY_TIMEOUT 90)    
 endforeach()
