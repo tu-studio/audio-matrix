@@ -9,11 +9,10 @@ project(${PROJECT_NAME} VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(WITH_TESTS "Build tests" ON)
+option(BUILD_TESTS "Build tests" ON)
 
-# Adds a Debug flag to the compiler so that we can use it in the code as preprocessor directive
-# In the FFT class we have lots of debug output that we only want to see when working on it
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+# This disables the default behavior of adding all targets to the CTest dashboard, when adding libraries with the fetchcontent module
+set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 
 # Add all source files to file list
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source/*.h)
@@ -37,24 +36,32 @@ foreach (DIR ${SUB_DIRS})
     endif ()
 endforeach ()
 
+
 include(FetchContent)
 
 FetchContent_Declare(
-  yaml-cpp
-  GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-  GIT_TAG 0.8.0
-)
+    yaml-cpp
+    GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+    GIT_TAG 0.8.0
+    )
 FetchContent_GetProperties(yaml-cpp)
 
+
 if(NOT yaml-cpp_POPULATED)
-  message(STATUS "Fetching yaml-cpp...")
-  FetchContent_Populate(yaml-cpp)
-  add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
+message(STATUS "Fetching yaml-cpp...")
+    FetchContent_Populate(yaml-cpp)
+    # Disable building of tools
+    option(YAML_CPP_BUILD_TOOLS OFF)
+    option(YAML_CPP_INSTALL OFF)
+    option(YAML_CPP_FORMAT_SOURCE OFF)
+    add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
 endif()
 
 # Link all of our libs together
 target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp::yaml-cpp)
 
-if (WITH_TESTS)
+include(cmake/install.cmake)
+
+if (BUILD_TESTS)
     add_subdirectory(test)
 endif()

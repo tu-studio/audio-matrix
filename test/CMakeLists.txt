@@ -2,8 +2,6 @@
 set(TEST_CONFIG_0 "${CMAKE_CURRENT_SOURCE_DIR}/test-configs/test_config_0.yml" CACHE STRING "Path to the test configuration file 0")
 add_compile_definitions(TEST_CONFIG_0="${TEST_CONFIG_0}")
 
-# This disables the default behavior of adding all targets to the CTest dashboard.
-set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 # enable ctest
 include(CTest)
 
