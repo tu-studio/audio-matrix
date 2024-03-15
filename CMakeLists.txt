@@ -9,7 +9,7 @@ project(${PROJECT_NAME} VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(BUILD_TESTS "Build tests" ON)
+option(BUILD_TESTS "Build tests" OFF)
 
 # This disables the default behavior of adding all targets to the CTest dashboard, when adding libraries with the fetchcontent module
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
@@ -62,6 +62,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp::yaml-cpp)
 
 include(cmake/install.cmake)
 
+# Exclude from all also makes sure that the test libs are not installed
+# https://stackoverflow.com/questions/64900981/how-do-you-prevent-cmake-from-install-ing-targets-from-within-projects-include
 if (BUILD_TESTS)
-    add_subdirectory(test)
+    add_subdirectory(test EXCLUDE_FROM_ALL)
 endif()
