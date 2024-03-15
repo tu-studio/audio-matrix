@@ -166,13 +166,8 @@ jobs:
                     # In contrast to dmg files zip files do not need to be codesigned before notarization
                     xcrun notarytool submit ${{ env.PRODUCT_NAME }}.zip --apple-id ${{ secrets.APPLE_DEV_ID }} --password ${{ secrets.APPLE_DEV_PWD }} --team-id ${{ secrets.TEAM_ID }} --wait
                     # Then we need to unzip it and staple the ticket for the gatekeeper to all binaries
-                    # Since we have no app file or vst3 file we can not staple the ticket to the zip file
-                    # unzip ${{ env.PRODUCT_NAME }}.zip && rm ${{ env.PRODUCT_NAME }}.zip
-                    # cd ${{ env.PRODUCT_NAME }}
-                    # xcrun stapler staple -v "${{ env.PROJECT_NAME }}"
-                    # cd ..
-                    # # And finally zip it again
-                    # zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
+                    # Since we have no app file or vst3 file we can not staple the ticket on the excutable
+                    # This is only a problem when the user has no internet connection
                 
             -   name: upload artifact
                 uses: actions/upload-artifact@v4
