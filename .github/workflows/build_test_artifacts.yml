@@ -168,7 +168,7 @@ jobs:
                     # Then we need to unzip it and staple the ticket for the gatekeeper to all binaries
                     unzip ${{ env.PRODUCT_NAME }}.zip && rm ${{ env.PRODUCT_NAME }}.zip
                     cd ${{ env.PRODUCT_NAME }}
-                    xcrun stapler staple "${{ env.PROJECT_NAME }}"
+                    xcrun stapler staple "${{ env.PROJECT_NAME }}" -v
                     cd ..
                     # And finally zip it again
                     zip -vr ${{ env.PRODUCT_NAME }}.zip ${{ env.PRODUCT_NAME }}/ -x "*.DS_Store"
