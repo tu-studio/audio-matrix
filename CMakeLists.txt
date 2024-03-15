@@ -9,7 +9,7 @@ project(${PROJECT_NAME} VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_TESTS "Build tests" ON)
 
 # This disables the default behavior of adding all targets to the CTest dashboard, when adding libraries with the fetchcontent module
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
@@ -36,6 +36,16 @@ foreach (DIR ${SUB_DIRS})
     endif ()
 endforeach ()
 
+# Add include directories for brew installed jack and liblo on macOS
+if (APPLE)
+    if (BUILD_ARCHITECTURE STREQUAL "arm64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
+        target_include_directories(${PROJECT_NAME} PRIVATE /opt/homebrew/include)
+        target_link_directories(${PROJECT_NAME} PRIVATE /opt/homebrew/lib)
+    else ()
+        target_include_directories(${PROJECT_NAME} PRIVATE /usr/local/include)
+        target_link_directories(${PROJECT_NAME} PRIVATE /usr/local/lib)
+    endif()
+endif ()
 
 include(FetchContent)
 

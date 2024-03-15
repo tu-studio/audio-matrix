@@ -1,6 +1,7 @@
 #ifndef GAIN_H
 #define GAIN_H
 
+#include <vector>
 #include <Module.h>
 #include <GainConfig.h>
 class Gain : public Module {

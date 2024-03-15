@@ -62,6 +62,7 @@ jobs:
                 run: |
                     if [ "${{ matrix.name }}" == "macOS" ]; then
                         brew install osxutils jack liblo
+                        echo "brew prefix: $(brew --prefix)"
                     elif [ "${{ matrix.name }}" == "Linux" ]; then
                         sudo apt-get update && sudo apt install jackd2 libjack-jackd2-dev liblo-dev
                     # elif [ "${{ matrix.name }}" == "Windows" ]; then
@@ -90,7 +91,7 @@ jobs:
                 shell: bash
                 run: |
                     if [ "${{ matrix.name }}" == "macOS" ]; then
-                        cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" -DBUILD_TESTS=ON
+                        cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DBUILD_TESTS=ON
                     # elif [ "${{ matrix.name }}" == "Windows" ]; then
                     #     cmake -B build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_C_COMPILER_LAUNCHER=${{ matrix.ccache }} -DCMAKE_CXX_COMPILER_LAUNCHER=${{ matrix.ccache }} -DBUILD_TESTS=ON
                     elif [ "${{ matrix.name }}" == "Linux" ]; then

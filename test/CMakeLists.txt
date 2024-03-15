@@ -78,6 +78,16 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
         endif ()
     endforeach ()
 
+    if (APPLE)
+        if (BUILD_ARCHITECTURE STREQUAL "arm64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "arm64")
+            target_include_directories(Test_${DIR} PRIVATE /opt/homebrew/include)
+            target_link_directories(Test_${DIR} PRIVATE /opt/homebrew/lib)
+        else ()
+            target_include_directories(Test_${DIR} PRIVATE /usr/local/include)
+            target_link_directories(Test_${DIR} PRIVATE /usr/local/lib)
+        endif()
+    endif ()
+
     # Link the test executable against gtest_main and google benchmark
     target_link_libraries(Test_${DIR} gtest_main benchmark::benchmark jack lo yaml-cpp)
 
