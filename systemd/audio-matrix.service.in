@@ -1,0 +1,14 @@
+[Unit]
+Description=@PROJECT_NAME@
+After=jack.service
+Requires=jack.service
+
+[Service]
+Type=notify
+ExecStart=@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@/@PROJECT_NAME@ --configfile @CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_SYSCONFDIR@/@PROJECT_NAME@/@PROJECT_NAME@-conf.yml
+LimitRTPRIO=95
+LimitRTTIME=infinity
+LimitMEMLOCK=infinity
+
+[Install]
+WantedBy=default.target

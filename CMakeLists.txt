@@ -83,9 +83,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC jack lo yaml-cpp::yaml-cpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}${INSTALL_POSTFIX}")
 
 include(cmake/install.cmake)
+add_subdirectory(systemd)
 
 # Exclude from all also makes sure that the test libs are not installed
 # https://stackoverflow.com/questions/64900981/how-do-you-prevent-cmake-from-install-ing-targets-from-within-projects-include
+# but this is not a good solution, TODO: find a better solution
 if (BUILD_TESTS)
     add_subdirectory(test)
 endif()
