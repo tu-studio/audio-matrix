@@ -1,9 +1,21 @@
 # Set minimum cmake version that is required
 cmake_minimum_required(VERSION 3.5)
 
+execute_process(COMMAND git describe --dirty
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                OUTPUT_VARIABLE PROJECT_VERSION_FULL
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+execute_process(COMMAND git describe --tags --abbrev=0
+                WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                OUTPUT_VARIABLE PROJECT_VERSION_SHORT
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+message(STATUS "Project version: ${PROJECT_VERSION_FULL}")
+
 # Project name
 set(PROJECT_NAME "audio-matrix")
-project(${PROJECT_NAME} VERSION 0.0.1)
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION_SHORT})
 
 # Set cpp standard to c++20, otherwise std::numbers library will not be found
 set(CMAKE_CXX_STANDARD 20)
@@ -19,7 +31,7 @@ set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source/*.h)
 
 if (VERSIONED_INSTALL)
-    set(INSTALL_POSTFIX "-${PROJECT_VERSION}")
+    set(INSTALL_POSTFIX "-${PROJECT_VERSION_FULL}")
 else()
     set(INSTALL_POSTFIX "")
 endif()
