@@ -8,3 +8,8 @@ install(TARGETS ${PROJECT_NAME}
     # these get default values from GNUInstallDirs
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# create symlinks for the binary when versioned installation is enabled
+if (VERSIONED_INSTALL)
+    install(CODE "execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${PROJECT_NAME}${INSTALL_POSTFIX} ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${PROJECT_NAME})")
+endif()
