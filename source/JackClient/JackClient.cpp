@@ -87,13 +87,22 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 }
 
 JackClient::~JackClient() {
+    std::cout << "[debug] JackClient deactivated!" << std::endl;
+
     jack_deactivate(m_client);
+
     sleep(1);
+    std::cout << "[debug] JackClient closed!" << std::endl;
     jack_client_close(m_client);
     // ports need to be freed after the client is closed, otherwise we can run into setfaults
+    sleep(1);
+    std::cout << "[debug] JackClient freeing inputs!" << std::endl;
+
     free (input_ports);
     free (output_ports);
+    sleep(1);
     delete audio_matrix;
+    sleep(1);
     delete[] in;
     delete[] out;
     std::cout << "[info] JackClient destructed!" << std::endl;
