@@ -86,6 +86,7 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 }
 
 JackClient::~JackClient() {
+    jack_deactivate(m_client);
     jack_client_close(m_client);
     // ports need to be freed after the client is closed, otherwise we can run into setfaults
     free (input_ports);
