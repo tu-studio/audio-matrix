@@ -11,6 +11,7 @@
 #include <ModuleConfig.h>
 #include <GainConfig.h>
 #include <FilterConfig.h>
+#include <AmbiEncoderConfig.h>
 
 class ConfigParser
 {
@@ -26,6 +27,7 @@ private:
     ModuleConfigPtr parse_module(YAML::Node module);
     ModuleConfigPtr parse_module_gain(YAML::Node module);
     ModuleConfigPtr parse_module_filter(YAML::Node module);
+    ModuleConfigPtr parse_module_ambi_encoder(YAML::Node module);
 
     YAML::Node config;
     std::shared_ptr<AudioMatrixConfig> parsed_config;

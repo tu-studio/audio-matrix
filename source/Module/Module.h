@@ -13,7 +13,7 @@ class Module {
 
 public:
     Module();
-    ~Module();
+    virtual ~Module();
 
     virtual size_t initialize(size_t input_channels) = 0;
     virtual void prepare(HostAudioConfig host_audio_config);
