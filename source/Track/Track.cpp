@@ -1,16 +1,25 @@
 #include <Track.h>
+#define CASE_MODULE(module_type, config_class, module_class) case module_type: \
+        {                                                                                       \
+                auto module_config_cast = std::dynamic_pointer_cast<config_class>(module_config);        \
+                std::shared_ptr<module_class> module = std::make_shared<module_class>(module_config_cast, osc_server);   \
+                m_modules.push_back(std::static_pointer_cast<Module>(module));                    \
+            }   \
+            break;
+
 
 Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_server): m_config(config) {
     for (const std::shared_ptr<ModuleConfig> module_config : m_config.modules){
         switch (module_config->module_type())
         {
-        case Modules::GAIN:
-            {
-                auto gain_config = std::dynamic_pointer_cast<GainConfig>(module_config);
-                std::shared_ptr<Gain> gain = std::make_shared<Gain>(gain_config, osc_server);
-                m_modules.push_back(std::static_pointer_cast<Module>(gain));
-            }
-            break;
+        CASE_MODULE(Modules::GAIN, GainConfig, Gain);
+        // case Modules::GAIN:
+        //     {
+        //         auto gain_config = std::dynamic_pointer_cast<GainConfig>(module_config);
+        //         std::shared_ptr<Gain> gain = std::make_shared<Gain>(gain_config, osc_server);
+        //         m_modules.push_back(std::static_pointer_cast<Module>(gain));
+        //     }
+        //     break;
         default:
             break;
         }
