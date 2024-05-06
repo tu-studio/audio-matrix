@@ -18,11 +18,12 @@ class SphericalHarmonics {
 
         void update_spherical_harmonics(float azim, float elev, float dist, std::vector<float>& sh_container){
             int i = 0;
+            float distance_gain = dist <= 1.0 ? 1.0 : 1/sqrt(dist);
             for (int n = 0; n <= m_order;n++){
                 for (int m = -n; m <= n; m++){
                     float a_factor = (m<0) ? sin(abs(m) * azim) : cos(abs(m) * azim);
                     float l = legendre(n, m, elev);
-                    sh_container[i] = m_norm_factors[i] * a_factor * l;
+                    sh_container[i] = m_norm_factors[i] * a_factor * l * distance_gain;
                     i++;
                 }
             }
