@@ -30,6 +30,7 @@ class AmbiEncoder : public Module{
         static int osc_pos_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data);
 
         AmbiEncoderConfigPtr m_config;
+        // TODO in ein struct zusammenfuehren
         std::vector<float> m_azimuth, m_elevation, m_distance;
         AudioBufferF m_buffer;
         

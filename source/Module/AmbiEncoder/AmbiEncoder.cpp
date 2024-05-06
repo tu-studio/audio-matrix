@@ -34,9 +34,10 @@ void AmbiEncoder::prepare(HostAudioConfig host_audio_config){
 
 void AmbiEncoder::process(AudioBufferF &buffer, size_t nframes){
     m_buffer.clear();
+    // TODO implement smoothing, saving of previous SH buffer
     for (size_t in_channel = 0; in_channel < m_n_input_channels; in_channel++) {
         update_spherical_harmonics(in_channel);
-
+        // TODO wenn geaendert ramp
         for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
 
             for (size_t j = 0; j < nframes; j++){
@@ -62,6 +63,7 @@ void AmbiEncoder::set_aed(size_t channel, float azimuth, float elevation, float 
     m_azimuth[channel] = azimuth;
     m_elevation[channel] = elevation;
     m_distance[channel] = distance;
+    // TODO set m_is_changed = True
 }
 
 
@@ -73,10 +75,10 @@ void AmbiEncoder::update_spherical_harmonics(size_t channel){
 }
 
 
-int AmbiEncoder::osc_pos_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data){
-    std::ignore = path;
-    std::ignore = types;
-    std::ignore = data;
+int AmbiEncoder::osc_pos_callback([[ maybe_unused ]] const char *path,[[ maybe_unused ]] const char *types, lo_arg **argv, int argc, [[ maybe_unused ]] lo_message data, void *user_data){
+    // std::ignore = path;
+    // std::ignore = types;
+    // std::ignore = data;
     if(argc==4){
         AmbiEncoder* ambi_encoder = (AmbiEncoder*) user_data;
         ambi_encoder->set_aed(argv[0]->i, argv[1]->f, argv[2]->f, argv[3]->f);
