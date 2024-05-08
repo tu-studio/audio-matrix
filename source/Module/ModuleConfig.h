@@ -9,7 +9,8 @@ enum Modules{
     GAIN,
     FILTER,
     DISTANCE_COMPENSATOR,
-    SUM
+    SUM,
+    AMBI_ENCODER,
 };
 
 struct ModuleConfig{

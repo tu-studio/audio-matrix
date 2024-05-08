@@ -15,9 +15,9 @@ void cleanup () {
 
 int main ( int argc, char *argv[] ) {
 
+    // Initialize jack client. No explicit call to jackClient.prepare() is needed, since the registered samplerate callback does that for us.
     jackClient = new JackClient(argc, argv);
-
-    jackClient->prepare();
+    std::cout << "[info] initialized jack client" << std::endl;
 
     /* install a signal handler to properly quit the jack client */
 #ifdef WIN32

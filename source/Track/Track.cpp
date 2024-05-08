@@ -11,6 +11,12 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
                 m_modules.push_back(std::static_pointer_cast<Module>(gain));
             }
             break;
+        case Modules::AMBI_ENCODER:
+            {
+                auto ambi_config = std::dynamic_pointer_cast<AmbiEncoderConfig>(module_config);
+                std::shared_ptr<AmbiEncoder> ambi_encoder = std::make_shared<AmbiEncoder>(ambi_config, osc_server);
+                m_modules.push_back(std::static_pointer_cast<Module> (ambi_encoder));
+            }
         default:
             break;
         }

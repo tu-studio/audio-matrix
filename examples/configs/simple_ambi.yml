@@ -1,0 +1,85 @@
+port: 8080
+n_input_channels: 64
+# osc_position_path: /source/pos/ # expect positions in aed format at position_path/aed or at position_path/azim, position_path/elev, position_path/dist
+
+tracks:
+  - name: hoa
+    modules:
+      - gain:
+          factor: 1
+          osc_controllable: true
+          osc_paths: /source/send/hoa
+      - hoa_encoder:
+          order: 3
+          osc_controllable: true
+          osc_paths: /source/pos/aed
+      - gain:
+          factor: 1
+      # - limiter:
+      #     type: brickwall
+      #     threshold: 0
+#   - name: wfs # listens to OSC path /source/send/wfs if
+#     modules:
+#       - gain:
+#           factor: 1
+#           osc_controllable: true
+#           osc_paths: wfs  # implicitely add /gain or other module specific values to that path
+#       - filter:
+#           type: HP # HP/LP
+#           freq: 100 # in Hz
+#       - gain:
+#           factor: 1
+#       - limiter:
+#           type: brickwall
+#           threshold: 0
+#       - delay:
+#           time: 0 # in ms
+
+#   - name: hoa
+#     modules:
+#       - gain:
+#           factor: 1
+#           osc_controllable: true
+#           osc_paths: hoa
+#       - distance_compensator:
+#       - hoa_encoder:
+#           order: 3
+#       - filter:
+#           type: HP # HP/LP
+#           freq: 100 # in Hz
+#       - gain: 5
+#       - limiter:
+#           type: brickwall
+#           threshold: 0
+#       - delay: 20 # in ms
+
+#   - name: lfe
+#     modules:
+#       - gain: 1
+#         osc_controllable: true
+#         osc_paths: lfe
+#       - sum:
+#       - filter:
+#           type: LP
+#           freq: 120
+#       - gain: 1
+#       - limiter:
+#           type: brickwall
+#           threshold: -3
+#       - delay: 30 # in ms
+
+#   - name: lf_crossover
+#     modules:
+#       - gain: 1
+#         osc_controllable: true
+#         osc_paths: [wfs, hoa]
+#       - distance_compensator
+#       - sum
+#       - filter:
+#           type: LP
+#           freq: 120
+#       - gain: 1
+#       - limiter:
+#           type: brickwall
+#           threshold: -3
+#       - delay: 30 # in ms

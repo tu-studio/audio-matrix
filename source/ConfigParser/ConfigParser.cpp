@@ -69,6 +69,8 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
         return parse_module_gain(module);
     } else if (name == "filter") {
         return parse_module_filter(module);
+    } else if (name == "hoa_encoder") {
+        return parse_module_ambi_encoder(module);
     } else {
         std::cout << "[error] Unknown module: " << name << std::endl;
         return nullptr;
@@ -162,6 +164,28 @@ ModuleConfigPtr ConfigParser::parse_module_filter(YAML::Node module){
         std::cout << "Filter Frequency undefined" << std::endl;
     }
 
+    return config;
+}
+
+ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
+    AmbiEncoderConfigPtr config = std::make_shared<AmbiEncoderConfig>();
+    parse_module_osc_params(module, config);
+    if(!module.IsMap()){
+        std::cout << "Ambisonics encoder missing parameters" << std::endl;
+        return nullptr;
+    }
+
+    YAML::Node moduleConfigNode = module.begin()->second;
+    if (!moduleConfigNode.IsMap()){
+        std::cout << "Ambisonics encoder missing parameters" << std::endl;
+        return nullptr;
+    }
+
+    if (moduleConfigNode["order"].IsDefined()){
+        config->order = moduleConfigNode["order"].as<int>();
+    } else {
+        std::cout << "Ambisonics encoder order unspecified" << std::endl;
+    }
     return config;
 }
 

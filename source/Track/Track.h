@@ -6,6 +6,7 @@
 #include <vector>
 #include <TrackConfig.h>
 #include <Gain.h>
+#include <AmbiEncoder.h>
 #include <OSCServer.h>
 #include <HostAudioConfig.h>
 
