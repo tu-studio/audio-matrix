@@ -6,7 +6,13 @@
 #include <AmbiEncoderConfig.h>
 #include <HostAudioConfig.h>
 #include <SphericalHarmonics.h>
+#include <atomic>
 
+struct PositionAED {
+    float azim;
+    float elev;
+    float dist;
+};
 
 class AmbiEncoder : public Module{
     public:
@@ -30,16 +36,14 @@ class AmbiEncoder : public Module{
         static int osc_pos_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data);
 
         AmbiEncoderConfigPtr m_config;
-        // TODO in ein struct zusammenfuehren
-        std::vector<float> m_azimuth, m_elevation, m_distance;
+        std::vector<PositionAED> m_position;
+        
         AudioBufferF m_buffer;
         
         SphericalHarmonics m_sh;
-        std::vector<float> m_sh_container;
-
-
-
-
+        std::vector<std::vector<float>> m_sh_containers;
+        std::vector<std::vector<float>> m_sh_containers_prev;
+        std::vector<bool> m_position_changed;
 
 };
 

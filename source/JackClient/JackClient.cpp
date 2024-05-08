@@ -77,11 +77,14 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
     // tell the JACK server to call `jack_shutdown()' if it ever shuts down, either entirely, or if it just decides to stop calling us.
     jack_on_shutdown (m_client, shutdown, this);
 
-    // registers a function to be called when the maximum buffer size changes
-    jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
-
+    std::cout << "[debug] registering sample rate callback" << std::endl;
     // registers a function to be called when the sample rate changes
     jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
+
+    // registers a function to be called when the maximum buffer size changes
+    std::cout << "[debug] registering buffer size callback" << std::endl;
+    jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
+
 
 }
 
@@ -161,8 +164,10 @@ void JackClient::prepare() {
 
 void JackClient::prepare(HostAudioConfig config) {
     // TODO: shall the client be deactivated before preparing?
-
+    std::cout << "[debug] entering audio matrix prepare with HostAudioConfig buffer_size="  << config.m_host_buffer_size << ", sr=" << config.m_host_sample_rate << std::endl;
     audio_matrix->prepare(config);
+    std::cout << "[debug] exiting audio matrix prepare" << std::endl;
+
 
     size_t n_input_channels = audio_matrix->get_n_input_channels();
     size_t n_output_channels = audio_matrix->get_n_output_channels(); 

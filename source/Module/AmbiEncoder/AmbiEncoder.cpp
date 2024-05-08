@@ -16,15 +16,18 @@ size_t AmbiEncoder::initialize(size_t input_channels) {
     int power_order = m_config->order + 1;
     m_n_output_channels = power_order * power_order;
 
-    // initialize position arrays
-    for (size_t i = 0; i < input_channels; i++) {
-        m_azimuth.push_back(0); 
-        m_elevation.push_back(0); 
-        m_distance.push_back(1);
-    }
+    // initialize position arrays and containers for spherical harmonics
+    // for (size_t i = 0; i < input_channels; i++) {
+    //     m_position.push_back({0,0,1});
+    //     m_sh_containers.push_back(std::vector<float>(m_n_output_channels));
+    //     m_sh_containers_prev.push_back(std::vector<float>(m_n_output_channels));
+    //     m_position_changed.push_back(true);
+    // }
+    m_position = std::vector<PositionAED>(m_n_input_channels, {0,0,1});
+    m_sh_containers = std::vector<std::vector<float>>(m_n_input_channels, std::vector<float>(m_n_output_channels, 0));
+    m_sh_containers_prev = std::vector<std::vector<float>>(m_n_input_channels, std::vector<float>(m_n_output_channels, 0));
+    m_position_changed = std::vector<bool>(m_n_input_channels, true);
 
-    // initialize container for spherical harmonics
-    m_sh_container.resize(m_n_output_channels);
     return m_n_output_channels;
 }
 
@@ -36,15 +39,31 @@ void AmbiEncoder::process(AudioBufferF &buffer, size_t nframes){
     m_buffer.clear();
     // TODO implement smoothing, saving of previous SH buffer
     for (size_t in_channel = 0; in_channel < m_n_input_channels; in_channel++) {
-        update_spherical_harmonics(in_channel);
-        // TODO wenn geaendert ramp
-        for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
+        if (m_position_changed[in_channel]){
+            m_position_changed[in_channel] = false;
+            update_spherical_harmonics(in_channel);
+            // std::cout << "source " << in_channel <<" changed: " << m_sh_containers_prev[in_channel][0] << "->" << m_sh_containers[in_channel][0] << std::endl;
 
-            for (size_t j = 0; j < nframes; j++){
-                float sample = m_buffer.getSample(out_channel, j) + buffer.getSample(in_channel, j) * m_sh_container[out_channel];
-                m_buffer.setSample(out_channel, j, sample);
+            for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
+                float sh_prev = m_sh_containers_prev[in_channel][out_channel];
+                float sh_new = m_sh_containers[in_channel][out_channel];
+                float stepsize = (sh_new-sh_prev) / nframes;
+                for (size_t j = 0; j < nframes; j++){
+                    float sample = m_buffer.getSample(out_channel, j) + buffer.getSample(in_channel, j) * (sh_prev + j *stepsize);
+                    m_buffer.setSample(out_channel, j, sample);
+                }
+
+                // update sh in prev container
+                m_sh_containers_prev[in_channel][out_channel] = sh_new;
             }
-        }
+        } else {
+            for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
+                for (size_t j = 0; j < nframes; j++){
+                    float sample = m_buffer.getSample(out_channel, j) + buffer.getSample(in_channel, j) * m_sh_containers_prev[in_channel][out_channel];
+                    m_buffer.setSample(out_channel, j, sample);
+                }
+            }
+        }        
     }
 
     for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
@@ -60,16 +79,17 @@ void AmbiEncoder::set_aed(size_t channel, float azimuth, float elevation, float 
         return;
     }
     std::cout << "updated position for source " << channel << std::endl;
-    m_azimuth[channel] = azimuth;
-    m_elevation[channel] = elevation;
-    m_distance[channel] = distance;
+    m_position[channel].azim = azimuth;
+    m_position[channel].elev = elevation;
+    m_position[channel].dist = distance;
+    m_position_changed[channel] = true;
     // TODO set m_is_changed = True
 }
 
 
 
 void AmbiEncoder::update_spherical_harmonics(size_t channel){
-    m_sh.update_spherical_harmonics(m_azimuth[channel], m_elevation[channel], m_distance[channel], m_sh_container);
+    m_sh.update_spherical_harmonics(m_position[channel].azim, m_position[channel].elev, m_position[channel].dist, m_sh_containers[channel]);
     
     // TODO
 }
