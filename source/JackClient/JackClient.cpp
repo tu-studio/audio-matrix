@@ -77,14 +77,15 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
     // tell the JACK server to call `jack_shutdown()' if it ever shuts down, either entirely, or if it just decides to stop calling us.
     jack_on_shutdown (m_client, shutdown, this);
 
-    std::cout << "[debug] registering sample rate callback" << std::endl;
-    // registers a function to be called when the sample rate changes
-    jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
+
 
     // registers a function to be called when the maximum buffer size changes
     std::cout << "[debug] registering buffer size callback" << std::endl;
     jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
 
+    std::cout << "[debug] registering sample rate callback" << std::endl;
+    // registers a function to be called when the sample rate changes
+    jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
 
 }
 
