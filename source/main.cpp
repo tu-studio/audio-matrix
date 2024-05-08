@@ -17,7 +17,7 @@ int main ( int argc, char *argv[] ) {
 
     jackClient = new JackClient(argc, argv);
 
-    jackClient->prepare();
+    //jackClient->prepare();
 
     /* install a signal handler to properly quit the jack client */
 #ifdef WIN32
