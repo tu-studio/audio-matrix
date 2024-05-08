@@ -78,14 +78,16 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
     jack_on_shutdown (m_client, shutdown, this);
 
 
-
-    // registers a function to be called when the maximum buffer size changes
-    std::cout << "[debug] registering buffer size callback" << std::endl;
-    jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
-
-    std::cout << "[debug] registering sample rate callback" << std::endl;
     // registers a function to be called when the sample rate changes
+    std::cout << "[debug] registering sample rate callback" << std::endl;
     jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
+
+    // TODO reenable changing of buffer size. when this is called before jack_set_sample_rate_callback the callback is executed multiple times, and when exiting the program jack crashes...
+    // // registers a function to be called when the maximum buffer size changes
+    // std::cout << "[debug] registering buffer size callback" << std::endl;
+    // jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
+
+
 
 }
 
