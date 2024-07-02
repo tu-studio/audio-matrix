@@ -2,7 +2,7 @@
 
 AmbiEncoder::AmbiEncoder(AmbiEncoderConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server): m_config(config){
     if (m_config->osc_controllable && osc_server != nullptr){
-        std::cout << "[info] Registering function on path " << m_config->osc_path << std::endl;
+        std::cout << "[info] Ambi Decoder listening for positional data in format (source id, azim, elev, dist) on path " << m_config->osc_path << std::endl;
         osc_server->add_method(m_config->osc_path, "ifff", osc_pos_callback, this);
     } else if(m_config->osc_controllable && osc_server == nullptr){
         std::cout << "[error] osc_server is null, cannot add ambi encoder callback method" << std::endl;

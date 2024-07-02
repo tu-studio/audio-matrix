@@ -17,6 +17,15 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
                 std::shared_ptr<AmbiEncoder> ambi_encoder = std::make_shared<AmbiEncoder>(ambi_config, osc_server);
                 m_modules.push_back(std::static_pointer_cast<Module> (ambi_encoder));
             }
+            break;
+        case Modules::SUM:
+            {
+                auto sum_config = std::dynamic_pointer_cast<SumConfig>(module_config);
+                std::shared_ptr<Sum> sum = std::make_shared<Sum>(sum_config, osc_server);
+                m_modules.push_back(std::static_pointer_cast<Module> (sum));
+
+            }
+            break;
         default:
             break;
         }
@@ -27,6 +36,8 @@ Track::~Track() {
 }
 
 size_t Track::initialize(size_t n_input_channels, size_t output_channel_offset) {
+    std::cout << "[debug] starting init for track " << m_config.name << std::endl;
+    
     m_max_n_channels = n_input_channels;
     m_output_channel_offset = output_channel_offset;
     m_n_input_channels = n_input_channels;
@@ -37,6 +48,7 @@ size_t Track::initialize(size_t n_input_channels, size_t output_channel_offset) 
         if (n_output_channels > m_max_n_channels) {
             m_max_n_channels = n_output_channels;
         }
+        std::cout << "[debug] initialized module with " << n_output_channels << " output channels" << std::endl;
     }
     m_n_output_channels = n_output_channels;
     return n_output_channels;

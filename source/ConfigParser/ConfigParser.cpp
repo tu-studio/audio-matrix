@@ -64,13 +64,15 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
     } else if (module.IsScalar()){
         name = module.as<std::string>(); 
     }
-
+    std::cout << "[debug] \t parsing module: " << name << std::endl;
     if (name == "gain"){
         return parse_module_gain(module);
     } else if (name == "filter") {
         return parse_module_filter(module);
     } else if (name == "hoa_encoder") {
         return parse_module_ambi_encoder(module);
+    } else if (name == "sum") {
+        return parse_module_sum(module);
     } else {
         std::cout << "[error] Unknown module: " << name << std::endl;
         return nullptr;
@@ -110,9 +112,6 @@ ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
 
     // parse basic osc params
     parse_module_osc_params(module, config);
-    if(config->osc_controllable){
-        std::cout << "[info] Module Gain listens to OSC on path: " << config->osc_path << std::endl;
-    }
 
     // get config values from config
     if (module.IsMap()){
@@ -127,6 +126,12 @@ ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
     }
     return config;
 }
+
+ModuleConfigPtr ConfigParser::parse_module_sum(YAML::Node module){
+    SumConfigPtr config = std::make_shared<SumConfig>();
+    return config;
+}
+
 
 ModuleConfigPtr ConfigParser::parse_module_filter(YAML::Node module){
     FilterConfigPtr config = std::make_shared<FilterConfig>();

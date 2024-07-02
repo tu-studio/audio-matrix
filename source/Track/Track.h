@@ -5,8 +5,11 @@
 #include <Module.h>
 #include <vector>
 #include <TrackConfig.h>
+
 #include <Gain.h>
 #include <AmbiEncoder.h>
+#include <Sum.h>
+
 #include <OSCServer.h>
 #include <HostAudioConfig.h>
 
