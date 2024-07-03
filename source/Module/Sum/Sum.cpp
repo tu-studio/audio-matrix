@@ -9,9 +9,10 @@ size_t Sum::initialize(size_t input_channels) {
 }
 
 void Sum::process(AudioBufferF &buffer, size_t nframes) {
-    for (size_t i = 0; i < m_n_input_channels; i++) {
-        for (size_t j = 0; j < nframes; j++) {
-            buffer.setSample(1, j, buffer.getSample(i, j));
+    // skip first channel, since we use that one as a base to add all other channels
+    for (size_t channel = 1; channel < m_n_input_channels; channel++) {
+        for (size_t sample = 0; sample < nframes; sample++) {
+            buffer.setSample(0, sample, buffer.getSample(0,sample) + buffer.getSample(channel, sample));
         }
     }
 }
