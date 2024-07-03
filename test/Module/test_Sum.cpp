@@ -15,7 +15,16 @@ TEST(Sum, simple_test){
     {
         for (size_t j = 0; j < frames; j++)
         {
-            buffer.setSample(i, j, 1); 
+            buffer.setSample(i, j, 1.0f); 
+        }
+        
+    }
+
+    for (size_t i = 0; i < channels; i++)
+    {
+        for (size_t j = 0; j < frames; j++)
+        {
+            EXPECT_FLOAT_EQ(1.0, buffer.getSample(i, j));
         }
         
     }
