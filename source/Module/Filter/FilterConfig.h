@@ -12,6 +12,7 @@ enum FilterType {
 struct FilterConfig : ModuleConfig{
     float freq;
     FilterType type;
+    int order;
     
     const Modules module_type() const override {
         return Modules::FILTER;
