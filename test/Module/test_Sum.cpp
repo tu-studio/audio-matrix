@@ -24,7 +24,7 @@ TEST(Sum, simple_test){
     {
         for (size_t j = 0; j < frames; j++)
         {
-            EXPECT_FLOAT_EQ(1.0, buffer.getSample(i, j));
+            EXPECT_FLOAT_EQ( 1.0, buffer.getSample(i, j) );
         }
         
     }
@@ -32,7 +32,7 @@ TEST(Sum, simple_test){
     s.process(buffer, frames);
     for (size_t i = 0; i < frames; i++)
     {
-        EXPECT_FLOAT_EQ(1.0 * channels, buffer.getSample(0, i));
+        EXPECT_FLOAT_EQ( 1.0 * channels, buffer.getSample(0, i) );
     }
     
     

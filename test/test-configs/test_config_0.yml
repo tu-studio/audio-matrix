@@ -1,9 +1,28 @@
 port: 8080
 n_input_channels: 64
-# osc_position_path: /source/pos/ # expect positions in aed format at position_path/aed or at position_path/azim, position_path/elev, position_path/dist
 
 tracks:
-  - name: wfs
+  - name: test_track
     modules:
       - gain:
-          factor: 1
+          factor: 3
+          osc_paths: "/gain"
+  - name: test_track_2
+    modules:
+      - gain: 3
+      - gain:
+      - gain: test
+      - sum
+      - sum:
+      - filter: HP
+      - filter:
+          type: LP
+          freq: 1000
+          order: 1
+  - name: test_track_ambisonics
+    modules:
+      - hoa_encoder
+      - hoa_encoder: 2
+      - hoa_encoder:
+          order: 3
+          osc_path: "/pos"

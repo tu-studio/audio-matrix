@@ -56,14 +56,47 @@ ConfigParser::ConfigParser(std::string config_file){
     parsed_config = std::make_shared<AudioMatrixConfig>(audio_matrix_config);
 }
 
+template <typename T>
+T ConfigParser::get_config_option(YAML::Node module, const std::string &option_name, T default_value, bool is_main_parameter, bool is_required, bool warn_when_default){
+    
+    if (module.IsMap()){
+        YAML::Node moduleConfigNode = module.begin()->second;
+        if (moduleConfigNode.IsMap()){
+            if (moduleConfigNode[option_name].IsDefined()){
+                try {
+                    return moduleConfigNode[option_name].as<T>();
+                } catch (const YAML::BadConversion& e){
+                    std::cout << "[warn] Invalid value for parameter " << option_name << std::endl;
+                }
+            }
+        } else if (is_main_parameter) {
+            // special case for modules that have just one config option, which can be specified in the config file using "module_name: value"
+            try {
+                return moduleConfigNode.as<T>();
+            } catch (const YAML::BadConversion& e){
+                std::cout << "[warn] Invalid value for parameter " << option_name << std::endl;
+            }
+        }
+    }
+    if (is_required) {
+        std::cout << "[error] Module missing required parameter " << option_name << std::endl;
+        // TODO exit here
+    }
+    if (warn_when_default)
+        std::cout << "[warn] using default value \"" << default_value << "\"" << std::endl;
+    return default_value;
+}
+
 std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
     std::string name;
 
+    // get name of module
     if (module.IsMap()){
         name = module.begin()->first.as<std::string>(); 
     } else if (module.IsScalar()){
         name = module.as<std::string>(); 
     }
+
     std::cout << "[debug] \t parsing module: " << name << std::endl;
     if (name == "gain"){
         return parse_module_gain(module);
@@ -81,29 +114,36 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
 }
 
 void ConfigParser::parse_module_osc_params(YAML::Node module, std::shared_ptr<ModuleConfig> config){
-    if (!module.IsMap()){
-        return;
-    }
-
-    YAML::Node moduleConfigNode = module.begin()->second;
-    if (!moduleConfigNode.IsMap()){
-        // return if there are no secondary parameters
-        return;
-    }
     
-    // get value of "osc_controllable"
-    YAML::Node oscControllableNode = moduleConfigNode["osc_controllable"];
-    if (oscControllableNode.IsDefined()){
-        config->osc_controllable = oscControllableNode.as<bool>();
+    // config->osc_controllable = get_config_option<bool>(module, "osc_controllable", false);
+    // if (!config->osc_controllable)
+    //     return;
+    // if (!module.IsMap()){
+    //     return;
+    // }
+
+    // YAML::Node moduleConfigNode = module.begin()->second;
+    // if (!moduleConfigNode.IsMap()){
+    //     return;
+    // }
+
+    std::string osc_path = get_config_option<std::string>(module, "osc_path", "", false, false, false);
+    if (osc_path != ""){
+        config->osc_controllable = true;
+        config->osc_path = osc_path;
     }
-    // get value of "osc_paths"
-    YAML::Node oscPathNode = moduleConfigNode["osc_paths"];
-    if (config->osc_controllable && oscPathNode.IsDefined()){
-        // TODO handle paths being a list
-        config->osc_path = oscPathNode.as<std::string>();
-    } else if (!config->osc_controllable && oscPathNode.IsDefined()){
-        std::cout << "[error] OSC path missing on module with activated osc receiver" << std::endl;
-    }
+    // YAML::Node oscPathNode = moduleConfigNode["osc_paths"];
+    // if (config->osc_controllable && oscPathNode.IsDefined()){
+    //     // TODO handle paths being a list
+    //     try {
+    //         config->osc_path = oscPathNode.as<std::string>();
+    //     } catch (YAML::BadConversion& e){
+    //         std::cout << "[error] invalid osc path" << std::endl;
+    //         config->osc_controllable = false;
+    //     }
+    // } else if (config->osc_controllable && !oscPathNode.IsDefined()){
+    //     std::cout << "[error] OSC path missing on module with activated osc receiver" << std::endl;
+    // }
 }
 
 ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
@@ -114,16 +154,8 @@ ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
     parse_module_osc_params(module, config);
 
     // get config values from config
-    if (module.IsMap()){
-        YAML::Node moduleConfigNode = module.begin()->second;
-        if (moduleConfigNode.IsMap()){
-            if (moduleConfigNode["factor"].IsDefined()){
-                config->factor = moduleConfigNode["factor"].as<float>();
-            }
-        } else {
-            config->factor = moduleConfigNode.as<float>();
-        }
-    }
+    config->factor = get_config_option<float>(module, "factor", 1, true);
+
     return config;
 }
 
@@ -136,61 +168,33 @@ ModuleConfigPtr ConfigParser::parse_module_sum(YAML::Node module){
 ModuleConfigPtr ConfigParser::parse_module_filter(YAML::Node module){
     FilterConfigPtr config = std::make_shared<FilterConfig>();
     parse_module_osc_params(module, config);
-    if(!module.IsMap()){
-        std::cout << "Filter missing parameters" << std::endl;
-        return nullptr;
-    }
     
-    YAML::Node moduleConfigNode = module.begin()->second;
-    if (!moduleConfigNode.IsMap()){
-        std::cout << "Filter missing parameters" << std::endl;
-        return nullptr;
-    }
-
     // Get Filter Type from Config
-    if (moduleConfigNode["type"].IsDefined()){
-        std::string filter_type = moduleConfigNode["type"].as<std::string>();
-        if (filter_type == "HP"){
-            config->type = FilterType::HP;
-        } else if (filter_type == "LP"){
-            config->type = FilterType::LP;
-        } else if (filter_type == "BP"){
-            config->type = FilterType::BP;
-        } else {
-            std::cout << "Unknown Filter Type: " << filter_type << std::endl;
-        }
+    std::string filter_type = get_config_option<std::string>(module, "type", "HP", true);
+
+    if (filter_type == "HP"){
+        config->type = FilterType::HP;
+    } else if (filter_type == "LP"){
+        config->type = FilterType::LP;
+    } else if (filter_type == "BP"){
+        config->type = FilterType::BP;
     } else {
-        std::cout << "Filter Type unspecified" << std::endl;
+        std::cout << "Unknown Filter Type: " << filter_type << std::endl;
     }
 
-    if (moduleConfigNode["freq"].IsDefined()){
-        config->freq = moduleConfigNode["freq"].as<float>();
-    } else {
-        std::cout << "Filter Frequency undefined" << std::endl;
-    }
+    config->freq = get_config_option<float>(module, "freq", 150);
+    config->order = get_config_option<int>(module, "order", 2);
 
     return config;
 }
 
 ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
     AmbiEncoderConfigPtr config = std::make_shared<AmbiEncoderConfig>();
+    
     parse_module_osc_params(module, config);
-    if(!module.IsMap()){
-        std::cout << "Ambisonics encoder missing parameters" << std::endl;
-        return nullptr;
-    }
 
-    YAML::Node moduleConfigNode = module.begin()->second;
-    if (!moduleConfigNode.IsMap()){
-        std::cout << "Ambisonics encoder missing parameters" << std::endl;
-        return nullptr;
-    }
-
-    if (moduleConfigNode["order"].IsDefined()){
-        config->order = moduleConfigNode["order"].as<int>();
-    } else {
-        std::cout << "Ambisonics encoder order unspecified" << std::endl;
-    }
+    config->order = get_config_option<int>(module, "order", 3, false);
+    
     return config;
 }
 
