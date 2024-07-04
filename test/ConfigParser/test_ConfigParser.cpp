@@ -153,7 +153,7 @@ TEST(ConfigParser, ambisonics_parse){
 
     auto module_hoa_3 = track_test.modules[2];
     ASSERT_EQ( module_hoa_3->module_type(), Modules::AMBI_ENCODER );
-    ASSERT_EQ( module_hoa_3->osc_controllable, false );
+    ASSERT_EQ( module_hoa_3->osc_controllable, true );
     auto module_hoa_cast_3 = std::dynamic_pointer_cast<AmbiEncoderConfig>(module_hoa_3);
     ASSERT_EQ( module_hoa_cast_3->order, 3 );
   

@@ -193,7 +193,7 @@ ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
     
     parse_module_osc_params(module, config);
 
-    config->order = get_config_option<int>(module, "order", 3, false);
+    config->order = get_config_option<int>(module, "order", 3, true);
     
     return config;
 }

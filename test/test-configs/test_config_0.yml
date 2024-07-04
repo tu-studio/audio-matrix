@@ -6,7 +6,7 @@ tracks:
     modules:
       - gain:
           factor: 3
-          osc_paths: "/gain"
+          osc_path: "/gain"
   - name: test_track_2
     modules:
       - gain: 3
