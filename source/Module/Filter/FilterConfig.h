@@ -1,5 +1,5 @@
-#ifndef FILTERCONFIG_H
-#define FILTERCONFIG_H
+#ifndef MODULE_FILTERCONFIG_H
+#define MODULE_FILTERCONFIG_H
 
 #include <ModuleConfig.h>
 
@@ -21,4 +21,4 @@ struct FilterConfig : ModuleConfig{
 
 typedef std::shared_ptr<FilterConfig> FilterConfigPtr;
 
-#endif //FILTERCONFIG_H
+#endif //MODULE_FILTERCONFIG_H

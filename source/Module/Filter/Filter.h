@@ -1,6 +1,7 @@
-#ifndef FILTER_H
-#define FILTER_H
+#ifndef MODULE_FILTER_H
+#define MODULE_FILTER_H
 
+#include <vector>
 #include <Module.h>
 #include <FilterConfig.h>
 
@@ -15,10 +16,11 @@ class Filter : public Module {
         void process(AudioBufferF &buffer, size_t n_frames) override;
     private:
         FilterConfigPtr m_config;
-        void calculate_filter_coefficients();
+        void calculate_filter_coefficients(double samplerate);
         std::vector<float> m_a;
         std::vector<float> m_b;
-        std::vector<std::vector<float>> m_memory;
+        std::vector<std::vector<float>> m_memory_x;
+        std::vector<std::vector<float>> m_memory_y;
 };
 
-#endif //FILTER_H
+#endif //MODULE_FILTER_H

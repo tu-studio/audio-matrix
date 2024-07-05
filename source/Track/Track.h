@@ -9,6 +9,7 @@
 #include <Gain.h>
 #include <AmbiEncoder.h>
 #include <Sum.h>
+#include <Filter.h>
 
 #include <OSCServer.h>
 #include <HostAudioConfig.h>

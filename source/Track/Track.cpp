@@ -26,6 +26,14 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
 
             }
             break;
+        case Modules::FILTER:
+            {
+                auto filter_config = std::dynamic_pointer_cast<FilterConfig>(module_config);
+                std::shared_ptr<Filter> filter = std::make_shared<Filter>(filter_config, osc_server);
+                m_modules.push_back(std::static_pointer_cast<Module> (filter));
+
+            }
+            break;
         default:
             break;
         }
