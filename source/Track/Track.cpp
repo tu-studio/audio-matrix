@@ -12,44 +12,12 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
     for (const std::shared_ptr<ModuleConfig> module_config : m_config.modules){
         switch (module_config->module_type())
         {
-        case Modules::GAIN:
-            {
-                auto gain_config = std::dynamic_pointer_cast<GainConfig>(module_config);
-                std::shared_ptr<Gain> gain = std::make_shared<Gain>(gain_config, osc_server);
-                m_modules.push_back(std::static_pointer_cast<Module>(gain));
-            }
-            break;
-        case Modules::AMBI_ENCODER:
-            {
-                auto ambi_config = std::dynamic_pointer_cast<AmbiEncoderConfig>(module_config);
-                std::shared_ptr<AmbiEncoder> ambi_encoder = std::make_shared<AmbiEncoder>(ambi_config, osc_server);
-                m_modules.push_back(std::static_pointer_cast<Module> (ambi_encoder));
-            }
-            break;
-        case Modules::SUM:
-            {
-                auto sum_config = std::dynamic_pointer_cast<SumConfig>(module_config);
-                std::shared_ptr<Sum> sum = std::make_shared<Sum>(sum_config, osc_server);
-                m_modules.push_back(std::static_pointer_cast<Module> (sum));
-
-            }
-            break;
-        case Modules::FILTER:
-            {
-                auto filter_config = std::dynamic_pointer_cast<FilterConfig>(module_config);
-                std::shared_ptr<Filter> filter = std::make_shared<Filter>(filter_config, osc_server);
-                m_modules.push_back(std::static_pointer_cast<Module> (filter));
-
-            }
-            break;
-        CASE_MODULE(Modules::GAIN, GainConfig, Gain);
-        // case Modules::GAIN:
-        //     {
-        //         auto gain_config = std::dynamic_pointer_cast<GainConfig>(module_config);
-        //         std::shared_ptr<Gain> gain = std::make_shared<Gain>(gain_config, osc_server);
-        //         m_modules.push_back(std::static_pointer_cast<Module>(gain));
-        //     }
-        //     break;
+            // MODULE SWITCH CASES GO HERE
+            CASE_MODULE(Modules::GAIN, GainConfig, Gain);
+            CASE_MODULE(Modules::AMBI_ENCODER, AmbiEncoderConfig, AmbiEncoder);
+            CASE_MODULE(Modules::SUM, SumConfig, Sum);
+            CASE_MODULE(Modules::FILTER, FilterConfig, Filter);
+            // END MODULE SWITCH CASES
         default:
             break;
         }
