@@ -72,7 +72,7 @@ size_t Track::initialize(size_t n_input_channels, size_t output_channel_offset) 
         if (n_output_channels > m_max_n_channels) {
             m_max_n_channels = n_output_channels;
         }
-        std::cout << "[debug] initialized module with " << n_output_channels << " output channels" << std::endl;
+        // std::cout << "[debug] initialized module with " << n_output_channels << " output channels" << std::endl;
     }
     m_n_output_channels = n_output_channels;
     return n_output_channels;

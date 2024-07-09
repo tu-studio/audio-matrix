@@ -79,7 +79,7 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 
 
     // registers a function to be called when the sample rate changes
-    std::cout << "[debug] registering sample rate callback" << std::endl;
+    // std::cout << "[debug] registering sample rate callback" << std::endl;
     jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
 
     // TODO reenable changing of buffer size. when this is called before jack_set_sample_rate_callback the callback is executed multiple times, and when exiting the program jack crashes...
@@ -92,8 +92,13 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
 }
 
 JackClient::~JackClient() {
-    jack_client_close(m_client);
+
+    // jack_deactivate(m_client);
+
+    int close_ret = jack_client_close(m_client);
     // ports need to be freed after the client is closed, otherwise we can run into setfaults
+    // std::cout << "[debug] JackClient close return val: " << close_ret << std::endl;
+
     free (input_ports);
     free (output_ports);
     delete audio_matrix;
@@ -167,9 +172,9 @@ void JackClient::prepare() {
 
 void JackClient::prepare(HostAudioConfig config) {
     // TODO: shall the client be deactivated before preparing?
-    std::cout << "[debug] entering audio matrix prepare with HostAudioConfig buffer_size="  << config.m_host_buffer_size << ", sr=" << config.m_host_sample_rate << std::endl;
+    // std::cout << "[debug] entering audio matrix prepare with HostAudioConfig buffer_size="  << config.m_host_buffer_size << ", sr=" << config.m_host_sample_rate << std::endl;
     audio_matrix->prepare(config);
-    std::cout << "[debug] exiting audio matrix prepare" << std::endl;
+    // std::cout << "[debug] exiting audio matrix prepare" << std::endl;
 
 
     size_t n_input_channels = audio_matrix->get_n_input_channels();
