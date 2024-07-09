@@ -6,8 +6,13 @@ ConfigParser::ConfigParser(std::string config_file){
     AudioMatrixConfig audio_matrix_config;
 
     // read global config options
-    audio_matrix_config.port = get_config_option<int>(config, "port", 54321);
-    audio_matrix_config.n_input_channels = get_config_option<int>(config, "n_input_channels", 32);
+    if (config["port"].IsDefined() && config["port"].IsScalar()){
+        audio_matrix_config.port = config["port"].as<int>();
+    }
+    
+    if (config["n_input_channels"].IsDefined() && config["n_input_channels"].IsScalar()){
+        audio_matrix_config.n_input_channels = config["n_input_channels"].as<int>();
+    } 
     
     // check if the tracks section exists in the config, and is a sequence
     YAML::Node tracksNode = config["tracks"];
