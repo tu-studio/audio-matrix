@@ -6,7 +6,6 @@
 enum FilterType {
     HP,
     LP,
-    BP
 };
 
 struct FilterConfig : ModuleConfig{

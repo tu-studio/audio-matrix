@@ -19,8 +19,8 @@ Configuration is done using a config file in YAML format. Some example configs c
 
 | Option Name | Description | Default Value |
 | --- | ---| ---| 
-| `port` | Port the OSC-Server listens on | `54321` |
-| `n_input_channels` | Amount of Input channels to be created. these are sent to every track | `32` |
+| `port` | Port the OSC-Server listens on | `12345` |
+| `n_input_channels` | Amount of Input channels to be created. these are sent to every track | `64` |
 | `tracks` | Array of `tracks`, see "Configuration of Tracks"  | `[]` |
 
 ## Configuration of Tracks:
