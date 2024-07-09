@@ -7,12 +7,10 @@ tracks:
     modules:
       - gain:
           factor: 1
-          osc_controllable: true
-          osc_paths: /source/send/hoa
+          osc_path: /source/send/hoa
       - hoa_encoder:
           order: 3
-          osc_controllable: true
-          osc_paths: /source/pos/aed
+          osc_path: /source/pos/aed
       - gain:
           factor: 1
       # - limiter:

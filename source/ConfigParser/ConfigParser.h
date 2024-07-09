@@ -36,7 +36,6 @@ private:
     ModuleConfigPtr parse_module_sum(YAML::Node module);
 
     template <typename T>
-
     T get_config_option(YAML::Node module, const std::string &option_name, T default_value, bool is_main_parameter=false, bool is_required=false, bool warn_when_default=true);
 
 
@@ -44,10 +43,6 @@ private:
     std::shared_ptr<AudioMatrixConfig> parsed_config;
     int port;
     int n_input_channels;
-    std::string osc_base_path;
-    std::string osc_position_path;
-
-
 };
 
 

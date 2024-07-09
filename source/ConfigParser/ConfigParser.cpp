@@ -6,13 +6,8 @@ ConfigParser::ConfigParser(std::string config_file){
     AudioMatrixConfig audio_matrix_config;
 
     // read global config options
-    if (config["port"].IsDefined() && config["port"].IsScalar()){
-        audio_matrix_config.port = config["port"].as<int>();
-    }
-    
-    if (config["n_input_channels"].IsDefined() && config["n_input_channels"].IsScalar()){
-        audio_matrix_config.n_input_channels = config["n_input_channels"].as<int>();
-    } 
+    audio_matrix_config.port = get_config_option<int>(config, "port", 54321);
+    audio_matrix_config.n_input_channels = get_config_option<int>(config, "n_input_channels", 32);
     
     // check if the tracks section exists in the config, and is a sequence
     YAML::Node tracksNode = config["tracks"];
@@ -56,6 +51,14 @@ ConfigParser::ConfigParser(std::string config_file){
     parsed_config = std::make_shared<AudioMatrixConfig>(audio_matrix_config);
 }
 
+ConfigParser::~ConfigParser(){
+}
+
+std::shared_ptr<AudioMatrixConfig> ConfigParser::get_config(){
+    return parsed_config;
+}
+
+
 template <typename T>
 T ConfigParser::get_config_option(YAML::Node module, const std::string &option_name, T default_value, bool is_main_parameter, bool is_required, bool warn_when_default){
     
@@ -98,6 +101,7 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
     }
 
     std::cout << "[debug] \t parsing module: " << name << std::endl;
+    // MODULE PARSER CASES GO HERE
     if (name == "gain"){
         return parse_module_gain(module);
     } else if (name == "filter") {
@@ -106,7 +110,9 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
         return parse_module_ambi_encoder(module);
     } else if (name == "sum") {
         return parse_module_sum(module);
-    } else {
+    } 
+    // END MODULE PARSER CASES
+    else {
         std::cout << "[error] Unknown module: " << name << std::endl;
         return nullptr;
     }
@@ -115,39 +121,17 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
 
 void ConfigParser::parse_module_osc_params(YAML::Node module, std::shared_ptr<ModuleConfig> config){
     
-    // config->osc_controllable = get_config_option<bool>(module, "osc_controllable", false);
-    // if (!config->osc_controllable)
-    //     return;
-    // if (!module.IsMap()){
-    //     return;
-    // }
-
-    // YAML::Node moduleConfigNode = module.begin()->second;
-    // if (!moduleConfigNode.IsMap()){
-    //     return;
-    // }
-
     std::string osc_path = get_config_option<std::string>(module, "osc_path", "", false, false, false);
     if (osc_path != ""){
         config->osc_controllable = true;
         config->osc_path = osc_path;
     }
-    // YAML::Node oscPathNode = moduleConfigNode["osc_paths"];
-    // if (config->osc_controllable && oscPathNode.IsDefined()){
-    //     // TODO handle paths being a list
-    //     try {
-    //         config->osc_path = oscPathNode.as<std::string>();
-    //     } catch (YAML::BadConversion& e){
-    //         std::cout << "[error] invalid osc path" << std::endl;
-    //         config->osc_controllable = false;
-    //     }
-    // } else if (config->osc_controllable && !oscPathNode.IsDefined()){
-    //     std::cout << "[error] OSC path missing on module with activated osc receiver" << std::endl;
-    // }
 }
 
+// CUSTOM MODULE PARSERS GO HERE
+
 ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
-    // Create config file
+    // create config
     GainConfigPtr config = std::make_shared<GainConfig>();
 
     // parse basic osc params
@@ -176,14 +160,12 @@ ModuleConfigPtr ConfigParser::parse_module_filter(YAML::Node module){
         config->type = FilterType::HP;
     } else if (filter_type == "LP"){
         config->type = FilterType::LP;
-    } else if (filter_type == "BP"){
-        config->type = FilterType::BP;
     } else {
         std::cout << "Unknown Filter Type: " << filter_type << std::endl;
     }
 
     config->freq = get_config_option<float>(module, "freq", 150);
-    config->order = get_config_option<int>(module, "order", 2);
+    config->order = get_config_option<int>(module, "order", 4);
 
     return config;
 }
@@ -198,9 +180,3 @@ ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
     return config;
 }
 
-ConfigParser::~ConfigParser(){
-}
-
-std::shared_ptr<AudioMatrixConfig> ConfigParser::get_config(){
-    return parsed_config;
-}
