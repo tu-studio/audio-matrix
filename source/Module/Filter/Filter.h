@@ -4,6 +4,7 @@
 #include <vector>
 #include <Module.h>
 #include <FilterConfig.h>
+#include <iir.h>
 
 class Filter : public Module {
     public:
@@ -17,10 +18,10 @@ class Filter : public Module {
     private:
         FilterConfigPtr m_config;
         void calculate_filter_coefficients(double samplerate);
-        std::vector<float> m_a;
-        std::vector<float> m_b;
-        std::vector<std::vector<float>> m_memory_x;
-        std::vector<std::vector<float>> m_memory_y;
+        std::vector<double> m_a;
+        std::vector<double> m_b;
+        std::vector<std::vector<double>> m_memory_x;
+        std::vector<std::vector<double>> m_memory_y;
 };
 
 #endif //MODULE_FILTER_H
