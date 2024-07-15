@@ -185,3 +185,7 @@ switch (module_config->module_type())
             break;
         }
 ```
+# Licenses
+This Project is licensed under the GPLv3.
+
+Calculation of the IIR filter coefficients is performed using the IIR library by [Exstrom Laboratories](https://www.exstrom.com/journal/sigproc/dsigproc.html), also licensed under the GPLv3
