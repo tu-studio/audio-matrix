@@ -89,7 +89,7 @@ TEST(ConfigParser, more_complex_parse){
     auto module_filter_1 = track_test.modules[5];
     ASSERT_EQ( module_filter_1->module_type(), Modules::FILTER );
     auto module_filter_cast_1 = std::dynamic_pointer_cast<FilterConfig>(module_filter_1);
-    ASSERT_EQ( module_filter_cast_1->order, 2 );
+    ASSERT_EQ( module_filter_cast_1->order, 4 );
     ASSERT_FLOAT_EQ( module_filter_cast_1->freq, 150 );
     ASSERT_EQ( module_filter_cast_1->type, FilterType::HP );
 
