@@ -20,8 +20,11 @@ class Filter : public Module {
         void calculate_filter_coefficients(double samplerate);
         std::vector<double> m_a;
         std::vector<double> m_b;
-        std::vector<std::vector<double>> m_memory_x;
-        std::vector<std::vector<double>> m_memory_y;
+        std::vector<std::vector<double>> m_memory_1;
+        std::vector<std::vector<double>> m_memory_2;
+        
+        double filter_sample(double new_value, std::vector<double> &memory);
+        int m_n_taps;
 };
 
 #endif //MODULE_FILTER_H
