@@ -10,6 +10,7 @@
 #include <AmbiEncoder.h>
 #include <Sum.h>
 #include <Filter.h>
+#include <DistanceGain.h>
 
 #include <OSCServer.h>
 #include <HostAudioConfig.h>

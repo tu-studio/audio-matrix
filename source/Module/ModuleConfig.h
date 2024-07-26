@@ -8,9 +8,10 @@ enum Modules{
     DUMMY,
     GAIN,
     FILTER,
-    DISTANCE_COMPENSATOR,
+    DISTANCE_GAIN,
     SUM,
     AMBI_ENCODER,
+    DELAY,
 };
 
 struct ModuleConfig{

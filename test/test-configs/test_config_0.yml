@@ -26,3 +26,5 @@ tracks:
       - hoa_encoder:
           order: 3
           osc_path: "/pos"
+      - distance_gain:
+          osc_path: "/dist"

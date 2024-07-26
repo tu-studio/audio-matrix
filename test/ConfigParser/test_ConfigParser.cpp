@@ -157,6 +157,10 @@ TEST(ConfigParser, ambisonics_parse){
     auto module_hoa_cast_3 = std::dynamic_pointer_cast<AmbiEncoderConfig>(module_hoa_3);
     ASSERT_EQ( module_hoa_cast_3->order, 3 );
   
+    auto module_distance_gain = track_test.modules[3];
+    ASSERT_EQ( module_distance_gain->module_type(), Modules::DISTANCE_GAIN );
+    ASSERT_EQ( module_distance_gain->osc_controllable, true );
+    auto module_distance_gain_cast = std::dynamic_pointer_cast<DistanceGainConfig>(module_distance_gain);
 
     // for(auto track = conf->tracks.begin(); track != conf->tracks.end(); ++track){
     //     std::cout << track->name << std::endl;

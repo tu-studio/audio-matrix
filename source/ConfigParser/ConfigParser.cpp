@@ -115,7 +115,9 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
         return parse_module_ambi_encoder(module);
     } else if (name == "sum") {
         return parse_module_sum(module);
-    } 
+    } else if (name == "distance_gain"){
+        return parse_module_distance_gain(module);
+    }
     // END MODULE PARSER CASES
     else {
         std::cout << "[error] Unknown module: " << name << std::endl;
@@ -144,6 +146,14 @@ ModuleConfigPtr ConfigParser::parse_module_gain(YAML::Node module){
 
     // get config values from config
     config->factor = get_config_option<float>(module, "factor", 1, true);
+
+    return config;
+}
+
+ModuleConfigPtr ConfigParser::parse_module_distance_gain(YAML::Node module){
+    DistanceGainConfigPtr config = std::make_shared<DistanceGainConfig>();
+
+    parse_module_osc_params(module, config);
 
     return config;
 }

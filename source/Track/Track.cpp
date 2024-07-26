@@ -17,6 +17,7 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
             CASE_MODULE(Modules::AMBI_ENCODER, AmbiEncoderConfig, AmbiEncoder);
             CASE_MODULE(Modules::SUM, SumConfig, Sum);
             CASE_MODULE(Modules::FILTER, FilterConfig, Filter);
+            CASE_MODULE(Modules::DISTANCE_GAIN, DistanceGainConfig, DistanceGain);
             // END MODULE SWITCH CASES
         default:
             break;

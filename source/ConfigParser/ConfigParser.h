@@ -13,6 +13,7 @@
 #include <FilterConfig.h>
 #include <AmbiEncoderConfig.h>
 #include <SumConfig.h>
+#include <DistanceGainConfig.h>
 
 
 class ConfigParser
@@ -34,6 +35,7 @@ private:
     ModuleConfigPtr parse_module_filter(YAML::Node module);
     ModuleConfigPtr parse_module_ambi_encoder(YAML::Node module);
     ModuleConfigPtr parse_module_sum(YAML::Node module);
+    ModuleConfigPtr parse_module_distance_gain(YAML::Node module);
 
     template <typename T>
     T get_config_option(YAML::Node module, const std::string &option_name, T default_value, bool is_main_parameter=false, bool is_required=false, bool warn_when_default=true);
