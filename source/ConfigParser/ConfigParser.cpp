@@ -117,6 +117,8 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
         return parse_module_sum(module);
     } else if (name == "distance_gain"){
         return parse_module_distance_gain(module);
+    } else if (name == "delay"){
+        return parse_module_delay(module);
     }
     // END MODULE PARSER CASES
     else {
@@ -195,3 +197,10 @@ ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
     return config;
 }
 
+ModuleConfigPtr ConfigParser::parse_module_delay(YAML::Node module){
+    DelayConfigPtr config = std::make_shared<DelayConfig>();
+
+    config->delay_time = get_config_option<float>(module, "time", 5, true);
+
+    return config;
+}

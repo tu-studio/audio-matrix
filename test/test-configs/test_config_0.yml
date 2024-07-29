@@ -19,6 +19,7 @@ tracks:
           type: LP
           freq: 1000
           order: 1
+      - delay: 10
   - name: test_track_ambisonics
     modules:
       - hoa_encoder

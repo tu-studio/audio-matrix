@@ -37,7 +37,7 @@ void AmbiEncoder::prepare(HostAudioConfig host_audio_config){
 
 void AmbiEncoder::process(AudioBufferF &buffer, size_t nframes){
     m_buffer.clear();
-    // TODO implement smoothing, saving of previous SH buffer
+    
     for (size_t in_channel = 0; in_channel < m_n_input_channels; in_channel++) {
         if (m_position_changed[in_channel]){
             m_position_changed[in_channel] = false;

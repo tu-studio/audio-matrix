@@ -18,6 +18,7 @@ Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_se
             CASE_MODULE(Modules::SUM, SumConfig, Sum);
             CASE_MODULE(Modules::FILTER, FilterConfig, Filter);
             CASE_MODULE(Modules::DISTANCE_GAIN, DistanceGainConfig, DistanceGain);
+            CASE_MODULE(Modules::DELAY, DelayConfig, Delay);
             // END MODULE SWITCH CASES
         default:
             break;
@@ -29,7 +30,7 @@ Track::~Track() {
 }
 
 size_t Track::initialize(size_t n_input_channels, size_t output_channel_offset) {
-    std::cout << "[debug] starting init for track " << m_config.name << std::endl;
+    // std::cout << "[debug] starting init for track " << m_config.name << std::endl;
     
     m_max_n_channels = n_input_channels;
     m_output_channel_offset = output_channel_offset;

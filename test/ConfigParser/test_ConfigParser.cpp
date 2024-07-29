@@ -95,12 +95,17 @@ TEST(ConfigParser, more_complex_parse){
 
     auto module_filter_2 = track_test.modules[6];
     ASSERT_EQ( module_filter_2->module_type(), Modules::FILTER );
-    ASSERT_EQ( module_filter_1->osc_controllable, false );
+    ASSERT_EQ( module_filter_2->osc_controllable, false );
 
     auto module_filter_cast_2 = std::dynamic_pointer_cast<FilterConfig>(module_filter_2);
     ASSERT_EQ( module_filter_cast_2->order, 1 );
     ASSERT_FLOAT_EQ( module_filter_cast_2->freq, 1000 );
     ASSERT_EQ( module_filter_cast_2->type, FilterType::LP );
+
+    auto module_delay = track_test.modules[7];
+    ASSERT_EQ(module_delay->module_type(), Modules::DELAY);
+    auto module_delay_cast = std::dynamic_pointer_cast<DelayConfig>(module_delay);
+    ASSERT_FLOAT_EQ(module_delay_cast->delay_time, 10.0f);
 
     // for(auto track = conf->tracks.begin(); track != conf->tracks.end(); ++track){
     //     std::cout << track->name << std::endl;

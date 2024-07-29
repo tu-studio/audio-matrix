@@ -11,6 +11,7 @@
 #include <Sum.h>
 #include <Filter.h>
 #include <DistanceGain.h>
+#include <Delay.h>
 
 #include <OSCServer.h>
 #include <HostAudioConfig.h>
