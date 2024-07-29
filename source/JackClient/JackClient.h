@@ -4,6 +4,7 @@
 #include <jack/jack.h>
 #include <getopt.h>
 #include <AudioMatrix.h>
+#include <semaphore>
 
 class JackClient {
 
@@ -30,10 +31,15 @@ private:
     jack_default_audio_sample_t **in;
     jack_default_audio_sample_t **out;
 
+    size_t m_nframes;
+    size_t m_samplerate;
+
     std::string m_config_path;
     const char* m_client_name = nullptr;
     bool verbose = false;
     AudioMatrix* audio_matrix;
+    
+    std::binary_semaphore m_host_audio_semaphore;
 };
 
 

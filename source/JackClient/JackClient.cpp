@@ -1,6 +1,6 @@
 #include <JackClient.h>
 
-JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
+JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]): m_host_audio_semaphore(1) {
 
     const char *server_name = NULL;
     int options = JackNullOption;
@@ -78,23 +78,25 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]) {
     jack_on_shutdown (m_client, shutdown, this);
 
 
+    m_nframes = jack_get_buffer_size(m_client);
+    m_samplerate = jack_get_sample_rate(m_client);
+
+    // registers a function to be called when the maximum buffer size changes
+    if(verbose)
+        std::cout << "[debug] registering buffer size callback" << std::endl;
+    jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
+
     // registers a function to be called when the sample rate changes
+    // This function is also called directly after registering it, so we don't need to call prepare explicitely
     // std::cout << "[debug] registering sample rate callback" << std::endl;
     jack_set_sample_rate_callback(m_client, sample_rate_callback, this);
-
-    // TODO reenable changing of buffer size. when this is called before jack_set_sample_rate_callback the callback is executed multiple times, and when exiting the program jack crashes...
-    // // registers a function to be called when the maximum buffer size changes
-    // std::cout << "[debug] registering buffer size callback" << std::endl;
-    // jack_set_buffer_size_callback(m_client, buffer_size_callback, this);
-
-
 
 }
 
 JackClient::~JackClient() {
 
     // jack_deactivate(m_client);
-
+    
     int close_ret = jack_client_close(m_client);
     // ports need to be freed after the client is closed, otherwise we can run into setfaults
     // std::cout << "[debug] JackClient close return val: " << close_ret << std::endl;
@@ -167,14 +169,14 @@ void JackClient::parse_args(int argc, char* argv[]) {
 }
 
 void JackClient::prepare() {
-    prepare(HostAudioConfig(jack_get_buffer_size(m_client), jack_get_sample_rate(m_client)));
+    prepare(HostAudioConfig(m_nframes, m_samplerate));
 }
 
 void JackClient::prepare(HostAudioConfig config) {
     // TODO: shall the client be deactivated before preparing?
-    // std::cout << "[debug] entering audio matrix prepare with HostAudioConfig buffer_size="  << config.m_host_buffer_size << ", sr=" << config.m_host_sample_rate << std::endl;
+    if(verbose)
+        std::cout << "[debug] entering audio matrix prepare with HostAudioConfig buffer_size="  << config.m_host_buffer_size << ", sr=" << config.m_host_sample_rate << std::endl;
     audio_matrix->prepare(config);
-    // std::cout << "[debug] exiting audio matrix prepare" << std::endl;
 
 
     size_t n_input_channels = audio_matrix->get_n_input_channels();
@@ -222,17 +224,29 @@ void JackClient::shutdown(void *arg) {
 }
 
 int JackClient::buffer_size_callback(jack_nframes_t nframes, void *arg) {
+
     JackClient* jack_client = static_cast<JackClient*>(arg);
-    jack_client->prepare(HostAudioConfig(nframes, jack_get_sample_rate(jack_client->m_client)));
-    if (jack_client->verbose)
-        std::cout << "[info] Buffer size changed to " << nframes << std::endl;
+
+    jack_client->m_host_audio_semaphore.acquire();
+    
+    jack_client->m_nframes = nframes;
+    jack_client->prepare(HostAudioConfig(jack_client->m_nframes, jack_client->m_samplerate));
+    std::cout << "[info] Buffer size changed to " << nframes << std::endl;
+    
+    jack_client->m_host_audio_semaphore.release();
     return 0;
 }
 
 int JackClient::sample_rate_callback(jack_nframes_t nframes, void *arg) {
+    
     JackClient* jack_client = static_cast<JackClient*>(arg);
-    jack_client->prepare(HostAudioConfig(jack_get_buffer_size(jack_client->m_client), nframes));
-    if (jack_client->verbose)
-        std::cout << "[info] Sample rate changed to " << nframes << std::endl;
+    jack_client->m_host_audio_semaphore.acquire();
+
+    jack_client->m_samplerate = nframes;
+    jack_client->prepare(HostAudioConfig(jack_client->m_nframes, jack_client->m_samplerate));
+    std::cout << "[info] Sample rate changed to " << nframes << std::endl;
+
+    jack_client->m_host_audio_semaphore.release();
+    
     return 0;
 }
