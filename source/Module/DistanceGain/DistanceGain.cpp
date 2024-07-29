@@ -48,6 +48,7 @@ void DistanceGain::process(AudioBufferF &buffer, size_t nframes) {
 
 void DistanceGain::set_distance(size_t channel, float distance){
     m_gain[channel] = distance <= 1.0 ? 1.0 : 1/sqrt(distance);
+    // std::cout << "[debug] distance: " << distance << ", gain: " << m_gain[channel] << std::endl;
 }
 
 int DistanceGain::distance_osc_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data){
@@ -56,6 +57,6 @@ int DistanceGain::distance_osc_callback(const char *path, const char *types, lo_
     std::ignore = argc;
     std::ignore = data;
     DistanceGain* gain = (DistanceGain*) user_data;
-    gain->set_distance(argv[0]->i, argv[1]->f);
+    gain->set_distance(argv[0]->i, argv[3]->f);
     return 0;
 }
