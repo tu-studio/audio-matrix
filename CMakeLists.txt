@@ -41,6 +41,10 @@ message(STATUS "Install postfix: ${INSTALL_POSTFIX}")
 # Add excecutables
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+# make version accessible
+# TODO fix this
+# target_compile_definitions(${PROJECT_NAME} PRIVATE VERSION="${PROJECT_VERSION_LONG}")
+
 # Add include directories for all folders in the source
 file(GLOB_RECURSE SUB_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/source/*)
 list(APPEND SUB_DIRS ${CMAKE_CURRENT_LIST_DIR}/source)

@@ -41,7 +41,9 @@ JackClient::JackClient([[ maybe_unused ]] int argc, char *argv[]): m_host_audio_
         m_client_name = jack_get_client_name ( m_client );
         fprintf ( stderr, "[error] unique name `%s' assigned\n", m_client_name );
     }
-
+    #ifdef VERSION
+    std::cout << "[info] audio-matrix version " << VERSION << std::endl;
+    #endif
     audio_matrix = new AudioMatrix(m_config_path);
 
     // create input and output ports
@@ -186,7 +188,6 @@ void JackClient::prepare(HostAudioConfig config) {
     delete[] out;
 
     // allocate memory for the input and output buffers
-    // TODO can this be done more elegantly?
     in = new jack_default_audio_sample_t*[n_input_channels];
     out = new jack_default_audio_sample_t*[n_output_channels];
     for (int i = 0; i < n_input_channels; i++ ) {
@@ -227,6 +228,7 @@ int JackClient::buffer_size_callback(jack_nframes_t nframes, void *arg) {
 
     JackClient* jack_client = static_cast<JackClient*>(arg);
 
+    // semaphore ensures that only one callback calls jack_client->prepare() at a time
     jack_client->m_host_audio_semaphore.acquire();
     
     jack_client->m_nframes = nframes;
@@ -240,6 +242,8 @@ int JackClient::buffer_size_callback(jack_nframes_t nframes, void *arg) {
 int JackClient::sample_rate_callback(jack_nframes_t nframes, void *arg) {
     
     JackClient* jack_client = static_cast<JackClient*>(arg);
+
+    // semaphore ensures that only one callback calls jack_client->prepare() at a time
     jack_client->m_host_audio_semaphore.acquire();
 
     jack_client->m_samplerate = nframes;
