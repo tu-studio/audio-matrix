@@ -17,7 +17,6 @@ public:
     void process(AudioBufferF &buffer, size_t nframes) override;
 
     void set_distance(size_t channel, float distance);
-    float get_distance(size_t channel);
 
 private:
     std::vector<float> m_prev_gain;
