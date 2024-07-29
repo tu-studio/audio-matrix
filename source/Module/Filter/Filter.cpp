@@ -116,21 +116,21 @@ void Filter::calculate_filter_coefficients(double samplerate){
     m_a = std::vector<double>(a_coeffs, a_coeffs + m_n_taps);
     m_b = std::vector<double>(b_coeffs, b_coeffs + m_n_taps);
 
-    std:: cout << "[debug] a coeffs: ";
-    for (size_t i = 0; i < m_n_taps; i++)
-    {
-        std::cout << m_a[i] << ", ";
-        /* code */
-    }
-    std::cout << std::endl;
+    // std:: cout << "[debug] a coeffs: ";
+    // for (size_t i = 0; i < m_n_taps; i++)
+    // {
+    //     std::cout << m_a[i] << ", ";
+    //     /* code */
+    // }
+    // std::cout << std::endl;
 
-    std:: cout << "[debug] b coeffs: ";
-    for (size_t i = 0; i < m_n_taps; i++)
-    {
-        std::cout << m_b[i] << ", ";
-        /* code */
-    }
-    std::cout << std::endl;
+    // std:: cout << "[debug] b coeffs: ";
+    // for (size_t i = 0; i < m_n_taps; i++)
+    // {
+    //     std::cout << m_b[i] << ", ";
+    //     /* code */
+    // }
+    // std::cout << std::endl;
 
     free(a_coeffs);
     free(b_coeffs);
