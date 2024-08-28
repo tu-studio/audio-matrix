@@ -6,6 +6,7 @@
 #include <memory>
 #include <cmath>
 #include <iostream>
+#include <Common.h>
 class SphericalHarmonics {
     public:
         SphericalHarmonics() = default;
@@ -18,7 +19,7 @@ class SphericalHarmonics {
 
         void update_spherical_harmonics(float azim, float elev, float dist, std::vector<float>& sh_container){
             int i = 0;
-            float distance_gain = dist <= 1.0 ? 1.0 : 1/sqrt(dist);
+            float distance_gain = distance_gain_function(dist);
             for (int n = 0; n <= m_order;n++){
                 for (int m = -n; m <= n; m++){
                     float a_factor = (m<0) ? sin(abs(m) * azim) : cos(abs(m) * azim);
