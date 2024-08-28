@@ -78,12 +78,11 @@ void AmbiEncoder::set_aed(size_t channel, float azimuth, float elevation, float 
     if (!(channel >= 0 && channel < m_n_input_channels)){
         return;
     }
-    std::cout << "updated position for source " << channel << std::endl;
+    // std::cout << "updated position for source " << channel << std::endl;
     m_position[channel].azim = azimuth;
     m_position[channel].elev = elevation;
     m_position[channel].dist = distance;
     m_position_changed[channel] = true;
-    // TODO set m_is_changed = True
 }
 
 
