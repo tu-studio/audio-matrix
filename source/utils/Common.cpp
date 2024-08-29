@@ -8,5 +8,5 @@ float distance_gain_function(float distance){
     //          a = 0.2
     // chosen because f(1)=g(1), f'(1)=g'(1)
     distance = std::abs(distance);
-    return distance < 1.0 ? 1 - 0.2 * std::powf(distance, 4) : 0.8/distance;
+    return distance < 1.0 ? 1 - 0.2 * std::pow(distance, 4) : 0.8/distance;
 }
