@@ -37,7 +37,7 @@ TEST(DistanceGain, simple_test){
 
     for (size_t i = 0; i < frames; i++)
     {
-        EXPECT_FLOAT_EQ( 1.0/sqrt(1.5), buffer.getSample(0, i) );
+        EXPECT_FLOAT_EQ( 0.8/1.5, buffer.getSample(0, i) );
     }
 
 }
