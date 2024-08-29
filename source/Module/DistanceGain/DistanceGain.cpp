@@ -49,7 +49,7 @@ void DistanceGain::process(AudioBufferF &buffer, size_t nframes) {
 
 void DistanceGain::set_distance(size_t channel, float distance){
     m_gain[channel] = distance_gain_function(distance);
-    // std::cout << "[debug] distance: " << distance << ", gain: " << m_gain[channel] << std::endl;
+    std::cout << "[debug] distance: " << distance << ", gain: " << m_gain[channel] << std::endl;
 }
 
 
