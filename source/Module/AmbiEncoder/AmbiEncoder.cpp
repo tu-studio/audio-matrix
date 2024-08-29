@@ -2,7 +2,7 @@
 
 AmbiEncoder::AmbiEncoder(AmbiEncoderConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server): m_config(config){
     if (m_config->osc_controllable && osc_server != nullptr){
-        std::cout << "[info] Registering function on path " << m_config->osc_path << std::endl;
+        std::cout << "[info] Ambi Decoder listening for positional data in format (source id, azim, elev, dist) on path " << m_config->osc_path << std::endl;
         osc_server->add_method(m_config->osc_path, "ifff", osc_pos_callback, this);
     } else if(m_config->osc_controllable && osc_server == nullptr){
         std::cout << "[error] osc_server is null, cannot add ambi encoder callback method" << std::endl;
@@ -37,7 +37,7 @@ void AmbiEncoder::prepare(HostAudioConfig host_audio_config){
 
 void AmbiEncoder::process(AudioBufferF &buffer, size_t nframes){
     m_buffer.clear();
-    // TODO implement smoothing, saving of previous SH buffer
+    
     for (size_t in_channel = 0; in_channel < m_n_input_channels; in_channel++) {
         if (m_position_changed[in_channel]){
             m_position_changed[in_channel] = false;
@@ -78,12 +78,11 @@ void AmbiEncoder::set_aed(size_t channel, float azimuth, float elevation, float 
     if (!(channel >= 0 && channel < m_n_input_channels)){
         return;
     }
-    std::cout << "updated position for source " << channel << std::endl;
+    // std::cout << "updated position for source " << channel << std::endl;
     m_position[channel].azim = azimuth;
     m_position[channel].elev = elevation;
     m_position[channel].dist = distance;
     m_position_changed[channel] = true;
-    // TODO set m_is_changed = True
 }
 
 

@@ -85,20 +85,36 @@ TEST(Track, process_buffer){
     }
 
     std::shared_ptr<Gain> test_gain = std::dynamic_pointer_cast<Gain>(test_track.get_modules()[0]);
+    float initial_gain = test_gain->get_gain(0);
+    float new_gain = 0.5f;
     for (int i = 0; i < channel_count; i++) {
-        test_gain->set_gain(i, 0.5f);
+        test_gain->set_gain(i, new_gain);
     }
 
     float** in = test_input_buffer.getArrayOfWritePointers();
     float** out = test_output_buffer.getArrayOfWritePointers();
     size_t nframes = host_audio_config.m_host_buffer_size;
 
+    
+    test_track.process(in, out, nframes);
+
+    float stepsize = (new_gain - initial_gain) / nframes;
+    for (int i = 0; i < channel_count; i++) {
+        for (int j = 0; j < nframes; j++) {
+            EXPECT_FLOAT_EQ(
+                test_input_buffer.getSample(i, j) * (initial_gain + (stepsize * j)),
+                test_output_buffer.getSample(i, j)
+            );
+        }
+    }
+
+    test_output_buffer.clear();
     test_track.process(in, out, nframes);
 
     for (int i = 0; i < channel_count; i++) {
         for (int j = 0; j < host_audio_config.m_host_buffer_size; j++) {
             EXPECT_FLOAT_EQ(
-                test_input_buffer.getSample(i, j) * 0.5f,
+                test_input_buffer.getSample(i, j) * new_gain,
                 test_output_buffer.getSample(i, j)
             );
         }

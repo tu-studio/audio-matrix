@@ -21,7 +21,7 @@ class AmbiEncoder : public Module{
         ~AmbiEncoder() = default;
 
         size_t initialize(size_t input_channels) override;
-        void prepare(HostAudioConfig host_audio_config);
+        void prepare(HostAudioConfig host_audio_config) override;
         void process(AudioBufferF &buffer, size_t nframes) override;
 
         // void set_azimuth(size_t channel, float azimuth);

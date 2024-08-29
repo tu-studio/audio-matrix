@@ -18,6 +18,7 @@ public:
     float get_gain(size_t channel);
 
 private:
+    std::vector<float> m_prev_gain;
     std::vector<float> m_gain;
     std::shared_ptr<GainConfig> m_config;
     static int osc_gain_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data);
