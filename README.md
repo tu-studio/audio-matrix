@@ -66,8 +66,8 @@ tracks:
   - name: example track
     modules:
       - hoa_encoder:
-        order: 3
-        osc_path: /positions
+          order: 3
+          osc_path: /positions
 ```
 
 ### Module: Gain
