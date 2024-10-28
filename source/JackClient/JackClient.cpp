@@ -119,7 +119,7 @@ void JackClient::parse_args(int argc, char* argv[]) {
         int option_index                    = 0;
         static struct option long_options[] = {
             {"configfile", required_argument, nullptr, 'c'},
-            {"jackclientname", required_argument, nullptr, 'n'},
+            {"jackclientname", required_argument, nullptr, 'j'},
             {"verbose", no_argument, nullptr, 'v'},
             {"help", no_argument, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}};
@@ -133,7 +133,7 @@ void JackClient::parse_args(int argc, char* argv[]) {
                 m_config_path = optarg;
                 break;
 
-            case 'n':
+            case 'j':
                 m_client_name = optarg;
                 break;
 
@@ -201,6 +201,8 @@ void JackClient::prepare(HostAudioConfig config) {
     if (jack_activate(m_client)) {
         fprintf ( stderr, "[error] cannot activate client" );
         exit ( 1 );
+    } else {
+        std::cout << "[info] jack client is ready" << std::endl;
     }
 }
 
