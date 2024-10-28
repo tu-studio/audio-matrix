@@ -121,6 +121,7 @@ void JackClient::parse_args(int argc, char* argv[]) {
             {"configfile", required_argument, nullptr, 'c'},
             {"jackclientname", required_argument, nullptr, 'j'},
             {"verbose", no_argument, nullptr, 'v'},
+            {"version", no_argument, nullptr, 1},
             {"help", no_argument, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}};
 
@@ -129,6 +130,14 @@ void JackClient::parse_args(int argc, char* argv[]) {
         if (c == -1) { break; }
 
         switch (c) {
+            case 1:
+                #ifdef VERSION
+                    std::cout << "audio-matrix version " << VERSION << std::endl;
+                #else
+                    std::cout << "audio-matrix version unknown" << std::endl;
+                #endif
+                exit(EXIT_SUCCESS);
+                break;
             case 'c':
                 m_config_path = optarg;
                 break;
@@ -150,12 +159,14 @@ void JackClient::parse_args(int argc, char* argv[]) {
                 verbose = true;
                 break;
 
+
             case '?':
                 /* getopt_long already printed an error message. */
                 break;
 
             default:
-                abort();
+                printf("?? getopt returned character code 0%o ??\n", c);
+                exit(EXIT_FAILURE);
         }
     }
 

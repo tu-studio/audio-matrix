@@ -27,6 +27,9 @@ option(VERSIONED_INSTALL "Install with version postfix and create symlinks" OFF)
 # This disables the default behavior of adding all targets to the CTest dashboard, when adding libraries with the fetchcontent module
 set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 
+# make version accessible
+add_compile_definitions(VERSION="${PROJECT_VERSION_FULL}")
+
 # Add all source files to file list
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/source/*.h)
 
@@ -41,9 +44,6 @@ message(STATUS "Install postfix: ${INSTALL_POSTFIX}")
 # Add excecutables
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# make version accessible
-# TODO fix this
-# target_compile_definitions(${PROJECT_NAME} PRIVATE VERSION="${PROJECT_VERSION_LONG}")
 
 # Add include directories for all folders in the source
 file(GLOB_RECURSE SUB_DIRS LIST_DIRECTORIES true ${CMAKE_CURRENT_LIST_DIR}/source/*)
