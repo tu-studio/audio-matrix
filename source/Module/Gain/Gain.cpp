@@ -21,29 +21,29 @@ size_t Gain::initialize(size_t input_channels) {
 
 void Gain::process(AudioBufferF &buffer, size_t nframes) {
     for (size_t channel = 0; channel < m_n_input_channels; channel++) {
-        if (m_gain[channel] != m_prev_gain[channel]){
-            float gain_prev = m_prev_gain[channel];
-            float gain_new = m_gain[channel];
+        float gain_new = m_gain[channel].load();
+        float gain_prev = m_prev_gain[channel].load(); 
+        if (gain_prev != gain_new){
             float stepsize = (gain_new-gain_prev) / nframes;
             for (size_t frame = 0; frame < nframes; frame++){
                 float gain = gain_prev + (stepsize * frame);
                 buffer.setSample(channel, frame, buffer.getSample(channel,frame) * gain);
             }
-            m_prev_gain[channel] = gain_new;
+            m_prev_gain[channel].store(gain_new);
         } else {
             for (size_t sample = 0; sample < nframes; sample++) {
-                buffer.setSample(channel, sample, buffer.getSample(channel, sample) * m_gain[channel]);
+                buffer.setSample(channel, sample, buffer.getSample(channel, sample) * gain_new);
             }
         }
     }
 }
 
 void Gain::set_gain(size_t channel, float gain) {
-    m_gain[channel] = gain;
+    m_gain[channel].store(gain);
 }
 
 float Gain::get_gain(size_t channel) {
-    return m_gain[channel];
+    return m_gain[channel].load();
 }
 
 int Gain::osc_gain_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data) {
