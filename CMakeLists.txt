@@ -1,5 +1,5 @@
 # Set minimum cmake version that is required
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 execute_process(COMMAND git describe --dirty
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -77,19 +77,19 @@ include(FetchContent)
 FetchContent_Declare(
     yaml-cpp
     GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-    GIT_TAG 0.8.0
+    GIT_TAG c9371de7836d113c0b14bfa15ca70f00ebb3ac6f #master branch as of 26.06.2025, update with proper version tag as soon as a new release happens
     )
 FetchContent_GetProperties(yaml-cpp)
 
 
 if(NOT yaml-cpp_POPULATED)
 message(STATUS "Fetching yaml-cpp...")
-    FetchContent_Populate(yaml-cpp)
     # Disable building of tools
-    option(YAML_CPP_BUILD_TOOLS OFF)
-    option(YAML_CPP_INSTALL OFF)
-    option(YAML_CPP_FORMAT_SOURCE OFF)
-    add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
+    set(YAML_CPP_BUILD_TOOLS OFF CACHE INTERNAL "turn off yamlcpp targets")
+    set(YAML_CPP_INSTALL OFF CACHE INTERNAL "turn off yamlcpp targets")
+    set(YAML_CPP_FORMAT_SOURCE OFF CACHE INTERNAL "turn off yamlcpp targets")
+
+    FetchContent_MakeAvailable(yaml-cpp)
 endif()
 
 # Link all of our libs together
