@@ -8,7 +8,6 @@
 #include <SphericalHarmonics.h>
 #include <CustomAtomic.h>
 
-// TODO make atomic
 struct PositionAED {
     float azim;
     float elev;
@@ -42,8 +41,8 @@ class AmbiEncoder : public Module{
         AudioBufferF m_buffer;
         
         SphericalHarmonics m_sh;
-        std::vector<std::vector<atomic_float>> m_sh_containers;
-        std::vector<std::vector<atomic_float>> m_sh_containers_prev;
+        std::vector<std::vector<float>> m_sh_containers;
+        std::vector<std::vector<float>> m_sh_containers_prev;
         std::vector<atomic_bool> m_position_changed;
 
 };
