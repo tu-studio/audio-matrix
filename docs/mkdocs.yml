@@ -1,0 +1,50 @@
+---
+site_name: Audio Matrix Docs
+repo_url: https://github.com/tu-studio/audio-matrix
+site_url: https://tu-studio.github.io/audio-matrix/
+
+theme:
+  name: material
+  language: en
+  # highlightjs: true
+  logo: graphics/studio-logo.png
+  favicon: graphics/studio-logo.png
+  palette:
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.footer
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/solid/envelope
+      link: mailto:studio@ak.tu-berlin.de
+
+extra_css:
+  - stylesheets/extra.css
+
+copyright: 2023 - TU Studio Team - Fares Schulz, Max Weidauer
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.details
+  - pymdownx.superfences

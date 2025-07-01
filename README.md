@@ -5,7 +5,7 @@ The Audio Matrix is a configurable router and signal processor for Audio-Setups 
 A configurable amount of input tracks is routed in parallel through user configurable tracks, that can process the audio on them using a variety of modules.
 
 An example Procesing setup could look like this:
-![An Image of the DSP flow in the audio matrix consisting of 3 Tracks, that each contain a number of modules](assets/AudioMatrix.png)
+![An Image of the DSP flow in the audio matrix consisting of 3 Tracks, that each contain a number of modules](docs/docs/graphics/AudioMatrix.png)
 
 # Building
 
