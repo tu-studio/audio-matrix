@@ -20,16 +20,19 @@ size_t Gain::initialize(size_t input_channels) {
 }
 
 void Gain::process(AudioBufferF &buffer, size_t nframes) {
+    // iterate over all input channels
     for (size_t channel = 0; channel < m_n_input_channels; channel++) {
         float gain_new = m_gain[channel].load();
-        float gain_prev = m_prev_gain[channel].load(); 
+        float gain_prev = m_prev_gain[channel];
+
+        // if gain changed apply the change as a ramp over the buffer, otherwise multiply all samples with gain
         if (gain_prev != gain_new){
             float stepsize = (gain_new-gain_prev) / nframes;
-            for (size_t frame = 0; frame < nframes; frame++){
-                float gain = gain_prev + (stepsize * frame);
-                buffer.setSample(channel, frame, buffer.getSample(channel,frame) * gain);
+            for (size_t sample = 0; sample < nframes; sample++){
+                float gain = gain_prev + (stepsize * sample);
+                buffer.setSample(channel, sample, buffer.getSample(channel,sample) * gain);
             }
-            m_prev_gain[channel].store(gain_new);
+            m_prev_gain[channel] = gain_new;
         } else {
             for (size_t sample = 0; sample < nframes; sample++) {
                 buffer.setSample(channel, sample, buffer.getSample(channel, sample) * gain_new);
