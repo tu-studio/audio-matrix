@@ -5,7 +5,7 @@
 #include <DistanceGainConfig.h>
 #include <vector>
 #include <math.h>
-
+#include <CustomAtomic.h>
 class DistanceGain : public Module {
 
 public:
@@ -20,7 +20,7 @@ public:
 
 private:
     std::vector<float> m_prev_gain;
-    std::vector<float> m_gain;
+    std::vector<atomic_float> m_gain;
     std::shared_ptr<DistanceGainConfig> m_config;
     static int distance_osc_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data);
 
