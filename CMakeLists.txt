@@ -1,5 +1,5 @@
 # Set minimum cmake version that is required
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
 execute_process(COMMAND git describe --dirty
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
