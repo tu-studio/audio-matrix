@@ -5,6 +5,7 @@
 
 struct AmbiEncoderConfig : ModuleConfig{
     int order;
+    float nearfield_size;
 
     const Modules module_type() const override{
         return Modules::AMBI_ENCODER;
