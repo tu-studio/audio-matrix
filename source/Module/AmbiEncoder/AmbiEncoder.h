@@ -39,6 +39,7 @@ class AmbiEncoder : public Module{
         std::vector<PositionAED> m_position;
         
         AudioBufferF m_buffer;
+        float m_nearfield_size;
         
         SphericalHarmonics m_sh;
         std::vector<std::vector<float>> m_sh_containers;

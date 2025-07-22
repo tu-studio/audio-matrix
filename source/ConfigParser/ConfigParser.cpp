@@ -193,6 +193,7 @@ ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
     parse_module_osc_params(module, config);
 
     config->order = get_config_option<int>(module, "order", 3, true);
+    config->nearfield_size = get_config_option<float>(module, "nearfield_size", 1.0, true);
     
     return config;
 }

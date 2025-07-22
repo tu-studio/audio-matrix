@@ -7,7 +7,7 @@ AmbiEncoder::AmbiEncoder(AmbiEncoderConfigPtr config, std::shared_ptr<lo::Server
     } else if(m_config->osc_controllable && osc_server == nullptr){
         std::cout << "[error] osc_server is null, cannot add ambi encoder callback method" << std::endl;
     }
-
+    m_nearfield_size = m_config->nearfield_size;
     m_sh.initalize(m_config->order);
 }
 
@@ -95,7 +95,7 @@ void AmbiEncoder::set_aed(size_t channel, float azimuth, float elevation, float 
 
 
 void AmbiEncoder::update_spherical_harmonics(size_t channel){
-    m_sh.update_spherical_harmonics(m_position[channel].azim, m_position[channel].elev, m_position[channel].dist, m_sh_containers[channel]);
+    m_sh.update_spherical_harmonics(m_position[channel].azim, m_position[channel].elev, m_position[channel].dist, m_nearfield_size, m_sh_containers[channel]);
 }
 
 
