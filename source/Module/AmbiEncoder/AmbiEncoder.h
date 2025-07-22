@@ -6,7 +6,7 @@
 #include <AmbiEncoderConfig.h>
 #include <HostAudioConfig.h>
 #include <SphericalHarmonics.h>
-#include <atomic>
+#include <CustomAtomic.h>
 
 struct PositionAED {
     float azim;
@@ -39,11 +39,12 @@ class AmbiEncoder : public Module{
         std::vector<PositionAED> m_position;
         
         AudioBufferF m_buffer;
+        float m_nearfield_size;
         
         SphericalHarmonics m_sh;
         std::vector<std::vector<float>> m_sh_containers;
         std::vector<std::vector<float>> m_sh_containers_prev;
-        std::vector<bool> m_position_changed;
+        std::vector<atomic_bool> m_position_changed;
 
 };
 

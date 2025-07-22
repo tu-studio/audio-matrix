@@ -1,4 +1,4 @@
-port: 8080
+port: 51234
 n_input_channels: 64
 # osc_position_path: /source/pos/ # expect positions in aed format at position_path/aed or at position_path/azim, position_path/elev, position_path/dist
 
@@ -6,13 +6,14 @@ tracks:
   - name: hoa
     modules:
       - gain:
-          factor: 1
+          factor: 0
           osc_path: /source/send/hoa
       - hoa_encoder:
           order: 3
+          nearfield_size: 1.5
           osc_path: /source/pos/aed
-      - gain:
-          factor: 1
+      # - gain:
+      #     factor: 1
       # - limiter:
       #     type: brickwall
       #     threshold: 0

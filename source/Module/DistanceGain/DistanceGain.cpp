@@ -27,10 +27,12 @@ size_t DistanceGain::initialize(size_t input_channels) {
 void DistanceGain::process(AudioBufferF &buffer, size_t nframes) {
     for (size_t channel = 0; channel < m_n_input_channels; channel++)
     {
-        if (m_gain[channel] != m_prev_gain[channel]){
+        float gain_new  = m_gain[channel].load();
+
+        if (gain_new != m_prev_gain[channel]){
             float gain_prev = m_prev_gain[channel];
-            float gain_new = m_gain[channel];
             float stepsize = (gain_new-gain_prev) / nframes;
+
             for (size_t frame = 0; frame < nframes; frame++){
                 float gain = gain_prev + (stepsize * frame);
                 buffer.setSample(channel, frame, buffer.getSample(channel,frame) * gain);
@@ -39,8 +41,9 @@ void DistanceGain::process(AudioBufferF &buffer, size_t nframes) {
 
         } else {
             for (size_t frame = 0; frame < nframes; frame++){
-                buffer.setSample(channel, frame, buffer.getSample(channel,frame) * m_gain[channel]);
+                buffer.setSample(channel, frame, buffer.getSample(channel,frame) * gain_new);
             }
+
         }
         
     }
@@ -53,7 +56,7 @@ void DistanceGain::set_distance(size_t channel, float distance){
         return;
     }
 
-    m_gain[channel] = distance_gain_function(distance);
+    m_gain[channel].store(distance_gain_function(distance));
     // std::cout << "[debug] distance: " << distance << ", gain: " << m_gain[channel] << std::endl;
 }
 

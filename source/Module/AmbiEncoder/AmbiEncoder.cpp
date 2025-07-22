@@ -7,7 +7,7 @@ AmbiEncoder::AmbiEncoder(AmbiEncoderConfigPtr config, std::shared_ptr<lo::Server
     } else if(m_config->osc_controllable && osc_server == nullptr){
         std::cout << "[error] osc_server is null, cannot add ambi encoder callback method" << std::endl;
     }
-
+    m_nearfield_size = m_config->nearfield_size;
     m_sh.initalize(m_config->order);
 }
 
@@ -24,9 +24,9 @@ size_t AmbiEncoder::initialize(size_t input_channels) {
     //     m_position_changed.push_back(true);
     // }
     m_position = std::vector<PositionAED>(m_n_input_channels, {0,0,1});
-    m_sh_containers = std::vector<std::vector<float>>(m_n_input_channels, std::vector<float>(m_n_output_channels, 0));
-    m_sh_containers_prev = std::vector<std::vector<float>>(m_n_input_channels, std::vector<float>(m_n_output_channels, 0));
-    m_position_changed = std::vector<bool>(m_n_input_channels, true);
+    m_sh_containers = std::vector<std::vector<float>>(m_n_input_channels, std::vector<float>(m_n_output_channels, 0.0));
+    m_sh_containers_prev = std::vector<std::vector<float>>(m_n_input_channels, std::vector<float>(m_n_output_channels, 0.0));
+    m_position_changed = std::vector<atomic_bool>(m_n_input_channels, true);
 
     return m_n_output_channels;
 }
@@ -38,15 +38,21 @@ void AmbiEncoder::prepare(HostAudioConfig host_audio_config){
 void AmbiEncoder::process(AudioBufferF &buffer, size_t nframes){
     m_buffer.clear();
     
+    // iterate over all input channels
     for (size_t in_channel = 0; in_channel < m_n_input_channels; in_channel++) {
-        if (m_position_changed[in_channel]){
-            m_position_changed[in_channel] = false;
-            update_spherical_harmonics(in_channel);
-            // std::cout << "source " << in_channel <<" changed: " << m_sh_containers_prev[in_channel][0] << "->" << m_sh_containers[in_channel][0] << std::endl;
+        
+        
+        if (m_position_changed[in_channel].is_set_clear()){
 
+            // if the position changed calculate new spherical harmonics
+            update_spherical_harmonics(in_channel);
+
+            // iterate over all output channels, number depends on the ambi order
             for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
+                // get the previous and the new spherical harmonic and fade between them over one buffer length
                 float sh_prev = m_sh_containers_prev[in_channel][out_channel];
                 float sh_new = m_sh_containers[in_channel][out_channel];
+
                 float stepsize = (sh_new-sh_prev) / nframes;
                 for (size_t j = 0; j < nframes; j++){
                     float sample = m_buffer.getSample(out_channel, j) + buffer.getSample(in_channel, j) * (sh_prev + j *stepsize);
@@ -58,8 +64,9 @@ void AmbiEncoder::process(AudioBufferF &buffer, size_t nframes){
             }
         } else {
             for (size_t out_channel = 0; out_channel < m_n_output_channels; out_channel++){
+                float spherical_harmonic = m_sh_containers_prev[in_channel][out_channel];
                 for (size_t j = 0; j < nframes; j++){
-                    float sample = m_buffer.getSample(out_channel, j) + buffer.getSample(in_channel, j) * m_sh_containers_prev[in_channel][out_channel];
+                    float sample = m_buffer.getSample(out_channel, j) + buffer.getSample(in_channel, j) * spherical_harmonic;
                     m_buffer.setSample(out_channel, j, sample);
                 }
             }
@@ -82,15 +89,13 @@ void AmbiEncoder::set_aed(size_t channel, float azimuth, float elevation, float 
     m_position[channel].azim = azimuth;
     m_position[channel].elev = elevation;
     m_position[channel].dist = distance;
-    m_position_changed[channel] = true;
+    m_position_changed[channel].set();
 }
 
 
 
 void AmbiEncoder::update_spherical_harmonics(size_t channel){
-    m_sh.update_spherical_harmonics(m_position[channel].azim, m_position[channel].elev, m_position[channel].dist, m_sh_containers[channel]);
-    
-    // TODO
+    m_sh.update_spherical_harmonics(m_position[channel].azim, m_position[channel].elev, m_position[channel].dist, m_nearfield_size, m_sh_containers[channel]);
 }
 
 
