@@ -25,9 +25,10 @@ OSC control enables the setting of these gains.
 
 This module encodes the incoming audio into the ambisonics domain. channels are ordered following the AmbiX format. The individual positions for each channel are settable using OSC.
 
-| Option Name | Description                                                           | Default Value |
-| ----------- | --------------------------------------------------------------------- | ------------- |
-| `order`     | Ambisonics order to encode to, currently orders up to 4 are supported | `3`           |
+| Option Name      | Description                                                                                                                                                                  | Default Value |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| `order`          | Ambisonics order to encode to, currently orders up to 4 are supported                                                                                                        | `3`           |
+| `nearfield_size` | Size of the nearfield of the ambisonics encoder in m. within this sphere the encoded ambisonics audio becomes more and more omnidirectional when moving closer to the center | `1.0`         |
 
 ## Module: Sum
 
