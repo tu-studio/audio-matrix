@@ -242,7 +242,12 @@ int JackClient::buffer_size_callback(jack_nframes_t nframes, void *arg) {
     JackClient* jack_client = static_cast<JackClient*>(arg);
 
     // semaphore ensures that only one callback calls jack_client->prepare() at a time
-    jack_client->m_host_audio_semaphore.acquire();
+    bool acquired = jack_client->m_host_audio_semaphore.try_acquire();
+    if (!acquired)
+    {
+        std::cout << "[warning] Could not acquire semaphore for buffer size callback, new buffer size: " << nframes << " , old buffer size: " << jack_client->m_nframes << std::endl;
+        return 0;
+    }
     
     jack_client->m_nframes = nframes;
     jack_client->prepare(HostAudioConfig(jack_client->m_nframes, jack_client->m_samplerate));
@@ -252,16 +257,21 @@ int JackClient::buffer_size_callback(jack_nframes_t nframes, void *arg) {
     return 0;
 }
 
-int JackClient::sample_rate_callback(jack_nframes_t nframes, void *arg) {
+int JackClient::sample_rate_callback(jack_nframes_t samplerate, void *arg) {
     
     JackClient* jack_client = static_cast<JackClient*>(arg);
 
     // semaphore ensures that only one callback calls jack_client->prepare() at a time
-    jack_client->m_host_audio_semaphore.acquire();
+    bool acquired = jack_client->m_host_audio_semaphore.try_acquire();
+    if (!acquired)
+    {
+        std::cout << "[warning] Could not acquire semaphore for sample rate callback, new sample rate: " << samplerate << " , old sample rate: " << jack_client->m_samplerate << std::endl;
+        return 0;
+    }
 
-    jack_client->m_samplerate = nframes;
+    jack_client->m_samplerate = samplerate;
     jack_client->prepare(HostAudioConfig(jack_client->m_nframes, jack_client->m_samplerate));
-    std::cout << "[info] Sample rate changed to " << nframes << std::endl;
+    std::cout << "[info] Sample rate changed to " << samplerate << std::endl;
 
     jack_client->m_host_audio_semaphore.release();
     
