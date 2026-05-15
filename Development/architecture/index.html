@@ -8,29 +8,29 @@
       
       
       
-        <link rel="canonical" href="https://tu-studio.github.io/audio-matrix/">
+        <link rel="canonical" href="https://tu-studio.github.io/audio-matrix/Development/architecture/">
       
       
+        <link rel="prev" href="../adding_modules/">
       
-        <link rel="next" href="configuration/">
       
       
         
       
       
-      <link rel="icon" href="graphics/studio-logo.png">
+      <link rel="icon" href="../../graphics/studio-logo.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Audio Matrix Docs</title>
+        <title>Architecture - Audio Matrix Docs</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,9 +49,9 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#audio-matrix" class="md-skip">
+        <a href="#architecture" class="md-skip">
           Skip to content
         </a>
       
@@ -92,9 +92,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="Audio Matrix Docs" class="md-header__button md-logo" aria-label="Audio Matrix Docs" data-md-component="logo">
+    <a href="../.." title="Audio Matrix Docs" class="md-header__button md-logo" aria-label="Audio Matrix Docs" data-md-component="logo">
       
-  <img src="graphics/studio-logo.png" alt="logo">
+  <img src="../../graphics/studio-logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Audio-Matrix
+              Architecture
             
           </span>
         </div>
@@ -227,9 +227,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Audio Matrix Docs" class="md-nav__button md-logo" aria-label="Audio Matrix Docs" data-md-component="logo">
+    <a href="../.." title="Audio Matrix Docs" class="md-nav__button md-logo" aria-label="Audio Matrix Docs" data-md-component="logo">
       
-  <img src="graphics/studio-logo.png" alt="logo">
+  <img src="../../graphics/studio-logo.png" alt="logo">
 
     </a>
     Audio Matrix Docs
@@ -253,19 +253,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -281,7 +272,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -293,7 +283,7 @@
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -320,7 +310,7 @@
   
   
     <li class="md-nav__item">
-      <a href="installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   
@@ -347,7 +337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="modules/" class="md-nav__link">
+      <a href="../../modules/" class="md-nav__link">
         
   
   
@@ -371,18 +361,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
@@ -403,7 +395,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -421,7 +413,7 @@
   
   
     <li class="md-nav__item">
-      <a href="Development/adding_modules/" class="md-nav__link">
+      <a href="../adding_modules/" class="md-nav__link">
         
   
   
@@ -446,10 +438,19 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="Development/architecture/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -465,6 +466,7 @@
   
 
       </a>
+      
     </li>
   
 
@@ -515,16 +517,13 @@
   
 
 
-<h1 id="audio-matrix">Audio-Matrix</h1>
-<p>The Audio Matrix is a configurable router and signal processor for Audio-Setups with lots of channels/speakers that offers built in remote control via OSC.</p>
-<p>It runs as a JACK client.</p>
-<p>A configurable amount of input tracks is routed in parallel through user configurable tracks, that can process the audio on them using a variety of modules.</p>
-<p>An example Procesing setup could look like this:
-<img alt="An Image of the DSP flow in the audio matrix consisting of 3 Tracks, that each contain a number of modules" src="graphics/AudioMatrix.png" /></p>
-<h1 id="licenses">Licenses</h1>
-<p>This Project is licensed under the GPLv3.</p>
-<p>Calculation of the IIR filter coefficients is performed using the IIR library by <a href="https://www.exstrom.com/journal/sigproc/dsigproc.html">Exstrom Laboratories</a>, also licensed under the GPLv3</p>
-<p>AudioBuffer and RingBuffer implementations are taken from the <a href="https://github.com/tu-studio/anira">anira</a> library, licensed under Apache License 2.0</p>
+<h1 id="architecture">Architecture</h1>
+<p>The <code>AudioMatrix</code> contains <code>Track</code>s, which each contain <code>Module</code>s, which do the actual audio processing.</p>
+<p>During Construction of the <code>Track</code>s, the <code>AudioMatrix</code> passes a shared pointer to the OSC Server Thread to them, which is passed to the modules in order for them to be able to receive OSC messages.</p>
+<p>During initalization the <code>AudioMatrix</code> initializes each <code>Track</code>. The <code>Track</code> in turn iterates over all <code>Module</code>s, each <code>Module</code> returns its number of output channels  depending on the amount of input channels it gets. The number of output channels of each <code>Track</code> is added up, so the <code>AudioMatrix</code> can report to the <code>JackClient</code> the amount of JACK ports that need to be opened.
+During </p>
+<p>Actual buffers get reserved during the <code>prepare</code> stage, which follows the same logic as the initalization stage.</p>
+<p>During processing the input channels are passed into each <code>Track</code>, the <code>Track</code> starts by copying the input buffers into its own <code>m_buffer</code>. then each <code>Module</code> uses its <code>process()</code> function on this buffer. At the end of the processing stage the amount of output channels earlier declared by this track is copied from the <code>m_buffer</code> into the main output buffer <code>out</code>.</p>
 
 
 
@@ -553,22 +552,22 @@
       
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
-        
           
-          <a href="configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Configuration">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Configuration
-              </div>
-            </div>
+          <a href="../adding_modules/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Adding a new module">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Adding a new module
+              </div>
             </div>
           </a>
+        
         
       </nav>
     
@@ -610,10 +609,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.footer"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
