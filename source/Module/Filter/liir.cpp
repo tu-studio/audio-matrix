@@ -73,14 +73,11 @@
 */
 
 double* binomial_mult(int n, double* p) {
-    int i, j;
-    double* a;
-
-    a = (double*)calloc(2 * n, sizeof(double));
+    double* a = (double*)calloc(2 * n, sizeof(double));
     if(a == NULL) return (NULL);
 
-    for(i = 0; i < n; ++i) {
-        for(j = i; j > 0; --j) {
+    for(size_t i = 0; i < n; ++i) {
+        for(size_t j = i; j > 0; --j) {
             a[2 * j] += p[2 * i] * a[2 * (j - 1)] - p[2 * i + 1] * a[2 * (j - 1) + 1];
             a[2 * j + 1] += p[2 * i] * a[2 * (j - 1) + 1] + p[2 * i + 1] * a[2 * (j - 1)];
         }
@@ -97,39 +94,31 @@ double* binomial_mult(int n, double* p) {
 */
 
 double* dcof_bwlp(int n, double fcf) {
-    int k;           // loop variables
-    double theta;    // M_PI * fcf / 2.0
-    double st;       // sine of theta
-    double ct;       // cosine of theta
-    double parg;     // pole angle
-    double sparg;    // sine of the pole angle
-    double cparg;    // cosine of the pole angle
-    double a;        // workspace variable
-    double* rcof;    // binomial coefficients
-    double* dcof;    // dk coefficients
+    const double theta = M_PI * fcf;
+    const double st = sin(theta);
+    const double ct = cos(theta);
 
-    rcof = (double*)calloc(2 * n, sizeof(double));
+    // binomial coefficients
+    double* rcof = (double*)calloc(2 * n, sizeof(double));
     if(rcof == NULL) return (NULL);
 
-    theta = M_PI * fcf;
-    st = sin(theta);
-    ct = cos(theta);
-
-    for(k = 0; k < n; ++k) {
-        parg = M_PI * (double)(2 * k + 1) / (double)(2 * n);
-        sparg = sin(parg);
-        cparg = cos(parg);
-        a = 1.0 + st * sparg;
+    for(size_t k = 0; k < n; ++k) {
+        // pole angle
+        const double parg = M_PI * (double)(2 * k + 1) / (double)(2 * n);
+        const double sparg = sin(parg);
+        const double cparg = cos(parg);
+        const double a = 1.0 + st * sparg;
         rcof[2 * k] = -ct / a;
         rcof[2 * k + 1] = -st * cparg / a;
     }
 
-    dcof = binomial_mult(n, rcof);
+    // dk coefficients
+    double* dcof = binomial_mult(n, rcof);
     free(rcof);
 
     dcof[1] = dcof[0];
     dcof[0] = 1.0;
-    for(k = 3; k <= n; ++k) {
+    for(size_t k = 3; k <= n; ++k) {
         dcof[k] = dcof[2 * k - 2];
     }
     return dcof;
@@ -152,17 +141,14 @@ double* dcof_bwhp(int n, double fcf) {
 */
 
 int* ccof_bwlp(int n) {
-    int* ccof;
-    int m;
-    int i;
-
-    ccof = (int*)calloc(n + 1, sizeof(int));
+    int* ccof = (int*)calloc(n + 1, sizeof(int));
     if(ccof == NULL) return (NULL);
 
     ccof[0] = 1;
     ccof[1] = n;
-    m = n / 2;
-    for(i = 2; i <= m; ++i) {
+
+    int m = n / 2;
+    for(size_t i = 2; i <= m; ++i) {
         ccof[i] = (n - i + 1) * ccof[i - 1] / i;
         ccof[n - i] = ccof[i];
     }
@@ -179,13 +165,10 @@ int* ccof_bwlp(int n) {
 */
 
 int* ccof_bwhp(int n) {
-    int* ccof;
-    int i;
-
-    ccof = ccof_bwlp(n);
+    int* ccof = ccof_bwlp(n);
     if(ccof == NULL) return (NULL);
 
-    for(i = 0; i <= n; ++i) {
+    for(size_t i = 0; i <= n; ++i) {
         if(i % 2) {
             ccof[i] = -ccof[i];
         }
@@ -203,19 +186,13 @@ int* ccof_bwhp(int n) {
 */
 
 double sf_bwlp(int n, double fcf) {
-    int m, k;         // loop variables
-    double omega;     // M_PI * fcf
-    double fomega;    // function of omega
-    double parg0;     // zeroth pole angle
-    double sf;        // scaling factor
+    double omega = M_PI * fcf;                 // M_PI * fcf
+    double fomega = sin(omega);                // function of omega
+    double parg0 = M_PI / (double)(2 * n);     // zeroth pole angle
+    double sf = 1.0;                           // scaling factor
+    size_t m = n / 2;
 
-    omega = M_PI * fcf;
-    fomega = sin(omega);
-    parg0 = M_PI / (double)(2 * n);
-
-    m = n / 2;
-    sf = 1.0;
-    for(k = 0; k < n / 2; ++k) {
+    for(size_t k = 0; k < m; ++k) {
         sf *= 1.0 + fomega * sin((double)(2 * k + 1) * parg0);
     }
 
@@ -237,19 +214,13 @@ double sf_bwlp(int n, double fcf) {
 */
 
 double sf_bwhp(int n, double fcf) {
-    int m, k;         // loop variables
-    double omega;     // M_PI * fcf
-    double fomega;    // function of omega
-    double parg0;     // zeroth pole angle
-    double sf;        // scaling factor
+    double omega = M_PI * fcf;                 // M_PI * fcf
+    double fomega = sin(omega);                // function of omega
+    double parg0 = M_PI / (double)(2 * n);     // zeroth pole angle
+    double sf = 1.0;                           // scaling factor
+    const size_t m = n / 2;
 
-    omega = M_PI * fcf;
-    fomega = sin(omega);
-    parg0 = M_PI / (double)(2 * n);
-
-    m = n / 2;
-    sf = 1.0;
-    for(k = 0; k < n / 2; ++k) {
+    for(size_t k = 0; k < m; ++k) {
         sf *= 1.0 + fomega * sin((double)(2 * k + 1) * parg0);
     }
 
@@ -260,5 +231,5 @@ double sf_bwhp(int n, double fcf) {
     }
     sf = pow(fomega, n) / sf;
 
-    return (sf);
+    return sf;
 }
