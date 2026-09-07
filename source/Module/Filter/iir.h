@@ -1,3 +1,6 @@
+#ifndef FILTER_IIR_H
+#define FILTER_IIR_H
+
 double *binomial_mult( int n, double *p );
 double *trinomial_mult( int n, double *b, double *c );
 
@@ -15,3 +18,5 @@ double sf_bwlp( int n, double fcf );
 double sf_bwhp( int n, double fcf );
 double sf_bwbp( int n, double f1f, double f2f );
 double sf_bwbs( int n, double f1f, double f2f );
+
+#endif // FILTER_IIR_H
