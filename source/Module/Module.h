@@ -5,8 +5,6 @@
 #include <lo/lo.h>
 #include <lo/lo_cpp.h>
 #include <AudioBuffer.h>
-#include <string>
-#include <iostream>
 #include <HostAudioConfig.h>
 
 class Module {
@@ -23,5 +21,7 @@ protected:
     size_t m_n_input_channels;
     size_t m_n_output_channels;
 };
+
+using ServerThreadPtr = std::shared_ptr<lo::ServerThread>;
 
 #endif // MODULE_H

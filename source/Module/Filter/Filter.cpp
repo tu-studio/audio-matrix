@@ -1,6 +1,7 @@
+#include <Module.h>
 #include <Filter.h>
 
-Filter::Filter(FilterConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server) : m_config(config){
+Filter::Filter(FilterConfigPtr config, ServerThreadPtr osc_server) : m_config(config){
 
 }
 
@@ -9,8 +10,7 @@ size_t Filter::initialize(size_t input_channels) {
     m_n_output_channels = input_channels;
     m_n_taps = m_config->order / 2 + 1;
     
-    for (size_t i = 0; i < input_channels; i++)
-    {
+    for (size_t i = 0; i < input_channels; i++) {
         m_memory_1.push_back(std::vector<double>(m_n_taps, 0.0) );
         m_memory_2.push_back(std::vector<double>(m_n_taps, 0.0) );
     }
@@ -66,24 +66,22 @@ double Filter::filter_sample(double current_x, std::vector<double> &memory){
     return y_n;
 }
 
-void Filter::calculate_filter_coefficients(double samplerate){
-    double * a_coeffs; // length: order
-    double * b_coeffs; // length: order+1
+void Filter::calculate_filter_coefficients(double samplerate) {
+    double* a_coeffs; // length: order
+    double* b_coeffs; // length: order+1
     int order = m_config->order / 2;
 
     //calculate cutoff freq as circular frequency
-    double cutoff_freq = 2*m_config->freq / samplerate ;
+    double cutoff_freq = 2 * m_config->freq / samplerate ;
 
-    switch (m_config->type)
-    {
-    case FilterType::LP :
-        {
+    switch (m_config->type) {
+    case FilterType::LP: {
             a_coeffs = dcof_bwlp(order, cutoff_freq );
 
-            int * b_coeffs_int = ccof_bwlp(order);
+            int* b_coeffs_int = ccof_bwlp(order);
             double scaling_factor = sf_bwlp(order, cutoff_freq);
 
-            b_coeffs = (double *) malloc((m_n_taps)* sizeof(double));
+            b_coeffs = (double*) malloc(m_n_taps * sizeof(double));
             for (size_t i = 0; i < m_n_taps; i++){
                 b_coeffs[i] = scaling_factor * b_coeffs_int[i];
             }
@@ -91,15 +89,13 @@ void Filter::calculate_filter_coefficients(double samplerate){
             free(b_coeffs_int);
         }
         break;
-    case FilterType::HP :
-        {
-
+    case FilterType::HP: {
             a_coeffs = dcof_bwhp(order, cutoff_freq );
 
-            int * b_coeffs_int = ccof_bwhp(order);
+            int* b_coeffs_int = ccof_bwhp(order);
             double scaling_factor = sf_bwhp(order, cutoff_freq);
 
-            b_coeffs = (double *) malloc((m_n_taps )* sizeof(double));
+            b_coeffs = (double*) malloc(m_n_taps * sizeof(double));
             for (size_t i = 0; i < m_n_taps; i++){
                 b_coeffs[i] = scaling_factor * b_coeffs_int[i];
             }
@@ -115,22 +111,6 @@ void Filter::calculate_filter_coefficients(double samplerate){
     
     m_a = std::vector<double>(a_coeffs, a_coeffs + m_n_taps);
     m_b = std::vector<double>(b_coeffs, b_coeffs + m_n_taps);
-
-    // std:: cout << "[debug] a coeffs: ";
-    // for (size_t i = 0; i < m_n_taps; i++)
-    // {
-    //     std::cout << m_a[i] << ", ";
-    //     /* code */
-    // }
-    // std::cout << std::endl;
-
-    // std:: cout << "[debug] b coeffs: ";
-    // for (size_t i = 0; i < m_n_taps; i++)
-    // {
-    //     std::cout << m_b[i] << ", ";
-    //     /* code */
-    // }
-    // std::cout << std::endl;
 
     free(a_coeffs);
     free(b_coeffs);

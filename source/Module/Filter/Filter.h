@@ -9,7 +9,7 @@
 class Filter : public Module {
     public:
         Filter() = delete;
-        Filter(FilterConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server);
+        Filter(FilterConfigPtr config, ServerThreadPtr osc_server);
         ~Filter() = default;
 
         size_t initialize(size_t input_channels) override;

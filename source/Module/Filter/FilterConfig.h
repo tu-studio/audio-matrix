@@ -2,13 +2,14 @@
 #define MODULE_FILTERCONFIG_H
 
 #include <ModuleConfig.h>
+#include <cstdint>
 
-enum FilterType {
+enum class FilterType : std::uint8_t {
     HP,
     LP,
 };
 
-struct FilterConfig : ModuleConfig{
+struct FilterConfig : ModuleConfig {
     float freq;
     FilterType type;
     int order;
