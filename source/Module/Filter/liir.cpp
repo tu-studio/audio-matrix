@@ -72,27 +72,23 @@
         of the array is then 2n.
 */
 
-double *binomial_mult( int n, double *p )
-{
+double* binomial_mult(int n, double* p) {
     int i, j;
-    double *a;
+    double* a;
 
-    a = (double *)calloc( 2 * n, sizeof(double) );
-    if( a == NULL ) return( NULL );
+    a = (double*)calloc(2 * n, sizeof(double));
+    if(a == NULL) return (NULL);
 
-    for( i = 0; i < n; ++i )
-    {
-	for( j = i; j > 0; --j )
-	{
-	    a[2*j] += p[2*i] * a[2*(j-1)] - p[2*i+1] * a[2*(j-1)+1];
-	    a[2*j+1] += p[2*i] * a[2*(j-1)+1] + p[2*i+1] * a[2*(j-1)];
-	}
-	a[0] += p[2*i];
-	a[1] += p[2*i+1];
+    for(i = 0; i < n; ++i) {
+        for(j = i; j > 0; --j) {
+            a[2 * j] += p[2 * i] * a[2 * (j - 1)] - p[2 * i + 1] * a[2 * (j - 1) + 1];
+            a[2 * j + 1] += p[2 * i] * a[2 * (j - 1) + 1] + p[2 * i + 1] * a[2 * (j - 1)];
+        }
+        a[0] += p[2 * i];
+        a[1] += p[2 * i + 1];
     }
-    return( a );
+    return a;
 }
-
 
 /**********************************************************************
   dcof_bwlp - calculates the d coefficients for a butterworth lowpass 
@@ -100,44 +96,43 @@ double *binomial_mult( int n, double *p )
 
 */
 
-double *dcof_bwlp( int n, double fcf )
-{
-    int k;            // loop variables
-    double theta;     // M_PI * fcf / 2.0
-    double st;        // sine of theta
-    double ct;        // cosine of theta
-    double parg;      // pole angle
-    double sparg;     // sine of the pole angle
-    double cparg;     // cosine of the pole angle
-    double a;         // workspace variable
-    double *rcof;     // binomial coefficients
-    double *dcof;     // dk coefficients
+double* dcof_bwlp(int n, double fcf) {
+    int k;           // loop variables
+    double theta;    // M_PI * fcf / 2.0
+    double st;       // sine of theta
+    double ct;       // cosine of theta
+    double parg;     // pole angle
+    double sparg;    // sine of the pole angle
+    double cparg;    // cosine of the pole angle
+    double a;        // workspace variable
+    double* rcof;    // binomial coefficients
+    double* dcof;    // dk coefficients
 
-    rcof = (double *)calloc( 2 * n, sizeof(double) );
-    if( rcof == NULL ) return( NULL );
+    rcof = (double*)calloc(2 * n, sizeof(double));
+    if(rcof == NULL) return (NULL);
 
     theta = M_PI * fcf;
     st = sin(theta);
     ct = cos(theta);
 
-    for( k = 0; k < n; ++k )
-    {
-	parg = M_PI * (double)(2*k+1)/(double)(2*n);
-	sparg = sin(parg);
-	cparg = cos(parg);
-	a = 1.0 + st*sparg;
-	rcof[2*k] = -ct/a;
-	rcof[2*k+1] = -st*cparg/a;
+    for(k = 0; k < n; ++k) {
+        parg = M_PI * (double)(2 * k + 1) / (double)(2 * n);
+        sparg = sin(parg);
+        cparg = cos(parg);
+        a = 1.0 + st * sparg;
+        rcof[2 * k] = -ct / a;
+        rcof[2 * k + 1] = -st * cparg / a;
     }
 
-    dcof = binomial_mult( n, rcof );
-    free( rcof );
+    dcof = binomial_mult(n, rcof);
+    free(rcof);
 
     dcof[1] = dcof[0];
     dcof[0] = 1.0;
-    for( k = 3; k <= n; ++k )
-        dcof[k] = dcof[2*k-2];
-    return( dcof );
+    for(k = 3; k <= n; ++k) {
+        dcof[k] = dcof[2 * k - 2];
+    }
+    return dcof;
 }
 
 /**********************************************************************
@@ -146,11 +141,9 @@ double *dcof_bwlp( int n, double fcf )
 
 */
 
-double *dcof_bwhp( int n, double fcf )
-{
-    return( dcof_bwlp( n, fcf ) );
+double* dcof_bwhp(int n, double fcf) {
+    return dcof_bwlp(n, fcf);
 }
-
 
 /**********************************************************************
   ccof_bwlp - calculates the c coefficients for a butterworth lowpass 
@@ -158,27 +151,25 @@ double *dcof_bwhp( int n, double fcf )
 
 */
 
-int *ccof_bwlp( int n )
-{
-    int *ccof;
+int* ccof_bwlp(int n) {
+    int* ccof;
     int m;
     int i;
 
-    ccof = (int *)calloc( n+1, sizeof(int) );
-    if( ccof == NULL ) return( NULL );
+    ccof = (int*)calloc(n + 1, sizeof(int));
+    if(ccof == NULL) return (NULL);
 
     ccof[0] = 1;
     ccof[1] = n;
-    m = n/2;
-    for( i=2; i <= m; ++i)
-    {
-        ccof[i] = (n-i+1)*ccof[i-1]/i;
-        ccof[n-i]= ccof[i];
+    m = n / 2;
+    for(i = 2; i <= m; ++i) {
+        ccof[i] = (n - i + 1) * ccof[i - 1] / i;
+        ccof[n - i] = ccof[i];
     }
-    ccof[n-1] = n;
+    ccof[n - 1] = n;
     ccof[n] = 1;
 
-    return( ccof );
+    return ccof;
 }
 
 /**********************************************************************
@@ -187,18 +178,21 @@ int *ccof_bwlp( int n )
 
 */
 
-int *ccof_bwhp( int n )
-{
-    int *ccof;
+int* ccof_bwhp(int n) {
+    int* ccof;
     int i;
 
-    ccof = ccof_bwlp( n );
-    if( ccof == NULL ) return( NULL );
+    ccof = ccof_bwlp(n);
+    if(ccof == NULL) return (NULL);
 
-    for( i = 0; i <= n; ++i)
-        if( i % 2 ) ccof[i] = -ccof[i];
+    for(i = 0; i <= n; ++i) {
+        if(i % 2) {
+            ccof[i] = -ccof[i];
+        }
+    }
 
-    return( ccof );
+
+    return ccof;
 }
 
 /**********************************************************************
@@ -208,8 +202,7 @@ int *ccof_bwhp( int n )
 
 */
 
-double sf_bwlp( int n, double fcf )
-{
+double sf_bwlp(int n, double fcf) {
     int m, k;         // loop variables
     double omega;     // M_PI * fcf
     double fomega;    // function of omega
@@ -218,19 +211,22 @@ double sf_bwlp( int n, double fcf )
 
     omega = M_PI * fcf;
     fomega = sin(omega);
-    parg0 = M_PI / (double)(2*n);
+    parg0 = M_PI / (double)(2 * n);
 
     m = n / 2;
     sf = 1.0;
-    for( k = 0; k < n/2; ++k )
-        sf *= 1.0 + fomega * sin((double)(2*k+1)*parg0);
+    for(k = 0; k < n / 2; ++k) {
+        sf *= 1.0 + fomega * sin((double)(2 * k + 1) * parg0);
+    }
 
     fomega = sin(omega / 2.0);
 
-    if( n % 2 ) sf *= fomega + cos(omega / 2.0);
-    sf = pow( fomega, n ) / sf;
+    if(n % 2) {
+        sf *= fomega + cos(omega / 2.0);
+    }
+    sf = pow(fomega, n) / sf;
 
-    return(sf);
+    return sf;
 }
 
 /**********************************************************************
@@ -240,8 +236,7 @@ double sf_bwlp( int n, double fcf )
 
 */
 
-double sf_bwhp( int n, double fcf )
-{
+double sf_bwhp(int n, double fcf) {
     int m, k;         // loop variables
     double omega;     // M_PI * fcf
     double fomega;    // function of omega
@@ -250,17 +245,20 @@ double sf_bwhp( int n, double fcf )
 
     omega = M_PI * fcf;
     fomega = sin(omega);
-    parg0 = M_PI / (double)(2*n);
+    parg0 = M_PI / (double)(2 * n);
 
     m = n / 2;
     sf = 1.0;
-    for( k = 0; k < n/2; ++k )
-        sf *= 1.0 + fomega * sin((double)(2*k+1)*parg0);
+    for(k = 0; k < n / 2; ++k) {
+        sf *= 1.0 + fomega * sin((double)(2 * k + 1) * parg0);
+    }
 
     fomega = cos(omega / 2.0);
 
-    if( n % 2 ) sf *= fomega + sin(omega / 2.0);
-    sf = pow( fomega, n ) / sf;
+    if(n % 2) {
+        sf *= fomega + sin(omega / 2.0);
+    }
+    sf = pow(fomega, n) / sf;
 
-    return(sf);
+    return (sf);
 }
