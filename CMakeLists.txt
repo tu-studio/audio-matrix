@@ -17,6 +17,9 @@ message(STATUS "Project version: ${PROJECT_VERSION_FULL}")
 set(PROJECT_NAME "audio-matrix")
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION_SHORT})
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+
 # Set cpp standard to c++20, otherwise std::numbers library will not be found
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
