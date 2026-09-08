@@ -30,10 +30,10 @@ size_t Filter::initialize(size_t input_channels) {
 
 void Filter::prepare(HostAudioConfig host_audio_config) {
     m_a.resize(m_config->order);
-    m_b_coeffs_int.resize(m_n_taps);
     m_b.resize(m_n_taps);
-    m_rcof.resize(m_config->order);
-    calculate_filter_coefficients(host_audio_config.m_host_sample_rate);
+
+    coeff_calc.prepare(m_config->order, 1. / host_audio_config.m_host_sample_rate);
+    calculate_filter_coefficients();
 }
 
 void Filter::process(AudioBufferF &buffer, size_t n_frames) {
@@ -81,41 +81,26 @@ double Filter::filter_sample(double current_x, std::vector<double> &memory) {
     return y_n;
 }
 
-void Filter::calculate_filter_coefficients(double samplerate) {
-    int order = m_config->order / 2;
-
-    //calculate cutoff freq as circular frequency
-    double cutoff_freq = 2 * m_config->freq / samplerate ;
-
+void Filter::calculate_filter_coefficients() {
     switch (m_config->type) {
-    case FilterType::LP: {
-            dcof_bwlp(m_a.data(), m_a.size(), m_rcof.data(), m_rcof.size(),
-                    order, cutoff_freq );
-
-            ccof_bwlp(m_b_coeffs_int.data(), m_b_coeffs_int.size(), order);
-            double scaling_factor = sf_bwlp(order, cutoff_freq);
-
-            for (size_t i = 0; i < m_n_taps; i++) {
-                m_b[i] = scaling_factor * m_b_coeffs_int[i];
-            }
-        }
+    case FilterType::LP:
+        coeff_calc.calc_lowpass(m_config->freq);
         break;
-    case FilterType::HP: {
-            dcof_bwhp(m_a.data(), m_a.size(), m_rcof.data(), m_rcof.size(),
-                    order, cutoff_freq );
-
-            ccof_bwhp(m_b_coeffs_int.data(), m_b_coeffs_int.size(), order);
-            double scaling_factor = sf_bwhp(order, cutoff_freq);
-
-            for (size_t i = 0; i < m_n_taps; i++) {
-                m_b[i] = scaling_factor * m_b_coeffs_int[i];
-            }
-        }
+    case FilterType::HP:
+        coeff_calc.calc_highpass(m_config->freq);
         break;
-    
     default:
         std::cout << "[ERROR] invalid Filter Type" << std::endl;
         throw "Invalid Filter Type";
+    }
+
+    // TODO:
+    // do something more sophisticated/atomic than just copying :]
+    for(size_t i = 0; i < m_a.size(); ++i) {
+        m_a[i] = coeff_calc.getA()[i];
+    }
+    for(size_t i = 0; i < m_b.size(); ++i) {
+        m_b[i] = coeff_calc.getB()[i];
     }
     
 }
@@ -133,7 +118,6 @@ int Filter::osc_filter_frequency_callback(const char *path, const char *types, l
     auto& config = filter->m_config;
 
     // Filter frequency
-    // TODO: set filter frequency
     const float f = argv[0]->f;
 
     // Filter type
@@ -146,6 +130,8 @@ int Filter::osc_filter_frequency_callback(const char *path, const char *types, l
         std::cout<<"Unknown filter type " << type << std::endl;
         return -1;
     }
+
+    filter->calculate_filter_coefficients();
 
     // on or off
     filter->set_enabled((bool)argv[2]->i);
