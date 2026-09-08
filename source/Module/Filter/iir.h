@@ -1,11 +1,13 @@
 #ifndef FILTER_IIR_H
 #define FILTER_IIR_H
 
-double* dcof_bwlp(int n, double fcf);
-double* dcof_bwhp(int n, double fcf);
+#include <cstddef>
 
-int* ccof_bwlp(int n);
-int* ccof_bwhp(int n);
+void dcof_bwlp(double* dcof, size_t dcof_size, double* rcof, size_t rcof_size, int n, double fcf);
+void dcof_bwhp(double* dcof, size_t dcof_size, double* rcof, size_t rcof_size, int n, double fcf);
+
+void ccof_bwlp(int* ccof, size_t size, int n);
+void ccof_bwhp(int* ccof, size_t size, int n);
 
 double sf_bwlp(int n, double fcf);
 double sf_bwhp(int n, double fcf);

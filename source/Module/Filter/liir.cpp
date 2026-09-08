@@ -36,6 +36,8 @@
  *
  */
 
+#include <cassert>
+#include <cstddef>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -72,9 +74,8 @@
         of the array is then 2n.
 */
 
-double* binomial_mult(int n, double* p) {
-    double* a = (double*)calloc(2 * n, sizeof(double));
-    if(a == NULL) return (NULL);
+void binomial_mult(double* a, size_t a_size, double* p, int n) {
+    assert(a_size == 2 * n);
 
     for(size_t i = 0; i < n; ++i) {
         for(size_t j = i; j > 0; --j) {
@@ -84,7 +85,6 @@ double* binomial_mult(int n, double* p) {
         a[0] += p[2 * i];
         a[1] += p[2 * i + 1];
     }
-    return a;
 }
 
 /**********************************************************************
@@ -93,14 +93,13 @@ double* binomial_mult(int n, double* p) {
 
 */
 
-double* dcof_bwlp(int n, double fcf) {
+void dcof_bwlp(double* dcof, size_t dcof_size, double* rcof, size_t rcof_size, int n, double fcf) {
     const double theta = M_PI * fcf;
     const double st = sin(theta);
     const double ct = cos(theta);
 
     // binomial coefficients
-    double* rcof = (double*)calloc(2 * n, sizeof(double));
-    if(rcof == NULL) return (NULL);
+    assert(rcof_size == 2 * n);
 
     for(size_t k = 0; k < n; ++k) {
         // pole angle
@@ -113,15 +112,13 @@ double* dcof_bwlp(int n, double fcf) {
     }
 
     // dk coefficients
-    double* dcof = binomial_mult(n, rcof);
-    free(rcof);
+    binomial_mult(dcof, dcof_size, rcof, n);
 
     dcof[1] = dcof[0];
     dcof[0] = 1.0;
     for(size_t k = 3; k <= n; ++k) {
         dcof[k] = dcof[2 * k - 2];
     }
-    return dcof;
 }
 
 /**********************************************************************
@@ -130,8 +127,8 @@ double* dcof_bwlp(int n, double fcf) {
 
 */
 
-double* dcof_bwhp(int n, double fcf) {
-    return dcof_bwlp(n, fcf);
+void dcof_bwhp(double* dcof, size_t dcof_size, double* rcof, size_t rcof_size, int n, double fcf) {
+    return dcof_bwlp(dcof, dcof_size, rcof, rcof_size, n, fcf);
 }
 
 /**********************************************************************
@@ -140,9 +137,8 @@ double* dcof_bwhp(int n, double fcf) {
 
 */
 
-int* ccof_bwlp(int n) {
-    int* ccof = (int*)calloc(n + 1, sizeof(int));
-    if(ccof == NULL) return (NULL);
+void ccof_bwlp(int* ccof, size_t size, int n) {
+    assert(size == n + 1);
 
     ccof[0] = 1;
     ccof[1] = n;
@@ -154,8 +150,6 @@ int* ccof_bwlp(int n) {
     }
     ccof[n - 1] = n;
     ccof[n] = 1;
-
-    return ccof;
 }
 
 /**********************************************************************
@@ -164,18 +158,13 @@ int* ccof_bwlp(int n) {
 
 */
 
-int* ccof_bwhp(int n) {
-    int* ccof = ccof_bwlp(n);
-    if(ccof == NULL) return (NULL);
-
+void ccof_bwhp(int* ccof, size_t size, int n) {
+    ccof_bwlp(ccof, size, n);
     for(size_t i = 0; i <= n; ++i) {
         if(i % 2) {
             ccof[i] = -ccof[i];
         }
     }
-
-
-    return ccof;
 }
 
 /**********************************************************************
