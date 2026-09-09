@@ -93,6 +93,7 @@ foreach(DIR IN LISTS SUB_DIRS_RELATIVE)
 
     get_target_property(COMPILE_DEF ${PROJECT_NAME} COMPILE_DEFINITIONS)
     target_compile_definitions(Test_${DIR} PRIVATE ${COMPILE_DEF})
+    target_compile_options(Test_${DIR} PRIVATE -Wno-c99-extensions)
     # include Loads and runs CMake code from the file given. Loads and runs CMake code from the file given.
     include(GoogleTest)
     # gtest_discover_tests will register a CTest test for each gtest and run them all in parallel with the rest of the Test.
