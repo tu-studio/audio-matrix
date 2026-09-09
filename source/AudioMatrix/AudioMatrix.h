@@ -5,7 +5,6 @@
 #include <Track.h>
 #include <vector>
 #include <string>
-#include <memory>
 #include <ConfigParser.h>
 #include <HostAudioConfig.h>
 #include <OSCServer.h>
@@ -27,10 +26,10 @@ public:
 
 private:
     std::vector<TrackPtr> m_tracks;
-    AudioMatrixConfig m_audio_matrix_config;
     size_t m_n_output_channels;
     ConfigParser config_parser;
     HostAudioConfig m_host_audio_config;
+    AudioMatrixConfig m_audio_matrix_config;
     OSCServer m_osc_server;
 };
 

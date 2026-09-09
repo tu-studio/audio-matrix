@@ -1,14 +1,19 @@
 #include <AudioMatrix.h>
 
-AudioMatrix::AudioMatrix(std::string config_path): config_parser(config_path)
+AudioMatrix::AudioMatrix(std::string config_path)
+: config_parser(config_path)
+, m_audio_matrix_config(*config_parser.get_config().get())
+, m_osc_server(m_audio_matrix_config.port)
 {
-    m_audio_matrix_config = *config_parser.get_config().get();
-    m_osc_server = OSCServer(m_audio_matrix_config.port);
+
+    auto server_thread = m_osc_server.get_server_thread();
     for (int i = 0; i < m_audio_matrix_config.tracks.size(); i++) {
-        m_tracks.emplace_back(std::make_unique<Track>(m_audio_matrix_config.tracks[i], m_osc_server.get_server_thread()));
+        m_tracks.emplace_back(std::make_unique<Track>(m_audio_matrix_config.tracks[i],
+                                                      m_osc_server.get_server_thread()));
     }
     m_osc_server.start();
     initialize();
+
 }
 
 AudioMatrix::~AudioMatrix() {
