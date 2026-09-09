@@ -1,7 +1,6 @@
 #ifndef OSCSERVER_H
 #define OSCSERVER_H
 
-#include <iostream>
 #include <lo/lo.h>
 #include <lo/lo_cpp.h>
 

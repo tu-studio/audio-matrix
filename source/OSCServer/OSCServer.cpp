@@ -1,12 +1,18 @@
 #include <OSCServer.h>
+#include <cstdlib>
+#include <iostream>
 
-OSCServer::OSCServer(int port) {
-    this->port = port;
-    try { 
-        st = std::make_shared<lo::ServerThread>(port);
-    }
-    catch(const std::exception& e) {
-        std::cerr << e.what() << '\n';
+void osc_error_handler(int num, const char *msg, const char *path) {
+    std::cerr << "liblo error " << num << " in " << path << ": " << msg << std::endl;
+}
+
+OSCServer::OSCServer(int port) : port(port) {
+    st = std::make_shared<lo::ServerThread>(port, osc_error_handler);
+
+    if (!st->is_valid()) {
+        std::cerr << "OSC Server initialization failed for port " << port << std::endl;
+        std::cerr << "Aborting" << std::endl;
+        std::abort();
     }
 }
 
