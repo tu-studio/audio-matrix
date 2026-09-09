@@ -32,6 +32,14 @@ public:
     std::string get_name() { return m_config.name; }
     AudioBufferF& get_buffer() { return m_buffer; }
     std::vector<std::shared_ptr<Module>>& get_modules() { return m_modules; }
+
+    template <typename ConfigClass, typename ModuleClass>
+    void createAndAddModule(const std::shared_ptr<ModuleConfig>& module_config, 
+                            const std::shared_ptr<lo::ServerThread>& osc_server) {
+    if (auto config_cast = std::dynamic_pointer_cast<ConfigClass>(module_config)) {
+        m_modules.push_back(std::make_shared<ModuleClass>(config_cast, osc_server));
+    }
+}
     
 private:
     AudioBufferF m_buffer;
