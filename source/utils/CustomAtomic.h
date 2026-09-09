@@ -75,7 +75,6 @@ class atomic_bool {
 
 };
 
-
 using atomic_float = custom_atomic<float>;
 using atomic_int = custom_atomic<int>;
 
