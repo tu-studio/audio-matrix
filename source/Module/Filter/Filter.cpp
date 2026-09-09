@@ -1,6 +1,11 @@
+#include "FilterConfig.h"
 #include <Module.h>
 #include <Filter.h>
+#include <algorithm>
+#include <cctype>
 #include <cstring>
+#include <iostream>
+#include <string>
 
 Filter::Filter(FilterConfigPtr config, ServerThreadPtr osc_server) : m_config(config) {
     if (!m_config->osc_controllable) return;
@@ -37,7 +42,7 @@ void Filter::prepare(HostAudioConfig host_audio_config) {
 }
 
 void Filter::process(AudioBufferF &buffer, size_t n_frames) {
-    if(!is_enabled) return;
+    if(!is_enabled.load())   return;
 
     for (size_t channel = 0; channel < m_n_input_channels; channel++) {
         for (size_t sample = 0; sample < n_frames; sample++) {
@@ -54,17 +59,18 @@ void Filter::process(AudioBufferF &buffer, size_t n_frames) {
 }
 
 double Filter::filter_sample(double current_x, std::vector<double> &memory) {
-    // Filter using this difference equasion (direct form II IIR filter):
+    // Filter using this difference equation (direct form II IIR filter):
     // w[n] = sum_{k=1}^N a_k * w[n-k] + x[n]
     // y[n] = sum_{k=0}^M b_k * w[n-k]
 
-    // TODO if necessary this function could be optimized, by using a ringbuffer for memory and by merging the loops. this wouldn't help readability
+    // TODO if necessary this function could be optimized, by using a ringbuffer
+    // for memory and by merging the loops. this wouldn't help readability
     double w_n = current_x;
     double y_n = 0.0;
 
     // calculate w[n]
     for (size_t i = 1; i < m_n_taps; i++) {
-        w_n -= memory[i-1] * m_a[i];
+        w_n -= memory[i-1] * m_a[i].load();
     }
 
     // move elements in memory back
@@ -76,7 +82,7 @@ double Filter::filter_sample(double current_x, std::vector<double> &memory) {
 
     // calculate y[n]
     for (size_t i = 0; i < m_n_taps; i++) {
-        y_n += m_b[i] * memory[i];
+        y_n += m_b[i].load() * memory[i];
     }
     return y_n;
 }
@@ -94,19 +100,20 @@ void Filter::calculate_filter_coefficients() {
         throw "Invalid Filter Type";
     }
 
-    // TODO:
-    // do something more sophisticated/atomic than just copying :]
+    const auto& a = coeff_calc.getA();
     for(size_t i = 0; i < m_a.size(); ++i) {
-        m_a[i] = coeff_calc.getA()[i];
+        m_a[i].store(a[i]);
     }
+
+    const auto& b = coeff_calc.getB();
     for(size_t i = 0; i < m_b.size(); ++i) {
-        m_b[i] = coeff_calc.getB()[i];
+        m_b[i].store(b[i]);
     }
     
 }
 
 void Filter::set_enabled(bool is_enabled_) {
-    is_enabled = is_enabled_;
+    is_enabled.store(is_enabled_);
 }
 
 int Filter::osc_filter_frequency_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data) {
@@ -117,24 +124,39 @@ int Filter::osc_filter_frequency_callback(const char *path, const char *types, l
     Filter* filter = (Filter*) user_data;
     auto& config = filter->m_config;
 
-    // Filter frequency
-    const float f = argv[0]->f;
+    // arg 0: Filter frequency
+    const float newFreq = argv[0]->f;
 
-    // Filter type
-    char* type = &(argv[1]->s);
-    if(!std::strncmp(type, "lp", 2)) {
-        config->type = FilterType::LP;
-    } else if(!std::strncmp(type, "hp", 2)) {
-        config->type = FilterType::HP;
+    // arg 1: Filter type
+    FilterType newType;
+    // assuming we are allowed to do a little heap allocation here ...
+    // if not, we could still copy the incoming string to the stack
+    std::string typeString(&(argv[1]->s));
+    std::transform(typeString.begin(), typeString.end(), typeString.begin(),
+                   [](auto c) { return std::tolower(c); });
+
+    if(typeString == "lp") {
+        newType = FilterType::LP;
+    } else if(typeString == "hp") {
+        newType = FilterType::HP;
     } else {
-        std::cout<<"Unknown filter type " << type << std::endl;
+        std::cout<<"Unknown filter type " << typeString << std::endl;
         return -1;
     }
 
-    filter->calculate_filter_coefficients();
+    // only recalculate if anything has actually changed!
+    bool defer_recalculate = (newFreq != config->freq) || (newType != config->type);
 
-    // on or off
-    filter->set_enabled((bool)argv[2]->i);
+    config->freq = newFreq;
+    config->type = newType;
+
+    if(defer_recalculate) {
+        filter->calculate_filter_coefficients();
+    }
+
+    // arg 2: on/off
+    const auto enabled = static_cast<bool>(argv[2]->i);
+    filter->set_enabled(enabled);
 
     return 0;
 }
