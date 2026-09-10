@@ -131,7 +131,7 @@ int Filter::osc_filter_frequency_callback(const char *path, const char *types, l
     // arg 0: channel index
     const int channel = argv[0]->i;
     if(channel >= filter->m_n_input_channels) {
-        std::cout<<"Channel index "<< channel<<" out of range!"<<std::endl;
+        std::cout<<"[warn] tried to set filter on invalid channel "<< channel<<std::endl;
         return -1;
     }
 
@@ -151,7 +151,7 @@ int Filter::osc_filter_frequency_callback(const char *path, const char *types, l
     } else if(typeString == "hp") {
         type = FilterType::HP;
     } else {
-        std::cout<<"Unknown filter type " << typeString << std::endl;
+        std::cout<<"[warn] unknown filter type " << typeString << std::endl;
         return -1;
     }
 
