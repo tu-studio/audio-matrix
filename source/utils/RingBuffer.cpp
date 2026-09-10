@@ -21,6 +21,10 @@ void RingBuffer::clear() {
     const auto N = getMaxNumSamples(channel);
     size_t wp = writePos[channel];
 
+    // write first, so that we never read stale samples
+    // else, offset = 0 would equal to offset = N
+    buffer.setSample(channel, wp, x);
+
     // read position is always just lagging behind the write position by the
     // offset amount (aka. the delay time)
     // using signed value because sub-zero result would underflow `size_t`!
@@ -30,8 +34,8 @@ void RingBuffer::clear() {
     float delayed = buffer.getSample(channel, rp);
     readPos[channel] = rp; // store again
 
-    // replacement write
-    buffer.setSample(channel, wp++, x);
+    // update write position
+    ++wp;
     if(wp >= N)   wp -= N;  // upper bound
     writePos[channel] = wp; // store again
 
