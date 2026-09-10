@@ -16,8 +16,6 @@ public:
     void prepare(HostAudioConfig host_audio_config) override;
     void process(AudioBufferF &buffer, size_t nframes) override;
 
-    
-
 private:
     DelayConfigPtr m_config;
     RingBuffer m_ringbuffer;
