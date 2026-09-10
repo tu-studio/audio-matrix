@@ -7,7 +7,7 @@ Delay::Delay(DelayConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server
 
     if (osc_server != nullptr) {
         std::cout << "[info] Delay listening on path " << m_config->osc_path
-            << " in format (index (int), time_ms (float), enabled (0/1))"
+            << " in format (index (int), time (in ms, float), enabled (0/1))"
             << std::endl;
         osc_server->add_method(m_config->osc_path, "ifi", osc_delay_frequency_callback, this);
     } else {

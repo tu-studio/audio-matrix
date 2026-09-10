@@ -201,6 +201,7 @@ ModuleConfigPtr ConfigParser::parse_module_ambi_encoder(YAML::Node module){
 
 ModuleConfigPtr ConfigParser::parse_module_delay(YAML::Node module){
     DelayConfigPtr config = std::make_shared<DelayConfig>();
+    parse_module_osc_params(module, config);
 
     config->delay_time = get_config_option<float>(module, "time", 5, true);
 
