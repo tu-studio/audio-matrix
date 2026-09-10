@@ -23,5 +23,5 @@ struct ModuleConfig{
     }
 };
 
-typedef std::shared_ptr<ModuleConfig> ModuleConfigPtr;
+using ModuleConfigPtr = std::shared_ptr<ModuleConfig>;
 #endif //MODULECONFIG_H

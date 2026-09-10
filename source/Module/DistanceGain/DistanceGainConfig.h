@@ -11,6 +11,6 @@ struct DistanceGainConfig : ModuleConfig {
     }
 };
 
-typedef std::shared_ptr<DistanceGainConfig> DistanceGainConfigPtr;
+using DistanceGainConfigPtr = std::shared_ptr<DistanceGainConfig>;
 
 #endif //MODULE_DISTANCEGAINCONFIG

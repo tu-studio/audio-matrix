@@ -26,7 +26,7 @@ TEST(ConfigParser, basic_parse){
     // for(auto track = conf->tracks.begin(); track != conf->tracks.end(); ++track){
     //     std::cout << track->name << std::endl;
 
-    //     for (const std::shared_ptr<ModuleConfig> mc : track->modules){
+    //     for (const ModuleConfigPtr mc : track->modules){
     //         switch (mc->module_type())
     //         {
     //         case Modules::GAIN:
@@ -110,7 +110,7 @@ TEST(ConfigParser, more_complex_parse){
     // for(auto track = conf->tracks.begin(); track != conf->tracks.end(); ++track){
     //     std::cout << track->name << std::endl;
 
-    //     for (const std::shared_ptr<ModuleConfig> mc : track->modules){
+    //     for (const ModuleConfigPtr mc : track->modules){
     //         switch (mc->module_type())
     //         {
     //         case Modules::GAIN:
@@ -170,7 +170,7 @@ TEST(ConfigParser, ambisonics_parse){
     // for(auto track = conf->tracks.begin(); track != conf->tracks.end(); ++track){
     //     std::cout << track->name << std::endl;
 
-    //     for (const std::shared_ptr<ModuleConfig> mc : track->modules){
+    //     for (const ModuleConfigPtr mc : track->modules){
     //         switch (mc->module_type())
     //         {
     //         case Modules::GAIN:

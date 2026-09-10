@@ -1,6 +1,7 @@
+#include <GainConfig.h>
 #include <Gain.h>
 
-Gain::Gain(std::shared_ptr<GainConfig> config, std::shared_ptr<lo::ServerThread> osc_server) : m_config(config){
+Gain::Gain(GainConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server) : m_config(config){
     if (m_config->osc_controllable && osc_server != nullptr){
         std::cout << "[info] Gain listening on path " << m_config->osc_path << std::endl;
         osc_server->add_method(m_config->osc_path, "if", osc_gain_callback, this);

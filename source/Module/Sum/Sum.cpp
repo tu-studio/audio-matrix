@@ -1,6 +1,7 @@
+#include <SumConfig.h>
 #include <Sum.h>
 
-Sum::Sum(std::shared_ptr<SumConfig> config, std::shared_ptr<lo::ServerThread> osc_server) : m_config(config) {}
+Sum::Sum(SumConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server) : m_config(config) {}
 
 size_t Sum::initialize(size_t input_channels) {
     m_n_input_channels = input_channels;

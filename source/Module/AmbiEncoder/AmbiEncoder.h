@@ -17,7 +17,7 @@ struct PositionAED {
 class AmbiEncoder : public Module{
     public:
         AmbiEncoder() = delete;
-        AmbiEncoder(std::shared_ptr<AmbiEncoderConfig> config, std::shared_ptr<lo::ServerThread> osc_server);
+        AmbiEncoder(AmbiEncoderConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server);
         ~AmbiEncoder() = default;
 
         size_t initialize(size_t input_channels) override;

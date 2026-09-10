@@ -43,6 +43,6 @@ private:
     const TrackConfig& m_config; 
 };
 
-typedef std::unique_ptr<Track> TrackPtr;
+using TrackPtr = std::unique_ptr<Track>;
 
 #endif // TRACK_H

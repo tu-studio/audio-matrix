@@ -12,6 +12,6 @@ struct AmbiEncoderConfig : ModuleConfig{
     }
 };
 
-typedef std::shared_ptr<AmbiEncoderConfig> AmbiEncoderConfigPtr;
+using AmbiEncoderConfigPtr = std::shared_ptr<AmbiEncoderConfig>;
 
 #endif //AMBIENCODERCONFIG_H

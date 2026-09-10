@@ -27,7 +27,7 @@ public:
     std::shared_ptr<AudioMatrixConfig> get_config();
 private:
 
-    void parse_module_osc_params(YAML::Node module, std::shared_ptr<ModuleConfig> config);
+    void parse_module_osc_params(YAML::Node module, ModuleConfigPtr config);
     ModuleConfigPtr parse_module(YAML::Node module);
 
     // Module Specific Config Parsers

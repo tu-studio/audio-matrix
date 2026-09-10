@@ -9,7 +9,7 @@ class Delay : public Module {
 
 public:
     Delay() = delete;
-    Delay(std::shared_ptr<DelayConfig> config, std::shared_ptr<lo::ServerThread> osc_server);
+    Delay(DelayConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server);
     ~Delay() = default;
 
     size_t initialize(size_t input_channels) override;
@@ -19,7 +19,7 @@ public:
     
 
 private:
-    std::shared_ptr<DelayConfig> m_config;
+    DelayConfigPtr m_config;
     RingBuffer m_ringbuffer;
 };
 #endif // MODULE_DELAY_H

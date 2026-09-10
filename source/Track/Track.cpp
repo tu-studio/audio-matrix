@@ -1,3 +1,4 @@
+#include <ModuleConfig.h>
 #include <Track.h>
 #define CASE_MODULE(module_type, config_class, module_class) case module_type: \
         {                                                                                       \
@@ -9,7 +10,7 @@
 
 
 Track::Track(const TrackConfig& config, std::shared_ptr<lo::ServerThread> osc_server): m_config(config) {
-    for (const std::shared_ptr<ModuleConfig> module_config : m_config.modules){
+    for (const ModuleConfigPtr module_config : m_config.modules){
         switch (module_config->module_type())
         {
             // MODULE SWITCH CASES GO HERE

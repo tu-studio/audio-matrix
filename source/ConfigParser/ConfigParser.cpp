@@ -1,3 +1,4 @@
+#include <ModuleConfig.h>
 #include <ConfigParser.h>
 
 
@@ -40,7 +41,7 @@ ConfigParser::ConfigParser(std::string config_file){
                     YAML::Node module = module_it->as<YAML::Node>();
                     
                     // parse module config, push it to the track_config if it is valid
-                    std::shared_ptr<ModuleConfig> module_config = parse_module(module);
+                    ModuleConfigPtr module_config = parse_module(module);
                     if (module_config != nullptr){
                         track_config.modules.push_back(module_config);
                     }
@@ -95,7 +96,7 @@ T ConfigParser::get_config_option(YAML::Node module, const std::string &option_n
     return default_value;
 }
 
-std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
+ModuleConfigPtr ConfigParser::parse_module(YAML::Node module){
     std::string name;
 
     // get name of module
@@ -128,7 +129,7 @@ std::shared_ptr<ModuleConfig> ConfigParser::parse_module(YAML::Node module){
     
 }
 
-void ConfigParser::parse_module_osc_params(YAML::Node module, std::shared_ptr<ModuleConfig> config){
+void ConfigParser::parse_module_osc_params(YAML::Node module, ModuleConfigPtr config){
     
     std::string osc_path = get_config_option<std::string>(module, "osc_path", "", false, false, false);
     if (osc_path != ""){

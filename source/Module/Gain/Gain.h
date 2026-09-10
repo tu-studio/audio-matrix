@@ -9,7 +9,7 @@ class Gain : public Module {
 
 public:
     Gain() = delete;
-    Gain(std::shared_ptr<GainConfig> config, std::shared_ptr<lo::ServerThread> osc_server);
+    Gain(GainConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server);
     ~Gain() = default;
 
     size_t initialize(size_t input_channels) override;
@@ -21,7 +21,7 @@ public:
 private:
     std::vector<float> m_prev_gain;
     std::vector<atomic_float> m_gain;
-    std::shared_ptr<GainConfig> m_config;
+    GainConfigPtr m_config;
     static int osc_gain_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data);
 
 };

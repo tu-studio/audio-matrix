@@ -11,7 +11,7 @@ struct GainConfig: ModuleConfig
     }
 };
 
-typedef std::shared_ptr<GainConfig> GainConfigPtr;
+using GainConfigPtr = std::shared_ptr<GainConfig>;
 
 
 #endif //GAINCONFIG_H

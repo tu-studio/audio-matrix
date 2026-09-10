@@ -11,6 +11,6 @@ struct DelayConfig : ModuleConfig{
     }
 };
 
-typedef std::shared_ptr<DelayConfig> DelayConfigPtr;
+using DelayConfigPtr = std::shared_ptr<DelayConfig>;
 
 #endif //MODULE_DELAY_CONFIG_H

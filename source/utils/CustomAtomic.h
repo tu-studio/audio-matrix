@@ -76,8 +76,7 @@ class atomic_bool {
 };
 
 
-typedef custom_atomic<float> atomic_float;
-typedef custom_atomic<int> atomic_int;
-// typedef custom_atomic<bool> atomic_bool;
+using atomic_float = custom_atomic<float>;
+using atomic_int = custom_atomic<int>;
 
 #endif //ATOMICVECTOR_H

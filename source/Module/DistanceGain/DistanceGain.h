@@ -10,7 +10,7 @@ class DistanceGain : public Module {
 
 public:
     DistanceGain() = delete;
-    DistanceGain(std::shared_ptr<DistanceGainConfig> config, std::shared_ptr<lo::ServerThread> osc_server);
+    DistanceGain(DistanceGainConfigPtr config, std::shared_ptr<lo::ServerThread> osc_server);
     ~DistanceGain() = default;
 
     size_t initialize(size_t input_channels) override;
@@ -21,7 +21,7 @@ public:
 private:
     std::vector<float> m_prev_gain;
     std::vector<atomic_float> m_gain;
-    std::shared_ptr<DistanceGainConfig> m_config;
+    DistanceGainConfigPtr m_config;
     static int distance_osc_callback(const char *path, const char *types, lo_arg **argv, int argc, lo_message data, void *user_data);
 
 };

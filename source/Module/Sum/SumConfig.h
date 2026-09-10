@@ -9,6 +9,6 @@ struct SumConfig: ModuleConfig
     }
 };
 
-typedef std::shared_ptr<SumConfig> SumConfigPtr;
+using SumConfigPtr = std::shared_ptr<SumConfig>;
 
 #endif //SUMCONFIG_H
