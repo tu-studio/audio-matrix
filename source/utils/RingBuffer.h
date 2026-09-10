@@ -1,26 +1,22 @@
 #ifndef RINGBUFFER_H
 #define RINGBUFFER_H
 
+#include <cstddef>
 #include <vector>
-#include <cmath>
 #include <AudioBuffer.h>
 
-
-class RingBuffer : public AudioBuffer<float>
-{
+class RingBuffer {
 public:
-    RingBuffer();
+    RingBuffer() = default;
+    void initialize(size_t numChannels, size_t maxNumSamples);
 
-    void initializeWithPositions(size_t numChannels, size_t numSamples);
-    void clearWithPositions();
-    void pushSample(size_t channel, float sample);
-    float popSample(size_t channel);
-    float getSampleFromTail(size_t channel, size_t offset);
-    size_t getAvailableSamples(size_t channel);
-
+    void clear();
+    [[nodiscard]] float delay(size_t channel, size_t offset, float x);
+    size_t getMaxNumSamples([[maybe_unused]] size_t channel) const;
 private:
-    std::vector<size_t> readPos, writePos;
+    AudioBuffer<float> buffer;
+    std::vector<size_t> readPos;
+    std::vector<size_t> writePos;
 };
-
 
 #endif //RINGBUFFER_H

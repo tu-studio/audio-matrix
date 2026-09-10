@@ -228,4 +228,4 @@ This Project is licensed under the GPLv3.
 
 Calculation of the IIR filter coefficients is performed using the IIR library by [Exstrom Laboratories](https://www.exstrom.com/journal/sigproc/dsigproc.html), also licensed under the GPLv3
 
-AudioBuffer and RingBuffer implementations are taken from the [anira](https://github.com/tu-studio/anira) library, licensed under Apache License 2.0
+The AudioBuffer implementation is taken from the [anira](https://github.com/tu-studio/anira) library, licensed under Apache License 2.0

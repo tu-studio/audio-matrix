@@ -1,64 +1,43 @@
 #include <RingBuffer.h>
+#include <cstdint>
 
-RingBuffer::RingBuffer() = default;
-
-void RingBuffer::initializeWithPositions(size_t numChannels, size_t numSamples) {
-    initialize(numChannels, numSamples);
-    readPos.resize(getNumChannels());
-    writePos.resize(getNumChannels());
-
-    for (size_t i = 0; i < readPos.size(); i++) {
-        readPos[i] = 0;
-        writePos[i] = 0;
-    }
-}
-
-void RingBuffer::clearWithPositions() {
+void RingBuffer::initialize(size_t numChannels, size_t maxNumSamples) {
+    buffer.initialize(numChannels, maxNumSamples);
+    readPos.resize(numChannels);
+    writePos.resize(numChannels);
     clear();
-    for (size_t i = 0; i < readPos.size(); i++) {
-        readPos[i] = 0;
-        writePos[i] = 0;
-    }
-}
-
-void RingBuffer::pushSample(size_t channel, float sample) {
-    setSample(channel, writePos[channel], sample);
-
-    ++writePos[channel];
-
-    if (writePos[channel] >= getNumSamples()) {
+    for(size_t channel = 0; channel < numChannels; ++channel) {
+        readPos[channel] = 0;
         writePos[channel] = 0;
     }
 }
 
-float RingBuffer::popSample(size_t channel) {
-    auto sample = getSample(channel, readPos[channel]);
-
-    ++readPos[channel];
-
-    if (readPos[channel] >= getNumSamples()) {
-        readPos[channel] = 0;
-    }
-
-    return sample;
+void RingBuffer::clear() {
+    buffer.clear();
 }
 
-float RingBuffer::getSampleFromTail (size_t channel, size_t offset) {
-    if ((int) readPos[channel] - (int) offset < 0) {
-        return getSample(channel, getNumSamples() + readPos[channel] - offset);
-    } else {
-        return getSample(channel, readPos[channel] - offset);
-    }
+[[nodiscard]] float RingBuffer::delay(size_t channel, size_t offset, float x) {
+    // doesn't need caching but makes it more legible
+    const auto N = getMaxNumSamples(channel);
+    size_t wp = writePos[channel];
+
+    // read position is always just lagging behind the write position by the
+    // offset amount (aka. the delay time)
+    // using signed value because sub-zero result would underflow `size_t`!
+    std::int64_t rp = wp - offset;
+    while(rp < 0) rp += N;  // lower bound
+    if(rp >= N)   rp -= N;  // upper bound
+    float delayed = buffer.getSample(channel, rp);
+    readPos[channel] = rp; // store again
+
+    // replacement write
+    buffer.setSample(channel, wp++, x);
+    if(wp >= N)   wp -= N;  // upper bound
+    writePos[channel] = wp; // store again
+
+    return delayed;
 }
 
-size_t RingBuffer::getAvailableSamples(size_t channel) {
-    size_t returnValue;
-
-    if (readPos[channel] <= writePos[channel]) {
-        returnValue = writePos[channel] - readPos[channel];
-    } else {
-        returnValue = writePos[channel] + getNumSamples() - readPos[channel];
-    }
-
-    return returnValue;
+size_t RingBuffer::getMaxNumSamples([[maybe_unused]] size_t channel) const {
+    return buffer.getNumSamples();
 }
