@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../../graphics/studio-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -312,33 +312,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../installation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../modules/" class="md-nav__link">
         
   
@@ -376,10 +349,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -397,8 +370,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -555,6 +528,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building_installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -653,13 +654,17 @@
 
 
 <h1 id="adding-a-new-module">Adding a new module</h1>
-<p>To add a module, several files have to be edited, until a more streamlined approach is found.</p>
-<h2 id="1-add-identifier-of-module-to-modules-enum">1. Add identifier of Module to Modules enum</h2>
-<p>In <code>ModuleConfig.h</code> add an identifier of your module to the <code>Modules</code> enum</p>
+<p>To add a module, several files have to be edited, until a more streamlined
+approach is found.</p>
+<h2 id="1-add-identifier-of-module-to-modules-enum">1. Add identifier of <code>Module</code> to <code>Modules</code> enum</h2>
+<p>In <code>ModuleConfig.h</code> add an identifier of your module to the <code>Modules</code> enum.</p>
 <h2 id="2-create-module-files">2. Create Module Files</h2>
-<p>Modules must inherit from <code>Module</code>.</p>
-<p>Modules need a config struct inheriting from <code>ModuleConfig</code>.</p>
-<p>Modules should be created in a subfolder of Module following this directory structure:</p>
+<ul>
+<li>Modules must inherit from <code>Module</code>.</li>
+<li>Modules need a config struct inheriting from <code>ModuleConfig</code>.</li>
+<li>Modules should be created in a subfolder of <code>source/Module</code> following this
+  directory structure:</li>
+</ul>
 <div class="highlight"><pre><span></span><code>source
 └── Module
     ├── MyModule
@@ -675,32 +680,43 @@
 </ol>
 <p>TODO explain classes</p>
 <h2 id="3-parsing-of-module-config">3. Parsing of Module Config</h2>
-<p>Parsing of the config happens in the <code>ConfigParser</code>, so we need to add the module-specific config parser there.</p>
+<p>Parsing of the config happens in the <code>ConfigParser</code>, so we need to add the
+module-specific config parser there.</p>
 <p>Add an include directive for your config in <code>ConfigParser.h</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;MyModuleConfig.h&gt;</span>
 </code></pre></div>
-<p>Add a function signature for the parser function to <code>ConfigParser.h</code>, next to the other similar functions:</p>
+<p>Add a function signature for the parser function to <code>ConfigParser.h</code>, next to
+the other similar functions:</p>
 <div class="highlight"><pre><span></span><code><span class="n">ModuleConfigPtr</span><span class="w"> </span><span class="nf">parse_module_mymodule</span><span class="p">(</span><span class="n">YAML</span><span class="o">::</span><span class="n">Node</span><span class="w"> </span><span class="k">module</span><span class="p">);</span>
 </code></pre></div>
-<p>Implement this function in <code>ConfigParser.cpp</code>. Parsing is done using the <a href="https://github.com/jbeder/yaml-cpp">yaml-cpp</a> library. For simple key/value pairs in the config you can use the <code>get_config_option()</code> function for convenience. If your Module is controlled using OSC, call <code>parse_module_osc_params()</code> for your module.</p>
-<p>The call to <code>parse_module_mymodule</code> should happen in <code>ConfigParser::parse_module()</code>, so you have to add an if-case for your module to the case structure there:</p>
-<div class="highlight"><pre><span></span><code><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;mymodule&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<p>Implement this function in <code>ConfigParser.cpp</code>. Parsing is done using the
+<a href="https://github.com/jbeder/yaml-cpp">yaml-cpp</a> library. For simple key/value
+pairs in the config you can use the <code>get_config_option()</code> function for
+convenience. If your Module is controlled using OSC, call
+<code>parse_module_osc_params()</code> for your module.</p>
+<p>The call to <code>parse_module_mymodule</code> should happen in
+<code>ConfigParser::parse_module()</code>, so you have to add an if-case for your module
+to the case structure there:</p>
+<div class="highlight"><pre><span></span><code><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"mymodule"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parse_module_mymodule</span><span class="p">(</span><span class="k">module</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="4-adding-module-to-initialization">4. Adding Module to Initialization</h2>
-<p>Modules are initialized by the <code>Track</code> they belong to.
-First you have to include your module header in the file <code>Track/Track.h</code> like this: <code>#include &lt;MyModule.h&gt;</code>, then you have to add a case for your module in the Constructor of <code>Track</code> in the file <code>Track/Track.cpp</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">module_config</span><span class="o">-&gt;</span><span class="n">module_type</span><span class="p">())</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">            </span><span class="c1">// MODULE SWITCH CASES GO HERE</span>
-<span class="w">            </span><span class="p">...</span>
-<span class="w">            </span><span class="n">CASE_MODULE</span><span class="p">(</span><span class="n">Modules</span><span class="o">::</span><span class="n">MY_MODULE</span><span class="p">,</span><span class="w"> </span><span class="n">MyModuleConfig</span><span class="p">,</span><span class="w"> </span><span class="n">MyModule</span><span class="p">);</span>
-<span class="w">            </span><span class="p">...</span>
-<span class="w">            </span><span class="c1">// END MODULE SWITCH CASES</span>
-<span class="w">        </span><span class="k">default</span><span class="o">:</span>
-<span class="w">            </span><span class="k">break</span><span class="p">;</span>
-<span class="w">        </span><span class="p">}</span>
+<p>Modules are initialized by the <code>Track</code> they belong to. First you have to
+include your module header in the file <code>Track/Track.h</code> like this: <code>#include
+&lt;MyModule.h&gt;</code>, then you have to add a case for your module in the Constructor
+of <code>Track</code> in the file <code>Track/Track.cpp</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">module_config</span><span class="o">-&gt;</span><span class="n">module_type</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// MODULE SWITCH CASES GO HERE</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">Modules</span><span class="o">::</span><span class="no">MY_MODULE</span><span class="p">:</span>
+<span class="w">            </span><span class="k">case</span><span class="w"> </span><span class="no">Modules</span><span class="o">::</span><span class="no">MY_MODULE</span><span class="p">,</span><span class="w"> </span><span class="no">MyModuleConfig</span><span class="p">,</span><span class="w"> </span><span class="no">MyModule</span><span class="p">)</span><span class="err">;</span>
+<span class="w">        </span><span class="no">createAndAddModule</span><span class="o">&lt;</span><span class="no">MyModuleConfig</span><span class="p">,</span><span class="w"> </span><span class="no">MyModule</span><span class="o">&gt;</span><span class="p">(</span><span class="no">module_config</span><span class="p">,</span><span class="w"> </span><span class="no">osc_server</span><span class="p">)</span><span class="err">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="c1">// END MODULE SWITCH CASES</span>
+<span class="w">    </span><span class="no">default</span><span class="p">:</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 </code></pre></div>
 
 
@@ -771,7 +787,7 @@ First you have to include your module header in the file <code>Track/Track.h</co
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      2023 - TU Studio Team - Fares Schulz, Max Weidauer
+      2023 - 2026 - TU Studio Team - Fares Schulz, Max Weidauer, Manolo Müller
     </div>
   
   
@@ -806,7 +822,7 @@ First you have to include your module header in the file <code>Track/Track.h</co
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

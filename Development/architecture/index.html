@@ -14,12 +14,14 @@
         <link rel="prev" href="../adding_modules/">
       
       
+        <link rel="next" href="../building_installation/">
+      
       
         
       
       
       <link rel="icon" href="../../graphics/studio-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -27,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -310,33 +312,6 @@
   
   
     <li class="md-nav__item">
-      <a href="../../installation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Installation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../../modules/" class="md-nav__link">
         
   
@@ -374,10 +349,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -395,8 +370,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -472,6 +447,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building_installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -518,12 +521,23 @@
 
 
 <h1 id="architecture">Architecture</h1>
-<p>The <code>AudioMatrix</code> contains <code>Track</code>s, which each contain <code>Module</code>s, which do the actual audio processing.</p>
-<p>During Construction of the <code>Track</code>s, the <code>AudioMatrix</code> passes a shared pointer to the OSC Server Thread to them, which is passed to the modules in order for them to be able to receive OSC messages.</p>
-<p>During initalization the <code>AudioMatrix</code> initializes each <code>Track</code>. The <code>Track</code> in turn iterates over all <code>Module</code>s, each <code>Module</code> returns its number of output channels  depending on the amount of input channels it gets. The number of output channels of each <code>Track</code> is added up, so the <code>AudioMatrix</code> can report to the <code>JackClient</code> the amount of JACK ports that need to be opened.
-During </p>
-<p>Actual buffers get reserved during the <code>prepare</code> stage, which follows the same logic as the initalization stage.</p>
-<p>During processing the input channels are passed into each <code>Track</code>, the <code>Track</code> starts by copying the input buffers into its own <code>m_buffer</code>. then each <code>Module</code> uses its <code>process()</code> function on this buffer. At the end of the processing stage the amount of output channels earlier declared by this track is copied from the <code>m_buffer</code> into the main output buffer <code>out</code>.</p>
+<p>The <code>AudioMatrix</code> contains <code>Track</code>s, which each contain <code>Module</code>s, which do the
+actual audio processing.</p>
+<p>During construction of the <code>Track</code>s, the <code>AudioMatrix</code> passes a shared pointer
+to the OSC server thread to each <code>Track</code>. This pointer is in turn passed to the
+modules in order for them to be able to receive OSC messages.</p>
+<p>During initalization, the <code>AudioMatrix</code> initializes each <code>Track</code>. The <code>Track</code>
+in turn iterates over all <code>Module</code>s, each <code>Module</code> returns its number of output
+channels  depending on the amount of input channels it gets. The number of
+output channels of each <code>Track</code> is added up, so the <code>AudioMatrix</code> can report
+the amount of JACK ports that need to be opened to the <code>JackClient</code></p>
+<p>Actual buffers get reserved during the <code>prepare</code> stage, which follows the same
+logic as the initalization stage.</p>
+<p>During processing, the input channels are passed into each <code>Track</code>. The <code>Track</code>
+starts by copying the input buffers into its own <code>m_buffer</code>. Then, each
+<code>Module</code> uses its <code>process()</code> function on this buffer. At the end of the
+processing stage the amount of output channels earlier declared by this track
+are copied from the <code>m_buffer</code> into the main output buffer <code>out</code>.</p>
 
 
 
@@ -569,6 +583,22 @@ During </p>
           </a>
         
         
+          
+          <a href="../building_installation/" class="md-footer__link md-footer__link--next" aria-label="Next: Building from source">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Building from source
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
       </nav>
     
   
@@ -577,7 +607,7 @@ During </p>
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      2023 - TU Studio Team - Fares Schulz, Max Weidauer
+      2023 - 2026 - TU Studio Team - Fares Schulz, Max Weidauer, Manolo Müller
     </div>
   
   
@@ -612,7 +642,7 @@ During </p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

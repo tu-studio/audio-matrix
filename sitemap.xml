@@ -2,26 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://tu-studio.github.io/audio-matrix/</loc>
-         <lastmod>2026-05-15</lastmod>
+         <lastmod>2026-09-11</lastmod>
     </url>
     <url>
          <loc>https://tu-studio.github.io/audio-matrix/configuration/</loc>
-         <lastmod>2026-05-15</lastmod>
-    </url>
-    <url>
-         <loc>https://tu-studio.github.io/audio-matrix/installation/</loc>
-         <lastmod>2026-05-15</lastmod>
+         <lastmod>2026-09-11</lastmod>
     </url>
     <url>
          <loc>https://tu-studio.github.io/audio-matrix/modules/</loc>
-         <lastmod>2026-05-15</lastmod>
+         <lastmod>2026-09-11</lastmod>
     </url>
     <url>
          <loc>https://tu-studio.github.io/audio-matrix/Development/adding_modules/</loc>
-         <lastmod>2026-05-15</lastmod>
+         <lastmod>2026-09-11</lastmod>
     </url>
     <url>
          <loc>https://tu-studio.github.io/audio-matrix/Development/architecture/</loc>
-         <lastmod>2026-05-15</lastmod>
+         <lastmod>2026-09-11</lastmod>
+    </url>
+    <url>
+         <loc>https://tu-studio.github.io/audio-matrix/Development/building_installation/</loc>
+         <lastmod>2026-09-11</lastmod>
     </url>
 </urlset>
