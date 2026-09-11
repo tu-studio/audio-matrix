@@ -39,7 +39,7 @@ extra:
 extra_css:
   - stylesheets/extra.css
 
-copyright: 2023 - TU Studio Team - Fares Schulz, Max Weidauer
+copyright: 2023 - 2026 - TU Studio Team - Fares Schulz, Max Weidauer, Manolo Müller
 
 markdown_extensions:
   - admonition
