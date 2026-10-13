@@ -86,6 +86,7 @@ int Delay::osc_delay_frequency_callback(const char *path, const char *types, lo_
     // arg 2: on/off
     const auto enabled = static_cast<bool>(argv[2]->i);
     delay->set_enabled(channel, enabled);
+    std::cout<<"[log] "<<channel<<" "<<delay<<" "<<enabled<<std::endl;
 
     return 0;
 }
