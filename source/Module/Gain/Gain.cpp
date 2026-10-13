@@ -57,6 +57,5 @@ int Gain::osc_gain_callback(const char *path, const char *types, lo_arg **argv, 
     std::ignore = data;
     Gain* gain = (Gain*) user_data;
     gain->set_gain(argv[0]->i, argv[1]->f);
-    std::cout<<"[log] "<<argv[0]->i<<" "<<argv[1]->f<<" "<<std::endl;
     return 0;
 }

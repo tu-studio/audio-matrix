@@ -163,7 +163,5 @@ int Filter::osc_filter_frequency_callback(const char *path, const char *types, l
         filter->set_filter(channel, freq, type);
     }
 
-    std::cout<<"[log] "<<channel<<" "<<freq<<" "<<typeString<<" "<<enabled<<std::endl;
-
     return 0;
 }
